@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1122" height="747" viewBox="0 0 374 249" fill="none" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="logoTitle logoDesc">
+  <title id="logoTitle">Gaming A logo</title>
+  <desc id="logoDesc">A stylized red and electric-blue letter A wrapped by a red-to-cyan orbital ring, with a small game controller at its center.</desc>
+  <defs>
+    <linearGradient id="redBeam" x1="70" y1="38" x2="185" y2="238" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ff684b"/>
+      <stop offset="0.22" stop-color="#ff2938"/>
+      <stop offset="0.62" stop-color="#ff073f"/>
+      <stop offset="1" stop-color="#d9004c"/>
+    </linearGradient>
+    <linearGradient id="redBeamShade" x1="92" y1="82" x2="156" y2="205" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ff9a68" stop-opacity=".55"/>
+      <stop offset=".22" stop-color="#ff3045" stop-opacity=".08"/>
+      <stop offset="1" stop-color="#a9004b" stop-opacity=".32"/>
+    </linearGradient>
+    <linearGradient id="blueBeam" x1="195" y1="39" x2="290" y2="238" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1654ff"/>
+      <stop offset=".28" stop-color="#087cff"/>
+      <stop offset=".68" stop-color="#00aaff"/>
+      <stop offset="1" stop-color="#04d7f4"/>
+    </linearGradient>
+    <linearGradient id="blueBeamShade" x1="207" y1="57" x2="271" y2="228" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5b9dff" stop-opacity=".65"/>
+      <stop offset=".34" stop-color="#00aaff" stop-opacity=".04"/>
+      <stop offset="1" stop-color="#0064d8" stop-opacity=".36"/>
+    </linearGradient>
+    <linearGradient id="orbit" x1="17" y1="169" x2="354" y2="151" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ff2733"/>
+      <stop offset=".24" stop-color="#ff063e"/>
+      <stop offset=".47" stop-color="#ed075d"/>
+      <stop offset=".68" stop-color="#087cff"/>
+      <stop offset=".88" stop-color="#00c7ff"/>
+      <stop offset="1" stop-color="#05e2fa"/>
+    </linearGradient>
+    <linearGradient id="orbitHighlight" x1="28" y1="164" x2="350" y2="112" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffb08b" stop-opacity=".82"/>
+      <stop offset=".3" stop-color="#ff4b58" stop-opacity=".34"/>
+      <stop offset=".68" stop-color="#45baff" stop-opacity=".2"/>
+      <stop offset="1" stop-color="#9affff" stop-opacity=".72"/>
+    </linearGradient>
+    <linearGradient id="controllerStroke" x1="148" y1="158" x2="222" y2="158" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ff267e"/>
+      <stop offset=".38" stop-color="#ed20a5"/>
+      <stop offset=".7" stop-color="#1688ff"/>
+      <stop offset="1" stop-color="#00d8f5"/>
+    </linearGradient>
+    <linearGradient id="dpad" x1="156" y1="149" x2="175" y2="168" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ff6b91"/>
+      <stop offset="1" stop-color="#ff0751"/>
+    </linearGradient>
+    <filter id="redGlow" x="-35%" y="-35%" width="170%" height="170%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="7" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0.95  0 0.12 0 0 0.01  0 0 0.18 0 0.03  0 0 0 0.8 0" result="tint"/>
+      <feMerge><feMergeNode in="tint"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="blueGlow" x="-35%" y="-35%" width="170%" height="170%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="7" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0.05 0 0 0 0  0 0.5 0 0 0.12  0 0 1 0 0.42  0 0 0 0.8 0" result="tint"/>
+      <feMerge><feMergeNode in="tint"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="orbitGlow" x="-25%" y="-45%" width="150%" height="190%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="smallGlow" x="-60%" y="-60%" width="220%" height="220%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="2.3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Rear part of the orbit: it passes behind the A. -->
+  <path d="M22.8 166.1C18.8 158.1 22.4 150.5 31.9 143.1C50.2 128.9 82.7 117.8 114.3 111.7C93.1 124.3 74.9 137.3 63.1 151.3C54.8 161.2 51.7 169.3 54.2 176.2C40.3 174.5 28.8 170.9 22.8 166.1Z" fill="url(#orbit)" filter="url(#orbitGlow)"/>
+
+  <!-- Main A mark. -->
+  <g filter="url(#redGlow)">
+    <path d="M157.3 39.7H191.2C196.1 39.7 199.7 42.3 202.1 46.8L94.7 237H46.5L151.4 47.2C152.8 42.8 154.8 39.7 157.3 39.7Z" fill="url(#redBeam)"/>
+    <path d="M157.3 40.8H190.7C194.4 40.8 197.2 42.4 199.3 45.6L94.1 231.5L84.1 231.5L151.9 47.6C153.2 43.6 155 40.8 157.3 40.8Z" fill="url(#redBeamShade)"/>
+    <path d="M157.5 40.5H191.1C195.7 40.5 198.7 42.6 200.6 46.3" stroke="#ffb18a" stroke-opacity=".72" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g filter="url(#blueGlow)">
+    <path d="M197.9 39.8C204.3 39.4 209 42.8 212.1 49.1L307.1 237.1H268.5C259.2 237.1 253 232.3 248.7 224.1L180.8 91.1L197.9 39.8Z" fill="url(#blueBeam)"/>
+    <path d="M200.7 42.2C205.3 42.6 208.5 45.7 211.2 51L300.5 231.9H271.2C262.2 231.9 256.8 227.7 253.2 220.5L187.1 91.3L200.7 42.2Z" fill="url(#blueBeamShade)"/>
+    <path d="M201.1 41.2C205.8 41.8 209.1 44.8 211.6 49.7" stroke="#6cbaff" stroke-opacity=".74" stroke-width="1.4" stroke-linecap="round"/>
+  </g>
+
+  <!-- Far cyan sweep of the orbit. -->
+  <path d="M229.8 74.1C266.2 64.4 308.7 64.6 333.1 76.1C352.4 85.2 359.1 98.2 346.1 113.4C336.2 125 319.2 136.3 301.2 146.1C318.2 131.9 333.8 116.1 340.8 102.5C347.1 90.2 337.1 81.7 321.2 77.8C295.7 71.5 259.5 71.3 229.8 74.1Z" fill="url(#orbit)" filter="url(#blueGlow)"/>
+  <path d="M231.8 73.8C266.9 66.8 306.8 67.4 330.9 77.5" stroke="#7bf5ff" stroke-width="1.15" stroke-linecap="round" stroke-opacity=".78"/>
+
+  <!-- Front sweep of the orbit, crossing in front of the A. -->
+  <path d="M23.7 163.8C17.5 173.3 21.2 185.6 37.5 194.9C55.4 205.1 82.9 206.4 112.5 201.5C178.5 190.6 249.4 162.8 302.1 134.2C323 122.8 340.9 108.9 349.2 97.7C342.1 114.1 324.6 130.7 301.1 147.1C247.8 184.4 178.2 209.1 111.7 217.2C69.1 222.4 36.6 213.8 22.5 198.5C13.1 188.3 15.8 174.3 23.7 163.8Z" fill="url(#orbit)" filter="url(#orbitGlow)"/>
+  <path d="M25.3 166.6C19.5 176.4 25.4 187.1 41.3 195.1C58.9 203.9 84.7 204.9 112.4 200.2C177.8 189.4 248.8 162 300.5 134.1" stroke="url(#orbitHighlight)" stroke-width="1.45" stroke-linecap="round" opacity=".82"/>
+
+  <!-- Game controller set into the open center of the mark. -->
+  <g filter="url(#smallGlow)">
+    <path d="M147.1 169.1L150.2 149.1C151.3 141.8 157.4 136.6 164.9 136.6H184.3C189.8 136.6 194.1 139.4 197.5 142.4C200.2 139.9 203.3 137.8 207.1 138.2C213.1 138.8 216.5 143.8 218.1 150.2L222.1 166.5C224.2 175 215.6 182.5 207.7 178.7L197.9 172.5H169.1L161.9 179.1C155.3 185.1 146.1 179.2 147.1 169.1Z" fill="#050916" stroke="url(#controllerStroke)" stroke-width="3.1" stroke-linejoin="round"/>
+    <path d="M155.4 149.2C156.6 142.9 160.6 139.7 166.5 139.7H181.2" stroke="#ff4c9b" stroke-width="1.1" stroke-linecap="round" opacity=".72"/>
+    <path d="M199.5 141.8C202.2 139.7 205.1 139 207.6 139.7" stroke="#54dcff" stroke-width="1.1" stroke-linecap="round" opacity=".86"/>
+
+    <!-- D-pad -->
+    <path d="M164.8 147.5C164.8 146.2 165.8 145.2 167.1 145.2H169.1C170.4 145.2 171.4 146.2 171.4 147.5V152.2H176.1C177.4 152.2 178.4 153.2 178.4 154.5V156.4C178.4 157.7 177.4 158.7 176.1 158.7H171.4V163.4C171.4 164.7 170.4 165.7 169.1 165.7H167.1C165.8 165.7 164.8 164.7 164.8 163.4V158.7H160.1C158.8 158.7 157.8 157.7 157.8 156.4V154.5C157.8 153.2 158.8 152.2 160.1 152.2H164.8V147.5Z" fill="url(#dpad)"/>
+    <!-- Face buttons -->
+    <circle cx="203.9" cy="151.4" r="3.1" fill="#08bfff"/>
+    <circle cx="213.4" cy="160.1" r="3.1" fill="#08bfff"/>
+    <circle cx="194.6" cy="160.1" r="3.1" fill="#168eff"/>
+    <circle cx="203.9" cy="168.8" r="3.1" fill="#168eff"/>
+  </g>
+</svg>

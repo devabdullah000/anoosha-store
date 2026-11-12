@@ -62,7 +62,7 @@ export default function TodoClient() {
     setMessage("");
 
     try {
-      const result = await getTodos();
+      const result : any = await getTodos();
 
       if (result.success) {
         setItems(result.items);
