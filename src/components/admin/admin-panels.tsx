@@ -9,6 +9,7 @@ import {
 } from "react";
 import type { AdminSectionId } from "./admin-navigation";
 import { CategoriesInterface } from "./categories/category-panel";
+import { AttributesInterface } from "./attributes/attribute-panel";
 
 export type AdminPanelProps = {
   adminEmail: string;
@@ -531,54 +532,7 @@ export function CategoriesPanel(_props: AdminPanelProps) {
 }
 
 export function AttributesPanel(_props: AdminPanelProps) {
-  type Attribute = Record<string, unknown>;
-  return (
-    <ResourcePanel<Attribute>
-      title="Attributes"
-      description="Manage the reusable attribute definitions assigned to product variants, such as color, material, size or capacity."
-      endpoint="/api/attributes"
-      searchEnabled
-      searchPlaceholder="Search attributes…"
-      rowKey={(item) => String(item.id)}
-      emptyTitle="No attributes found"
-      emptyDescription="Reusable product attributes will appear here when they are created."
-      columns={[
-        {
-          key: "name",
-          heading: "Attribute",
-          render: (item) => (
-            <div>
-              <p className="font-semibold text-slate-900">
-                {valueText(item.name)}
-              </p>
-              <p className="mt-1 text-xs text-slate-400">
-                {valueText(item.id as string)}
-              </p>
-            </div>
-          ),
-        },
-        {
-          key: "valueType",
-          heading: "Value type",
-          render: (item) => (
-            <span className="rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700">
-              {valueText(item.valueType)}
-            </span>
-          ),
-        },
-        {
-          key: "displayType",
-          heading: "Display type",
-          render: (item) => valueText(item.displayType),
-        },
-        {
-          key: "unit",
-          heading: "Unit",
-          render: (item) => valueText(item.unit),
-        },
-      ]}
-    />
-  );
+  return <AttributesInterface {..._props} />;
 }
 
 export function InventoryPanel(_props: AdminPanelProps) {
