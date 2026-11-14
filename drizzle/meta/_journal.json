@@ -15,6 +15,13 @@
       "when": 1794251553595,
       "tag": "0001_breezy_skullbuster",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1794584880224,
+      "tag": "0002_adorable_doctor_doom",
+      "breakpoints": true
     }
   ]
 }

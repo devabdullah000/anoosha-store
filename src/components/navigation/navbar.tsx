@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import {
   NAVBAR_CONFIG,
@@ -14,9 +14,11 @@ import { authClient } from "@/lib/auth-client";
 import { clearAccessTokenCache } from "@/lib/auth/access-token";
 import { clearAuthProfile } from "@/store/auth-slice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { ADMIN_NAVIGATION, requestAdminNavigation } from "@/components/admin/admin-navigation";
 
 export function Navbar() {
   const router = useRouter();
+  const pathname = usePathname();
   const dispatch = useAppDispatch();
 
   const persistedProfile = useAppSelector(
@@ -124,15 +126,24 @@ export function Navbar() {
 
             {/* CENTER: Desktop navigation */}
             <div className="order-2 hidden items-center justify-center gap-1 lg:flex">
-              {NAVBAR_CONFIG.navLinks.map((item) => (
+              {profile?.role === "admin" ? (
                 <Link
-                  key={item.link}
-                  href={item.link}
-                  className="rounded-xl px-4 py-2.5 text-sm font-semibold capitalize text-slate-600 transition duration-200 hover:bg-slate-50 hover:text-slate-950"
+                  href="/admin/dashboard"
+                  className={`rounded-xl px-4 py-2.5 text-sm font-semibold transition duration-200 ${pathname.startsWith("/admin/dashboard") ? "bg-indigo-50 text-indigo-800" : "text-slate-600 hover:bg-slate-50 hover:text-slate-950"}`}
                 >
-                  {item.name}
+                  Admin workspace
                 </Link>
-              ))}
+              ) : (
+                NAVBAR_CONFIG.navLinks.map((item) => (
+                  <Link
+                    key={item.link}
+                    href={item.link}
+                    className="rounded-xl px-4 py-2.5 text-sm font-semibold capitalize text-slate-600 transition duration-200 hover:bg-slate-50 hover:text-slate-950"
+                  >
+                    {item.name}
+                  </Link>
+                ))
+              )}
             </div>
 
             {/* RIGHT: Login / Account + Mobile menu */}
@@ -284,8 +295,8 @@ export function Navbar() {
 
           {/* MOBILE MENU */}
           {mobileOpen && (
-            <div className="border-t border-slate-100 px-4 py-4 lg:hidden">
-              <div className="mx-auto flex max-w-[1440px] flex-col gap-2">
+            <div className="max-h-[calc(100dvh-110px)] overflow-y-auto overscroll-contain border-t border-slate-100 px-4 py-4 lg:hidden">
+              <div className="mx-auto flex max-w-[1440px] flex-col gap-2 pb-2">
 
                 {/* Full email appears first */}
                 {profile && (
@@ -328,32 +339,77 @@ export function Navbar() {
                   </div>
                 )}
 
-                {/* Navigation links */}
-                {NAVBAR_CONFIG.navLinks.map((item) => (
-                  <Link
-                    key={item.link}
-                    href={item.link}
-                    onClick={closeMenus}
-                    className="flex items-center justify-between rounded-xl px-3 py-3 text-sm font-semibold capitalize text-slate-700 transition hover:bg-slate-50 hover:text-slate-950"
-                  >
-                    {item.name}
-
-                    <svg
-                      className="h-4 w-4 text-slate-400"
-                      viewBox="0 0 20 20"
-                      fill="none"
-                      aria-hidden="true"
+                {/* Admin section links stay on /admin/dashboard and switch components internally. */}
+                {profile?.role === "admin" ? (
+                  pathname.startsWith("/admin/dashboard") ? (
+                    <>
+                      <p className="px-3 pb-1 pt-2 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
+                        Admin workspace
+                      </p>
+                      {ADMIN_NAVIGATION.map((item) => (
+                        <button
+                          key={item.id}
+                          type="button"
+                          onClick={() => {
+                            requestAdminNavigation(item.id);
+                            closeMenus();
+                          }}
+                          className="flex w-full items-center justify-between rounded-xl px-3 py-3 text-left text-sm font-semibold text-slate-700 transition hover:bg-indigo-50 hover:text-indigo-800"
+                        >
+                          {item.name}
+                          <svg
+                            className="h-4 w-4 text-slate-400"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            aria-hidden="true"
+                          >
+                            <path
+                              d="m7.5 4 6 6-6 6"
+                              stroke="currentColor"
+                              strokeWidth="1.6"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </button>
+                      ))}
+                    </>
+                  ) : (
+                    <Link
+                      href="/admin/dashboard"
+                      onClick={closeMenus}
+                      className="flex items-center justify-between rounded-xl bg-indigo-50 px-3 py-3 text-sm font-semibold text-indigo-800 transition hover:bg-indigo-100"
                     >
-                      <path
-                        d="m7.5 4 6 6-6 6"
-                        stroke="currentColor"
-                        strokeWidth="1.6"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </Link>
-                ))}
+                      Open admin workspace
+                      <span aria-hidden="true">→</span>
+                    </Link>
+                  )
+                ) : (
+                  NAVBAR_CONFIG.navLinks.map((item) => (
+                    <Link
+                      key={item.link}
+                      href={item.link}
+                      onClick={closeMenus}
+                      className="flex items-center justify-between rounded-xl px-3 py-3 text-sm font-semibold capitalize text-slate-700 transition hover:bg-slate-50 hover:text-slate-950"
+                    >
+                      {item.name}
+                      <svg
+                        className="h-4 w-4 text-slate-400"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="m7.5 4 6 6-6 6"
+                          stroke="currentColor"
+                          strokeWidth="1.6"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </Link>
+                  ))
+                )}
               </div>
             </div>
           )}

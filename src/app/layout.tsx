@@ -1,4 +1,3 @@
-
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -6,6 +5,8 @@ import "./globals.css";
 import { AppProviders } from "./providers";
 import { Navbar } from "@/components/navigation/navbar";
 import { Footer } from "@/components/footer";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,7 +38,19 @@ export default function RootLayout({
       >
         <AppProviders>
           <Navbar />
+
+          <ToastContainer
+            position="top-right"
+            autoClose={3000}
+            newestOnTop
+            closeOnClick
+            pauseOnHover
+            draggable
+            theme="light"
+          />
+
           {children}
+
           <Footer />
         </AppProviders>
       </body>

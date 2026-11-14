@@ -267,11 +267,19 @@ export function getAuthContext() {
       },
     },
 
-    // One-year database-backed session.
-    session: {
-      expiresIn: ONE_YEAR_SECONDS,
-      updateAge: ONE_WEEK_SECONDS,
-    },
+    
+// One-year database-backed session with 15-minute cookie caching.
+session: {
+  expiresIn: ONE_YEAR_SECONDS,
+  updateAge: ONE_WEEK_SECONDS,
+
+  cookieCache: {
+    enabled: true,
+    maxAge: 60 * 60, // 15 minutes
+    strategy: "compact",
+  },
+},
+
 
     // Google OAuth is intentionally not configured in Better Auth.
     // The independent Google flow is implemented under /api/google-auth and
