@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -6,14 +7,12 @@ import { toast } from "react-toastify";
 
 import type {
   Attribute,
-  AttributeValueType,
   AttributeDisplayType,
 } from "./attributes-types";
 
 type AttributeFormProps = {
   mode: "create" | "update";
   attribute?: Attribute | null;
-
   onClose: () => void;
   onSuccess: (attribute: Attribute) => void;
 };
@@ -23,16 +22,6 @@ type ApiResponse = {
   message?: string;
   data?: Attribute;
 };
-
-const valueTypeOptions: {
-  value: AttributeValueType;
-  label: string;
-}[] = [
-  { value: "text", label: "Text" },
-  { value: "number", label: "Number" },
-  { value: "boolean", label: "Boolean" },
-  { value: "color", label: "Color" },
-];
 
 const displayTypeOptions: {
   value: AttributeDisplayType;
@@ -50,10 +39,7 @@ export default function AttributeForm({
   onSuccess,
 }: AttributeFormProps) {
   const [name, setName] = useState(attribute?.name ?? "");
-  const [valueType, setValueType] = useState<AttributeValueType>(
-    attribute?.valueType ?? "text",
-  );
-  const [unit, setUnit] = useState(attribute?.unit ?? "");
+
   const [displayType, setDisplayType] =
     useState<AttributeDisplayType>(
       attribute?.displayType ?? "dropdown",
@@ -64,15 +50,11 @@ export default function AttributeForm({
 
   useEffect(() => {
     setName(attribute?.name ?? "");
-    setValueType(attribute?.valueType ?? "text");
-    setUnit(attribute?.unit ?? "");
     setDisplayType(attribute?.displayType ?? "dropdown");
     setFormError("");
   }, [
     attribute?.id,
     attribute?.name,
-    attribute?.valueType,
-    attribute?.unit,
     attribute?.displayType,
     mode,
   ]);
@@ -107,7 +89,6 @@ export default function AttributeForm({
     if (submitting) return;
 
     const normalizedName = name.trim();
-    const normalizedUnit = unit.trim();
 
     if (!normalizedName) {
       setFormError("Attribute name is required.");
@@ -115,7 +96,9 @@ export default function AttributeForm({
     }
 
     if (normalizedName.length > 120) {
-      setFormError("Attribute name cannot exceed 120 characters.");
+      setFormError(
+        "Attribute name cannot exceed 120 characters.",
+      );
       return;
     }
 
@@ -134,8 +117,7 @@ export default function AttributeForm({
         body: JSON.stringify({
           ...(isUpdate ? { id: attribute!.id } : {}),
           name: normalizedName,
-          valueType,
-          unit: normalizedUnit || null,
+          valueType: "text",
           displayType,
         }),
       });
@@ -152,13 +134,17 @@ export default function AttributeForm({
       ) {
         throw new Error(
           result?.message ??
-            `Unable to ${isUpdate ? "update" : "create"} attribute.`,
+            `Unable to ${
+              isUpdate ? "update" : "create"
+            } attribute.`,
         );
       }
 
       toast.success(
         result.message ??
-          `Attribute ${isUpdate ? "updated" : "created"} successfully.`,
+          `Attribute ${
+            isUpdate ? "updated" : "created"
+          } successfully.`,
       );
 
       onSuccess(result.data);
@@ -203,12 +189,14 @@ export default function AttributeForm({
                 id="attribute-form-title"
                 className="text-lg font-bold text-slate-900"
               >
-                {isUpdate ? "Update attribute" : "Add attribute"}
+                {isUpdate
+                  ? "Update attribute"
+                  : "Add attribute"}
               </h2>
 
               <p className="mt-1 text-sm leading-6 text-slate-500">
                 {isUpdate
-                  ? "Change the attribute name, value type, unit, or display type."
+                  ? "Change the attribute name or display type."
                   : "Create a reusable attribute for your product variants."}
               </p>
             </div>
@@ -236,7 +224,10 @@ export default function AttributeForm({
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="mt-7 space-y-5">
+          <form
+            onSubmit={handleSubmit}
+            className="mt-7 space-y-5"
+          >
             {/* Attribute name */}
             <div>
               <label
@@ -244,7 +235,9 @@ export default function AttributeForm({
                 className="mb-2 block text-sm font-semibold text-slate-700"
               >
                 Attribute name
-                <span className="ml-1 text-rose-500">*</span>
+                <span className="ml-1 text-rose-500">
+                  *
+                </span>
               </label>
 
               <input
@@ -268,62 +261,6 @@ export default function AttributeForm({
               </p>
             </div>
 
-            {/* Value type */}
-            <div>
-              <label
-                htmlFor="attribute-value-type"
-                className="mb-2 block text-sm font-semibold text-slate-700"
-              >
-                Value type
-                <span className="ml-1 text-rose-500">*</span>
-              </label>
-
-              <select
-                id="attribute-value-type"
-                value={valueType}
-                onChange={(event) => {
-                  setValueType(
-                    event.target.value as AttributeValueType,
-                  );
-                  setFormError("");
-                }}
-                disabled={submitting}
-                className={selectClasses}
-              >
-                {valueTypeOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Unit */}
-            <div>
-              <label
-                htmlFor="attribute-unit"
-                className="mb-2 block text-sm font-semibold text-slate-700"
-              >
-                Unit
-                <span className="ml-2 text-xs font-normal text-slate-400">
-                  Optional
-                </span>
-              </label>
-
-              <input
-                id="attribute-unit"
-                type="text"
-                value={unit}
-                onChange={(event) => {
-                  setUnit(event.target.value);
-                  setFormError("");
-                }}
-                placeholder="e.g. cm, kg, inches"
-                disabled={submitting}
-                className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-indigo-300 focus:ring-4 focus:ring-indigo-500/10 disabled:bg-slate-50"
-              />
-            </div>
-
             {/* Display type */}
             <div>
               <label
@@ -331,7 +268,9 @@ export default function AttributeForm({
                 className="mb-2 block text-sm font-semibold text-slate-700"
               >
                 Display type
-                <span className="ml-1 text-rose-500">*</span>
+                <span className="ml-1 text-rose-500">
+                  *
+                </span>
               </label>
 
               <select
@@ -339,7 +278,8 @@ export default function AttributeForm({
                 value={displayType}
                 onChange={(event) => {
                   setDisplayType(
-                    event.target.value as AttributeDisplayType,
+                    event.target
+                      .value as AttributeDisplayType,
                   );
                   setFormError("");
                 }}
@@ -347,7 +287,10 @@ export default function AttributeForm({
                 className={selectClasses}
               >
                 {displayTypeOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
+                  <option
+                    key={option.value}
+                    value={option.value}
+                  >
                     {option.label}
                   </option>
                 ))}

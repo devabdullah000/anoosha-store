@@ -66,7 +66,9 @@ export const products = sqliteTable(
   },
   (table) => [
     // Case-insensitive, globally unique parent-product name.
-    uniqueIndex("products_name_unique").on(sql`lower(${table.name})`),
+    uniqueIndex("products_name_unique")
+      .on(sql`lower(${table.name})`)
+      .where(sql`${table.deletedAt} IS NULL`),
 
     check("products_status_check", sql`${table.status} in (0, 1)`),
     check("products_has_variants_check", sql`${table.hasVariants} in (0, 1)`),
@@ -131,14 +133,15 @@ export const productVariants = sqliteTable(
     updatedAt: text("updated_at")
       .notNull()
       .default(sql`(current_timestamp)`),
+    // Removed variants remain in D1 so inventory movement history survives.
+    deletedAt: text("deleted_at"),
   },
   (table) => [
     // Variant labels such as "Small" or "Black" may repeat across
     // different products, but not within the same parent product.
-    uniqueIndex("product_variants_product_name_unique").on(
-      table.productId,
-      sql`lower(${table.name})`,
-    ),
+    uniqueIndex("product_variants_product_name_unique")
+      .on(table.productId, sql`lower(${table.name})`)
+      .where(sql`${table.deletedAt} IS NULL`),
 
     // SKU and slug are globally unique, case-insensitively.
     uniqueIndex("product_variants_sku_unique").on(sql`lower(${table.sku})`),
@@ -165,7 +168,7 @@ export const productVariants = sqliteTable(
     // ensure exactly one default variant when a product is published.
     uniqueIndex("product_variants_one_default_per_product_idx")
       .on(table.productId)
-      .where(sql`${table.isDefault} = 1`),
+      .where(sql`${table.isDefault} = 1 AND ${table.deletedAt} IS NULL`),
 
     // Supports loading a product's active variants and default-variant status.
     index("product_variants_product_status_default_idx").on(
@@ -299,6 +302,29 @@ export const variantAttributes = sqliteTable(
 );
 
 /* ============================================================
+   INVENTORY DOCUMENTS: one type per atomic multi-variant posting.
+   ============================================================ */
+
+export const inventoryDocuments = sqliteTable(
+  "inventory_documents",
+  {
+    id: text("id").primaryKey(),
+    operationType: text("operation_type").notNull(),
+    reference: text("reference"),
+    note: text("note"),
+    createdBy: text("created_by").notNull(),
+    createdAt: text("created_at").notNull().default(sql`(current_timestamp)`),
+  },
+  (table) => [
+    check("inventory_documents_type_check", sql`${table.operationType} in ('purchase', 'increase', 'decrease')`),
+    index("inventory_documents_created_idx").on(table.createdAt),
+    uniqueIndex("inventory_documents_purchase_reference_unique")
+      .on(sql`lower(${table.reference})`)
+      .where(sql`${table.operationType} = 'purchase' AND ${table.reference} IS NOT NULL`),
+  ],
+);
+
+/* ============================================================
    7. INVENTORY MOVEMENTS
    Append-only inventory audit history.
 
@@ -321,6 +347,10 @@ export const inventoryMovements = sqliteTable(
     newQty: integer("new_qty").notNull(),
     qtyDiff: integer("qty_diff").notNull(),
     note: text("note"),
+    documentId: text("document_id").references(() => inventoryDocuments.id, {
+      onDelete: "restrict",
+      onUpdate: "cascade",
+    }),
     createdAt: text("created_at")
       .notNull()
       .default(sql`(current_timestamp)`),
@@ -344,6 +374,9 @@ export const inventoryMovements = sqliteTable(
       table.variantId,
       table.createdAt,
     ),
+
+    // Allows retrieving all movements belonging to a single document.
+    index("inventory_movements_document_idx").on(table.documentId),
 
     // Supports administrative filtering by movement type and date.
     index("inventory_movements_type_created_idx").on(
@@ -409,6 +442,10 @@ export const variantAttributesRelations = relations(
   }),
 );
 
+export const inventoryDocumentsRelations = relations(inventoryDocuments, ({ many }) => ({
+  movements: many(inventoryMovements),
+}));
+
 export const inventoryMovementsRelations = relations(
   inventoryMovements,
   ({ one }) => ({
@@ -416,5 +453,33 @@ export const inventoryMovementsRelations = relations(
       fields: [inventoryMovements.variantId],
       references: [productVariants.id],
     }),
+    document: one(inventoryDocuments, {
+      fields: [inventoryMovements.documentId],
+      references: [inventoryDocuments.id],
+    }),
   }),
+);
+
+/* ============================================================
+   8. PENDING PRODUCT IMAGE CLEANUP
+   Durable outbox: the D1 transaction stores a cleanup task
+   when an image row is removed. External R2 deletion and CDN
+   purge are retried independently until both succeed.
+   ============================================================ */
+
+export const productImageCleanupJobs = sqliteTable(
+  "product_image_cleanup_jobs",
+  {
+    id: text("id").primaryKey(),
+    storageKey: text("storage_key").notNull(),
+    attempts: integer("attempts").notNull().default(0),
+    lastError: text("last_error"),
+    createdAt: text("created_at")
+      .notNull()
+      .default(sql`(current_timestamp)`),
+  },
+  (table) => [
+    uniqueIndex("product_image_cleanup_storage_key_unique").on(table.storageKey),
+    index("product_image_cleanup_created_idx").on(table.createdAt),
+  ],
 );

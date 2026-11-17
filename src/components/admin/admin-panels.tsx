@@ -10,6 +10,8 @@ import {
 import type { AdminSectionId } from "./admin-navigation";
 import { CategoriesInterface } from "./categories/category-panel";
 import { AttributesInterface } from "./attributes/attribute-panel";
+import { ProductsInterface } from "./products";
+import InventoryInterface from "./inventory/inventory-panel";
 
 export type AdminPanelProps = {
   adminEmail: string;
@@ -455,76 +457,7 @@ export function OverviewPanel({ adminEmail, onNavigate }: AdminPanelProps) {
 }
 
 export function ProductsPanel(_props: AdminPanelProps) {
-  type Product = Record<string, unknown> & {
-    category?: { name?: string };
-    variants?: unknown[];
-    stock?: number;
-    isAvailable?: boolean;
-    status?: boolean;
-  };
-
-  return (
-    <ResourcePanel<Product>
-      title="Products"
-      description="Browse products with their category, variants and current availability. Product images are served from your CloudFront domain."
-      endpoint="/api/products"
-      searchEnabled
-      searchPlaceholder="Search products by name…"
-      rowKey={(item) => String(item.id)}
-      emptyTitle="No products found"
-      emptyDescription="Products will appear here after they are created in your catalog."
-      columns={[
-        {
-          key: "product",
-          heading: "Product",
-          render: (item) => (
-            <div>
-              <p className="font-semibold text-slate-900">
-                {valueText(item.name)}
-              </p>
-              <p className="mt-1 text-xs text-slate-400">
-                {valueText(item.id as string)}
-              </p>
-            </div>
-          ),
-        },
-        {
-          key: "category",
-          heading: "Category",
-          render: (item) => valueText(item.category?.name),
-        },
-        {
-          key: "variants",
-          heading: "Variants",
-          render: (item) => (
-            <span className="font-medium text-slate-700">
-              {item.variants?.length ?? 0}
-            </span>
-          ),
-        },
-        {
-          key: "stock",
-          heading: "Total stock",
-          render: (item) => (
-            <span className="font-semibold tabular-nums text-slate-900">
-              {Number(item.stock ?? 0).toLocaleString()}
-            </span>
-          ),
-        },
-        {
-          key: "status",
-          heading: "Availability",
-          render: (item) => (
-            <StatusPill
-              active={Boolean(item.isAvailable)}
-              yes="In stock"
-              no="Out of stock"
-            />
-          ),
-        },
-      ]}
-    />
-  );
+  return <ProductsInterface {..._props} />;
 }
 
 export function CategoriesPanel(_props: AdminPanelProps) {
@@ -536,74 +469,7 @@ export function AttributesPanel(_props: AdminPanelProps) {
 }
 
 export function InventoryPanel(_props: AdminPanelProps) {
-  type Inventory = Record<string, unknown> & {
-    category?: { name?: string };
-    stock?: number;
-    isAvailable?: boolean;
-  };
-  return (
-    <ResourcePanel<Inventory>
-      title="Inventory"
-      description="Review live stock at the variant level. Stock changes are recorded through the inventory movement API and reflected in this view."
-      endpoint="/api/inventory"
-      rowKey={(item) => String(item.variantId)}
-      emptyTitle="No inventory records found"
-      emptyDescription="Variant stock records will appear here once products are created."
-      columns={[
-        {
-          key: "product",
-          heading: "Product",
-          render: (item) => (
-            <div>
-              <p className="font-semibold text-slate-900">
-                {valueText(item.productName)}
-              </p>
-              <p className="mt-1 text-xs text-slate-400">
-                {valueText(item.productId as string)}
-              </p>
-            </div>
-          ),
-        },
-        {
-          key: "variant",
-          heading: "Variant",
-          render: (item) => valueText(item.variantName),
-        },
-        {
-          key: "sku",
-          heading: "SKU",
-          render: (item) => (
-            <span className="font-mono text-xs">{valueText(item.sku)}</span>
-          ),
-        },
-        {
-          key: "category",
-          heading: "Category",
-          render: (item) => valueText(item.category?.name),
-        },
-        {
-          key: "stock",
-          heading: "Stock",
-          render: (item) => (
-            <span className="font-bold tabular-nums text-slate-900">
-              {Number(item.stock ?? 0).toLocaleString()}
-            </span>
-          ),
-        },
-        {
-          key: "availability",
-          heading: "Status",
-          render: (item) => (
-            <StatusPill
-              active={Boolean(item.isAvailable)}
-              yes="Available"
-              no="Out of stock"
-            />
-          ),
-        },
-      ]}
-    />
-  );
+  return <InventoryInterface />;
 }
 
 export function OrdersPanel(_props: AdminPanelProps) {

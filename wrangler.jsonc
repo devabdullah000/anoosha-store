@@ -45,6 +45,14 @@
       "remote": true,
     },
   ],
+  // Cloudflare R2 - Live product images bucket
+  "r2_buckets": [
+    {
+      "binding": "IMAGES_BUCKET",
+      "bucket_name": "anoosha-store-images",
+      "remote": true
+    }
+  ]
   /**
    * Smart Placement
    * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
