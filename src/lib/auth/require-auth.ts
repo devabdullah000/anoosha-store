@@ -16,7 +16,12 @@ import {
  * from their separate signed HttpOnly cookie and do not create D1 auth rows.
  */
 export async function getCurrentUser() {
-  const betterAuthSession = await getAuth().api.getSession({ headers: await headers() });
+  const betterAuthSession = await getAuth().api.getSession({ 
+    headers: await headers(),
+    query: {
+    disableCookieCache: true,
+  },
+  });
   if (betterAuthSession?.user) return betterAuthSession.user;
 
   const cookieStore = await cookies();

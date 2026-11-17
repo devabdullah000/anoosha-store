@@ -137,3 +137,6 @@ export const footer_bottom_text = {
   country: "Pakistan",
   closingLine: "Made for everyday connections and gaming experiences.",
 };
+
+export const ADMIN_PANEL_MAIN_TEXT = "Anoosha Store · Administration";
+export const ICON_CLASS = "h-5 w-5 text-black";

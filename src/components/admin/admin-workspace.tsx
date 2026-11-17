@@ -2,41 +2,49 @@
 
 import { useEffect, useState } from "react";
 import {
+  LuLayoutGrid,
+  LuPackage,
+  LuFolder,
+  LuCirclePlus,
+  LuWarehouse,
+  LuFileText,
+  LuSettings,
+} from "react-icons/lu";
+import {
   ADMIN_NAVIGATION,
   ADMIN_NAVIGATE_EVENT,
   type AdminSectionId,
 } from "./admin-navigation";
+import { ICON_CLASS } from "@/lib/constants";
 
 function NavIcon({ name, active = false }: { name: string; active?: boolean }) {
-  const common = {
-    className: `h-[18px] w-[18px] shrink-0 ${active ? "text-indigo-700" : "text-slate-400"}`,
-    viewBox: "0 0 24 24",
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 1.7,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-    "aria-hidden": true as const,
-  };
 
-  switch (name) {
-    case "overview":
-      return <svg {...common}><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg>;
-    case "products":
-      return <svg {...common}><path d="m4 8 8-4 8 4-8 4-8-4Z"/><path d="m4 8 8 4 8-4M4 8v8l8 4 8-4V8M12 12v8"/></svg>;
-    case "categories":
-      return <svg {...common}><path d="M4 5.5h6l2 2h8v11H4z"/><path d="M4 8h16"/></svg>;
-    case "attributes":
-      return <svg {...common}><circle cx="12" cy="12" r="8.5"/><path d="M8 12h8M12 8v8"/></svg>;
-    case "inventory":
-      return <svg {...common}><path d="M4 7h16v13H4zM8 7V4h8v3M8 11h8M8 15h5"/></svg>;
-    case "orders":
-      return <svg {...common}><path d="M6 3.5h9l3 3V20H6z"/><path d="M14.5 3.5V7H18M9 11h6M9 15h6"/></svg>;
-    case "settings":
-      return <svg {...common}><circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1.1a1.7 1.7 0 1 1-2.4 2.4l-.1-.1a1.7 1.7 0 0 0-2.9 1.2v.2a1.7 1.7 0 1 1-3.4 0v-.2A1.7 1.7 0 0 0 7.8 17l-.1.1a1.7 1.7 0 1 1-2.4-2.4l.1-.1a1.7 1.7 0 0 0-1.2-2.9h-.2a1.7 1.7 0 1 1 0-3.4h.2A1.7 1.7 0 0 0 5.4 5.8l-.1-.1a1.7 1.7 0 1 1 2.4-2.4l.1.1a1.7 1.7 0 0 0 2.9-1.2v-.2a1.7 1.7 0 1 1 3.4 0v.2A1.7 1.7 0 0 0 17 3.4l.1-.1a1.7 1.7 0 1 1 2.4 2.4l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.2a1.7 1.7 0 1 1 0 3.4h-.2a1.7 1.7 0 0 0-1.2 2.9Z" transform="translate(-1 -1) scale(1.08)"/></svg>;
-    default:
-      return null;
-  }
+switch (name) {
+  case "overview":
+    return <LuLayoutGrid className={ICON_CLASS} />;
+
+  case "products":
+    return <LuPackage className={ICON_CLASS} />;
+
+  case "categories":
+    return <LuFolder className={ICON_CLASS} />;
+
+  case "attributes":
+    return <LuCirclePlus className={ICON_CLASS} />;
+
+  case "inventory":
+    return <LuWarehouse className={ICON_CLASS} />;
+
+  case "orders":
+    return <LuFileText className={ICON_CLASS} />;
+
+  case "settings":
+    return <LuSettings className={ICON_CLASS} />;
+
+  default:
+    return null;
+}
+
 }
 
 export function AdminWorkspace({ adminEmail }: { adminEmail: string }) {
