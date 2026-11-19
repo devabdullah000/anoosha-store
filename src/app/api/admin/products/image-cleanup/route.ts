@@ -1,5 +1,9 @@
 import { requireAdminServer } from "@/lib/auth/require-admin-server";
-import { errorResponse, serverError, successResponse } from "@/lib/server/api-response";
+import {
+  errorResponse,
+  serverError,
+  successResponse,
+} from "@/lib/server/api-response";
 import {
   imageEnvironment,
   requireImagePurgeConfig,
@@ -24,7 +28,8 @@ export async function POST() {
       result.warnings.length ? { warnings: result.warnings } : undefined,
     );
   } catch (error) {
-    if (error instanceof ImageConfigurationError) return errorResponse(error.message, 500);
+    if (error instanceof ImageConfigurationError)
+      return errorResponse(error.message, 500);
     return serverError("products image cleanup retry", error);
   }
 }

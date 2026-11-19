@@ -1,3 +1,5 @@
+// Admin config and constants file. All constants and config related to admin panel is described in this file.
+// These are programatic constants and other displayed text for admin panel is still described in constants.ts file
 "use client";
 
 import type { ComponentType } from "react";

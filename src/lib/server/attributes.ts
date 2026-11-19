@@ -22,19 +22,7 @@ import {
   errorResponse,
   serverError,
 } from "./api-response";
-
-type AttributeValueType = "text" | "number" | "boolean" | "color";
-type AttributeDisplayType = "dropdown" | "button" | "color";
-
-type AttributeRecord = {
-  id: string;
-  name: string;
-  valueType: string;
-  unit: string | null;
-  displayType: string;
-  createdAt: string;
-  updatedAt: string;
-};
+import type { AttributeValueType,AttributeDisplayType,AttributeRecord } from "./server-types";
 
 function isObject(
   value: unknown,

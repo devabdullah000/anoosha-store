@@ -1,45 +1,39 @@
-
 "use client";
 
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
-import {
-  NAVBAR_CONFIG,
-  NAVBAR_TEXT,
-} from "../../lib/constants";
+import { NAVBAR_CONFIG, NAVBAR_TEXT } from "../../lib/constants";
 
 import { authClient } from "@/lib/auth-client";
 import { clearAccessTokenCache } from "@/lib/auth/access-token";
 import { clearAuthProfile } from "@/store/auth-slice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { ADMIN_NAVIGATION, requestAdminNavigation } from "@/components/admin/admin-navigation";
+import {
+  ADMIN_NAVIGATION,
+  requestAdminNavigation,
+} from "@/components/admin/admin-navigation";
 
 export function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
   const dispatch = useAppDispatch();
 
-  const persistedProfile = useAppSelector(
-    (state) => state.auth.profile
-  );
+  const persistedProfile = useAppSelector((state) => state.auth.profile);
 
-  const authStatus = useAppSelector(
-    (state) => state.auth.status
-  );
+  const authStatus = useAppSelector((state) => state.auth.status);
 
   // Do not display persisted authentication data before
   // AuthBootstrap validates the server-side session.
-  const profile =
-    authStatus === "authenticated" ? persistedProfile : null;
+  const profile = authStatus === "authenticated" ? persistedProfile : null;
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const [logoutError, setLogoutError] = useState("");
 
-  function displayEmail(email : string) {
+  function displayEmail(email: string) {
     return email.length > NAVBAR_CONFIG.emailMaxLength
       ? `${email.slice(0, NAVBAR_CONFIG.emailPreviewLength)}...`
       : email;
@@ -80,14 +74,10 @@ export function Navbar() {
 
       router.replace(NAVBAR_CONFIG.homeHref);
       router.refresh();
-
     } catch (cause) {
       setLogoutError(
-        cause instanceof Error
-          ? cause.message
-          : NAVBAR_TEXT.logoutError
+        cause instanceof Error ? cause.message : NAVBAR_TEXT.logoutError,
       );
-
     } finally {
       setSigningOut(false);
     }
@@ -98,18 +88,14 @@ export function Navbar() {
 
   return (
     <header className="sticky top-3 z-40 mx-3 mt-3 sm:mx-5 lg:mx-8">
-
       {/* Gradient border wrapper */}
       <div className="rounded-2xl bg-gradient-to-r from-pink-500 via-blue-500 to-cyan-400 p-[1px] shadow-[0_4px_20px_rgba(15,23,42,0.045)]">
-
         <nav
           aria-label={NAVBAR_TEXT.ariaLabel}
           className="overflow-visible rounded-[15px] bg-white/95 backdrop-blur-xl"
         >
-
           {/* MAIN NAVBAR */}
           <div className="mx-auto grid min-h-[68px] max-w-[1440px] grid-cols-[1fr_auto] items-center gap-3 px-3 sm:px-5 lg:grid-cols-[1fr_auto_1fr] lg:px-7">
-
             {/* LEFT: Store logo */}
             <Link
               href={NAVBAR_CONFIG.logoHref}
@@ -148,7 +134,6 @@ export function Navbar() {
 
             {/* RIGHT: Login / Account + Mobile menu */}
             <div className="order-2 flex min-w-0 items-center justify-end gap-2 lg:order-3">
-
               {/* Login / Account */}
               {!profile ? (
                 authStatus === "loading" ? (
@@ -255,9 +240,7 @@ export function Navbar() {
               <button
                 type="button"
                 aria-label={
-                  mobileOpen
-                    ? NAVBAR_TEXT.closeMenu
-                    : NAVBAR_TEXT.openMenu
+                  mobileOpen ? NAVBAR_TEXT.closeMenu : NAVBAR_TEXT.openMenu
                 }
                 aria-expanded={mobileOpen}
                 onClick={() => {
@@ -269,9 +252,7 @@ export function Navbar() {
                 <span className="flex w-[18px] flex-col gap-[5px]">
                   <span
                     className={`h-[1.7px] w-full rounded-full bg-current transition-all ${
-                      mobileOpen
-                        ? "translate-y-[6.7px] rotate-45"
-                        : ""
+                      mobileOpen ? "translate-y-[6.7px] rotate-45" : ""
                     }`}
                   />
 
@@ -283,9 +264,7 @@ export function Navbar() {
 
                   <span
                     className={`h-[1.7px] w-full rounded-full bg-current transition-all ${
-                      mobileOpen
-                        ? "-translate-y-[6.7px] -rotate-45"
-                        : ""
+                      mobileOpen ? "-translate-y-[6.7px] -rotate-45" : ""
                     }`}
                   />
                 </span>
@@ -297,7 +276,6 @@ export function Navbar() {
           {mobileOpen && (
             <div className="max-h-[calc(100dvh-110px)] overflow-y-auto overscroll-contain border-t border-slate-100 px-4 py-4 lg:hidden">
               <div className="mx-auto flex max-w-[1440px] flex-col gap-2 pb-2">
-
                 {/* Full email appears first */}
                 {profile && (
                   <div className="mb-2 rounded-xl border border-slate-200 bg-slate-50 p-3">
@@ -323,16 +301,11 @@ export function Navbar() {
                       onClick={logout}
                       className="mt-3 flex w-full items-center gap-2 border-t border-slate-200 pt-3 text-left text-sm font-semibold text-red-600 transition hover:text-red-700 disabled:opacity-50"
                     >
-                      {signingOut
-                        ? NAVBAR_TEXT.signingOut
-                        : NAVBAR_TEXT.logout}
+                      {signingOut ? NAVBAR_TEXT.signingOut : NAVBAR_TEXT.logout}
                     </button>
 
                     {logoutError && (
-                      <p
-                        role="alert"
-                        className="mt-2 text-xs text-red-600"
-                      >
+                      <p role="alert" className="mt-2 text-xs text-red-600">
                         {logoutError}
                       </p>
                     )}

@@ -1,6 +1,10 @@
 /** Shared, serializable product DTOs. All prices are integer PKR paisa. */
 export type ProductAttributeValue =
-  | { attributeId: string; kind: "dropdown"; options: { label: string; quantity: number }[] }
+  | {
+      attributeId: string;
+      kind: "dropdown";
+      options: { label: string; quantity: number }[];
+    }
   | { attributeId: string; kind: "button" | "color"; values: string[] };
 
 export type ProductImage = {

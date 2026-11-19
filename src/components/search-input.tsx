@@ -63,10 +63,7 @@ export default function SearchInput<T>({
       try {
         onLoadingChange?.(true);
 
-        const url = new URL(
-          apiUrl,
-          window.location.origin,
-        );
+        const url = new URL(apiUrl, window.location.origin);
 
         const normalizedQuery = query.trim();
 
@@ -176,10 +173,7 @@ export default function SearchInput<T>({
           aria-hidden="true"
         >
           <circle cx="11" cy="11" r="7" />
-          <path
-            d="m16 16 4 4"
-            strokeLinecap="round"
-          />
+          <path d="m16 16 4 4" strokeLinecap="round" />
         </svg>
       </div>
 

@@ -1,13 +1,6 @@
-export type AttributeValueType =
-  | "text"
-  | "number"
-  | "boolean"
-  | "color";
+export type AttributeValueType = "text" | "number" | "boolean" | "color";
 
-export type AttributeDisplayType =
-  | "dropdown"
-  | "button"
-  | "color";
+export type AttributeDisplayType = "dropdown" | "button" | "color";
 
 export type Attribute = {
   id: string;

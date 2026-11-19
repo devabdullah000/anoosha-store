@@ -48,13 +48,11 @@ import {
   imageUrl,
   uploadImages,
   validateImageFiles,
-  type ImageCleanupJob,
 } from "./product-images";
-
+import type { SqlQuery, ToSQL } from "./server-types";
+import type { ImageCleanupJob } from "./server-types";
+//route level constants
 const now = sql`CURRENT_TIMESTAMP`;
-
-type SqlQuery = { sql: string; params: unknown[] };
-type ToSQL = { toSQL: () => SqlQuery };
 
 /** All statements are compiled by Drizzle; D1 executes the batch atomically. */
 async function atomic(queries: ToSQL[]) {
@@ -81,8 +79,10 @@ const relationError = (error: unknown) =>
   );
 const isInputError = (error: unknown) =>
   error instanceof ProductInputError || error instanceof ImageInputError;
+
 function handleMutationError(operation: string, error: unknown) {
-  if (error instanceof ImageConfigurationError) return errorResponse(error.message, 500);
+  if (error instanceof ImageConfigurationError)
+    return errorResponse(error.message, 500);
   if (isInputError(error)) return errorResponse((error as Error).message);
   if (uniqueError(error))
     return errorResponse(
@@ -492,6 +492,7 @@ function variantInsert(
     stock: draft.stock,
   });
 }
+
 function variantUpdate(db: ReturnType<typeof getDb>, planned: PlannedVariant) {
   const { draft, id } = planned;
   return db
@@ -544,9 +545,12 @@ function insertCleanupJobs(
 ): ToSQL[] {
   const queries: ToSQL[] = [];
   for (let start = 0; start < jobs.length; start += 25) {
-    queries.push(db.insert(productImageCleanupJobs)
-      .values(jobs.slice(start, start + 25))
-      .onConflictDoNothing({ target: productImageCleanupJobs.storageKey }));
+    queries.push(
+      db
+        .insert(productImageCleanupJobs)
+        .values(jobs.slice(start, start + 25))
+        .onConflictDoNothing({ target: productImageCleanupJobs.storageKey }),
+    );
   }
   return queries;
 }
@@ -560,8 +564,13 @@ async function completeImageCleanup(
     const result = await processImageCleanupJobs(jobs, config);
     return result.warnings;
   } catch (error) {
-    console.error("Cleanup after product commit failed; tasks remain in D1", error);
-    return ["Image cleanup is pending. Product changes were saved; use Retry image cleanup from Products."];
+    console.error(
+      "Cleanup after product commit failed; tasks remain in D1",
+      error,
+    );
+    return [
+      "Image cleanup is pending. Product changes were saved; use Retry image cleanup from Products.",
+    ];
   }
 }
 
@@ -727,8 +736,14 @@ export async function createProduct(request: Request) {
           "R2 compensation after database failure did not complete",
           cleanupError,
         );
-        try { await queueOrphanImageCleanup([...createdUploads.values()]); }
-        catch (queueError) { console.error("Could not persist orphan-upload cleanup tasks", queueError); }
+        try {
+          await queueOrphanImageCleanup([...createdUploads.values()]);
+        } catch (queueError) {
+          console.error(
+            "Could not persist orphan-upload cleanup tasks",
+            queueError,
+          );
+        }
       }
     }
     return handleMutationError("create", error);
@@ -758,21 +773,25 @@ export async function updateProduct(productId: string, request: Request) {
     // Never accept stock edits through PATCH, even from forged API requests.
     // New variants added to an existing product begin at zero; their initial
     // movement is recorded and future adjustments belong to Inventory.
-    const activeStockByVariant = new Map(current.variants.map((v) => [v.id, v.stock]));
+    const activeStockByVariant = new Map(
+      current.variants.map((v) => [v.id, v.stock]),
+    );
     for (const [index, incoming] of draft.variants.entries()) {
       if (!incoming.id) {
         if (incoming.stock !== 0) {
           throw new ProductInputError(
             `New variant ${index + 1} must start with stock 0 during product updates. ` +
-            "Save the variant, then add stock through Inventory.",
+              "Save the variant, then add stock through Inventory.",
           );
         }
-      } else if (activeStockByVariant.has(incoming.id) &&
-                 incoming.stock !== activeStockByVariant.get(incoming.id)) {
+      } else if (
+        activeStockByVariant.has(incoming.id) &&
+        incoming.stock !== activeStockByVariant.get(incoming.id)
+      ) {
         throw new ProductInputError(
           `Stock for ${incoming.name} cannot be changed in Products. ` +
-          "Open Inventory to make a stock adjustment. " +
-          "If Inventory changed while this editor was open, reopen the product to refresh its stock.",
+            "Open Inventory to make a stock adjustment. " +
+            "If Inventory changed while this editor was open, reopen the product to refresh its stock.",
         );
       }
     }
@@ -1056,8 +1075,14 @@ export async function updateProduct(productId: string, request: Request) {
           "R2 compensation after database failure did not complete",
           cleanupError,
         );
-        try { await queueOrphanImageCleanup([...createdUploads.values()]); }
-        catch (queueError) { console.error("Could not persist orphan-upload cleanup tasks", queueError); }
+        try {
+          await queueOrphanImageCleanup([...createdUploads.values()]);
+        } catch (queueError) {
+          console.error(
+            "Could not persist orphan-upload cleanup tasks",
+            queueError,
+          );
+        }
       }
     }
     return handleMutationError("update", error);

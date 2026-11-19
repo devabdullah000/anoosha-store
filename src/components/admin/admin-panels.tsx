@@ -37,22 +37,19 @@ export function OverviewPanel({ adminEmail, onNavigate }: AdminPanelProps) {
     {
       id: "categories",
       label: "Categories",
-      description:
-        "Organize products into searchable storefront categories.",
+      description: "Organize products into searchable storefront categories.",
       icon: LuLayers,
     },
     {
       id: "attributes",
       label: "Attributes",
-      description:
-        "Manage reusable variant attributes and their values.",
+      description: "Manage reusable variant attributes and their values.",
       icon: LuSlidersHorizontal,
     },
     {
       id: "inventory",
       label: "Inventory",
-      description:
-        "Review live variant stock and stock movement status.",
+      description: "Review live variant stock and stock movement status.",
       icon: LuWarehouse,
     },
   ];
@@ -114,10 +111,7 @@ export function OverviewPanel({ adminEmail, onNavigate }: AdminPanelProps) {
                 className="group h-full w-full rounded-[15px] bg-white p-5 text-left transition duration-200 hover:bg-white/95"
               >
                 <span className="grid h-11 w-11 place-items-center rounded-xl bg-indigo-50 text-lg font-semibold text-indigo-700 transition group-hover:bg-indigo-600 group-hover:text-white">
-                  <Icon
-                    className="h-6 w-6"
-                    aria-hidden="true"
-                  />
+                  <Icon className="h-6 w-6" aria-hidden="true" />
                 </span>
 
                 <span className="mt-5 block text-base font-bold text-slate-900">
@@ -145,7 +139,7 @@ export function ProductsPanel(_props: AdminPanelProps) {
 }
 
 export function CategoriesPanel(_props: AdminPanelProps) {
-  return <CategoriesInterface {..._props} />; 
+  return <CategoriesInterface {..._props} />;
 }
 
 export function AttributesPanel(_props: AdminPanelProps) {
@@ -188,5 +182,5 @@ export function OrdersPanel(_props: AdminPanelProps) {
 }
 
 export function SettingsPanel({ adminEmail }: AdminPanelProps) {
-    return <SettingsInterface adminEmail={adminEmail} />;
+  return <SettingsInterface adminEmail={adminEmail} />;
 }

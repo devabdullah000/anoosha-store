@@ -89,7 +89,7 @@ export default function ConfirmationPopup({
       setErrorMessage(
         error instanceof Error
           ? error.message
-          : "The operation could not be completed. Please try again."
+          : "The operation could not be completed. Please try again.",
       );
     } finally {
       setSubmitting(false);

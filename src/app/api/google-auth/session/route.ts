@@ -15,12 +15,15 @@ export async function GET(request: NextRequest) {
   const env = rawEnv as GoogleAuthEnv;
   const audience = getGoogleSessionAudience(env);
   const requestOrigin = new URL(request.url).origin;
-  const profile = requestOrigin === audience
-    ? await verifyGoogleAppSession(token, env.GOOGLE_SESSION_SECRET, audience)
-    : null;
+  const profile =
+    requestOrigin === audience
+      ? await verifyGoogleAppSession(token, env.GOOGLE_SESSION_SECRET, audience)
+      : null;
 
   return NextResponse.json(
-    { profile: profile ? { email: profile.email, role: "user" as const } : null },
+    {
+      profile: profile ? { email: profile.email, role: "user" as const } : null,
+    },
     { headers: { "Cache-Control": "no-store, private" } },
   );
 }

@@ -145,12 +145,16 @@ export default function AdminPasswordReset({
         email,
       });
       if (error) {
-        throw new Error(error.message || "Unable to send the verification code.");
+        throw new Error(
+          error.message || "Unable to send the verification code.",
+        );
       }
 
       setOtp("");
       setOtpSent(true);
-      toast.success("If this admin account exists, a reset code has been sent to its email.");
+      toast.success(
+        "If this admin account exists, a reset code has been sent to its email.",
+      );
     } catch (error) {
       showError(
         error instanceof Error
@@ -196,13 +200,17 @@ export default function AdminPasswordReset({
       setConfirmPassword("");
       setOtp("");
       setOtpSent(false);
-      toast.success("Admin password updated. Sign in again with the new password.");
+      toast.success(
+        "Admin password updated. Sign in again with the new password.",
+      );
 
       // Full navigation clears client-side session caches in this tab.
       window.location.replace("/login");
     } catch (error) {
       showError(
-        error instanceof Error ? error.message : "Unable to reset the password.",
+        error instanceof Error
+          ? error.message
+          : "Unable to reset the password.",
       );
     } finally {
       setBusy(false);
@@ -216,8 +224,8 @@ export default function AdminPasswordReset({
           Change administrator password
         </h3>
         <p className="mt-1 text-sm leading-6 text-slate-500">
-          Set a new password and confirm it with the code sent to your registered
-          admin email. All existing admin sessions will be revoked.
+          Set a new password and confirm it with the code sent to your
+          registered admin email. All existing admin sessions will be revoked.
         </p>
 
         <div className="mt-5 rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 text-sm text-slate-600">

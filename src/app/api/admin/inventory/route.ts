@@ -1,6 +1,9 @@
 import { requireAdminServer } from "@/lib/auth/require-admin-server";
 import { errorResponse, serverError } from "@/lib/server/api-response";
-import { getInventoryHistory, postInventoryDocument } from "../../../../lib/server/inventory";
+import {
+  getInventoryHistory,
+  postInventoryDocument,
+} from "../../../../lib/server/inventory";
 
 export const dynamic = "force-dynamic";
 
@@ -24,9 +27,19 @@ export async function POST(request: Request) {
   }
 }
 
-export function PATCH() { return errorResponse("Inventory history cannot be updated."); }
-export function PUT() { return errorResponse("Inventory history cannot be updated."); }
-export function DELETE() { return errorResponse("Inventory history cannot be deleted."); }
+export function PATCH() {
+  return errorResponse("Inventory history cannot be updated.");
+}
+export function PUT() {
+  return errorResponse("Inventory history cannot be updated.");
+}
+export function DELETE() {
+  return errorResponse("Inventory history cannot be deleted.");
+}
 
-export function OPTIONS() { return errorResponse("Unsupported inventory operation.", 400); }
-export function HEAD() { return errorResponse("Unsupported inventory operation.", 400); }
+export function OPTIONS() {
+  return errorResponse("Unsupported inventory operation.", 400);
+}
+export function HEAD() {
+  return errorResponse("Unsupported inventory operation.", 400);
+}

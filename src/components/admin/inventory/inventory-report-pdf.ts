@@ -8,7 +8,10 @@
  * recipients can use software that ignores or removes PDF restrictions.
  */
 
-import type { InventoryMovementRow, InventoryOperationType } from "./inventory-types";
+import type {
+  InventoryMovementRow,
+  InventoryOperationType,
+} from "./inventory-types";
 
 export type InventoryReportFilters = {
   fromDate: string;
@@ -44,10 +47,15 @@ function pdfText(value: unknown): string {
 }
 
 function formatMovementDate(value: string) {
-  const instant = new Date(value.includes("T") ? value : `${value.replace(" ", "T")}Z`);
+  const instant = new Date(
+    value.includes("T") ? value : `${value.replace(" ", "T")}Z`,
+  );
   return Number.isNaN(instant.getTime())
     ? value
-    : instant.toLocaleString("en-PK", { dateStyle: "short", timeStyle: "short" });
+    : instant.toLocaleString("en-PK", {
+        dateStyle: "short",
+        timeStyle: "short",
+      });
 }
 
 function safeFilenameDate(value: string) {
@@ -103,9 +111,19 @@ export async function downloadInventoryReportPdf({
   const yTableHeader = 168;
   let currentY = yTableHeader;
 
-  const purchases = rows.reduce((sum, item) => sum + (item.type === "purchase" ? item.qtyDiff : 0), 0);
-  const increases = rows.reduce((sum, item) => sum + (item.type === "increase" ? item.qtyDiff : 0), 0);
-  const decreases = rows.reduce((sum, item) => sum + (item.type === "decrease" ? Math.abs(item.qtyDiff) : 0), 0);
+  const purchases = rows.reduce(
+    (sum, item) => sum + (item.type === "purchase" ? item.qtyDiff : 0),
+    0,
+  );
+  const increases = rows.reduce(
+    (sum, item) => sum + (item.type === "increase" ? item.qtyDiff : 0),
+    0,
+  );
+  const decreases = rows.reduce(
+    (sum, item) =>
+      sum + (item.type === "decrease" ? Math.abs(item.qtyDiff) : 0),
+    0,
+  );
 
   function drawTop() {
     doc.setFillColor(16, 24, 40);
@@ -128,25 +146,37 @@ export async function downloadInventoryReportPdf({
     doc.setFont("helvetica", "normal");
     doc.text(pdfText(`${filters.fromDate} to ${filters.toDate}`), left, 90);
     doc.text(
-      pdfText(filters.type === "all" ? "All activities" : typeNames[filters.type]),
-      left + 220, 90,
+      pdfText(
+        filters.type === "all" ? "All activities" : typeNames[filters.type],
+      ),
+      left + 220,
+      90,
     );
     const productLabel = filters.products.length
       ? `${filters.products.length} selected: ${filters.products.map((p) => p.name).join(", ")}`
       : "All products";
-    const shownProduct = doc.splitTextToSize(pdfText(productLabel), 280).slice(0, 2);
+    const shownProduct = doc
+      .splitTextToSize(pdfText(productLabel), 280)
+      .slice(0, 2);
     doc.text(shownProduct, left + 420, 90);
 
     doc.setTextColor(95, 107, 128);
     doc.setFontSize(8);
-    doc.text(pdfText(`Search: ${filters.search || "None"}`.slice(0, 150)), left, 115);
-    doc.text(`Generated: ${generatedAt.toLocaleString("en-PK")}`, right, 115, { align: "right" });
+    doc.text(
+      pdfText(`Search: ${filters.search || "None"}`.slice(0, 150)),
+      left,
+      115,
+    );
+    doc.text(`Generated: ${generatedAt.toLocaleString("en-PK")}`, right, 115, {
+      align: "right",
+    });
     doc.setFont("helvetica", "bold");
     doc.setTextColor(37, 55, 86);
     doc.setFontSize(9);
     doc.text(
       `Movements: ${rows.length}    Purchases: +${purchases}    Manual increases: +${increases}    Manual decreases: -${decreases}`,
-      left, 136,
+      left,
+      136,
     );
 
     doc.setFillColor(238, 242, 250);
@@ -168,8 +198,13 @@ export async function downloadInventoryReportPdf({
     const product = item.hasVariants
       ? `${item.productName} / ${item.variantName}\nSKU: ${item.sku}`
       : `${item.productName}\nSKU: ${item.sku}`;
-    const notes = [item.reference || "-", item.documentNote || item.note || "", item.createdBy || ""]
-      .filter(Boolean).join("\n");
+    const notes = [
+      item.reference || "-",
+      item.documentNote || item.note || "",
+      item.createdBy || "",
+    ]
+      .filter(Boolean)
+      .join("\n");
     const values = [
       product,
       typeNames[item.type],
@@ -185,7 +220,8 @@ export async function downloadInventoryReportPdf({
     // Preserve complete line information rather than truncating invoice notes.
     const cellLines = values.map((value, cellIndex) => {
       const wrapped = doc.splitTextToSize(
-        pdfText(value), tableColumns[cellIndex].width - 12,
+        pdfText(value),
+        tableColumns[cellIndex].width - 12,
       ) as string[];
       return wrapped.length ? wrapped : [""];
     });
@@ -207,11 +243,20 @@ export async function downloadInventoryReportPdf({
     for (let c = 0; c < tableColumns.length; c++) {
       const column = tableColumns[c];
       const numeric = c >= 2 && c <= 4;
-      doc.setTextColor(c === 3 && item.qtyDiff < 0 ? 170 : 39, c === 3 && item.qtyDiff < 0 ? 45 : 50, 65);
+      doc.setTextColor(
+        c === 3 && item.qtyDiff < 0 ? 170 : 39,
+        c === 3 && item.qtyDiff < 0 ? 45 : 50,
+        65,
+      );
       doc.setFont("helvetica", c === 0 ? "bold" : "normal");
-      doc.text(cellLines[c], numeric ? x + column.width - 6 : x + 6, currentY + 13, {
-        align: numeric ? "right" : "left",
-      });
+      doc.text(
+        cellLines[c],
+        numeric ? x + column.width - 6 : x + 6,
+        currentY + 13,
+        {
+          align: numeric ? "right" : "left",
+        },
+      );
       x += column.width;
     }
     currentY += rowHeight;
@@ -225,8 +270,14 @@ export async function downloadInventoryReportPdf({
     doc.setFont("helvetica", "normal");
     doc.setFontSize(8);
     doc.setTextColor(109, 120, 140);
-    doc.text("Inventory audit | Editing restricted in compatible PDF viewers", left, pageHeight - 21);
-    doc.text(`Page ${p} of ${pages}`, right, pageHeight - 21, { align: "right" });
+    doc.text(
+      "Inventory audit | Editing restricted in compatible PDF viewers",
+      left,
+      pageHeight - 21,
+    );
+    doc.text(`Page ${p} of ${pages}`, right, pageHeight - 21, {
+      align: "right",
+    });
   }
 
   const filename = `anoosha-inventory-${safeFilenameDate(filters.fromDate)}-to-${safeFilenameDate(filters.toDate)}.pdf`;

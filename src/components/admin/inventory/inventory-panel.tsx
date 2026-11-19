@@ -8,12 +8,18 @@ import type { DataTableColumn } from "@/components/data-table";
 import Pagination from "@/components/pagination";
 import InventoryForm from "./inventory-form";
 import InventoryProductFilter from "./inventory-product-filter";
-import type { InventoryMovementRow, InventoryOperationType } from "./inventory-types";
+import type {
+  InventoryMovementRow,
+  InventoryOperationType,
+} from "./inventory-types";
 import { downloadInventoryReportPdf } from "./inventory-report-pdf";
 import type { InventoryReportFilters } from "./inventory-report-pdf";
 
 type ProductFilter = { id: string; name: string };
-type ReportRequest = InventoryReportFilters & { requestId: number; tzOffsetMinutes: number };
+type ReportRequest = InventoryReportFilters & {
+  requestId: number;
+  tzOffsetMinutes: number;
+};
 
 type InventoryPage = {
   success: boolean;
@@ -36,7 +42,11 @@ function isInventoryPage(value: unknown): value is InventoryPage {
   if (!("success" in value) || typeof value.success !== "boolean") {
     return false;
   }
-  if ("message" in value && value.message !== undefined && typeof value.message !== "string") {
+  if (
+    "message" in value &&
+    value.message !== undefined &&
+    typeof value.message !== "string"
+  ) {
     return false;
   }
   return true;
@@ -195,7 +205,9 @@ async function fetchInventoryPage(
   }
   const payload = rawPayload;
   if (!response.ok || payload.success !== true) {
-    throw new Error(payload.message || "Unable to generate the inventory report.");
+    throw new Error(
+      payload.message || "Unable to generate the inventory report.",
+    );
   }
   if (
     !Array.isArray(payload.data) ||
@@ -241,7 +253,9 @@ export default function InventoryInterface() {
 
   const updateFrom = (value: string) => {
     if (value && toDate && value > toDate) {
-      toast.error("From date cannot be after To date. Choose an earlier date or change To date first.");
+      toast.error(
+        "From date cannot be after To date. Choose an earlier date or change To date first.",
+      );
       return;
     }
     setFromDate(value);
@@ -250,7 +264,9 @@ export default function InventoryInterface() {
 
   const updateTo = (value: string) => {
     if (value && fromDate && value < fromDate) {
-      toast.error("To date cannot be earlier than From date. Choose a later date or change From date first.");
+      toast.error(
+        "To date cannot be earlier than From date. Choose a later date or change From date first.",
+      );
       return;
     }
     setToDate(value);
@@ -267,11 +283,15 @@ export default function InventoryInterface() {
 
   const generateReport = () => {
     if (!fromDate || !toDate) {
-      toast.error("Select both From date and To date before generating the inventory report.");
+      toast.error(
+        "Select both From date and To date before generating the inventory report.",
+      );
       return;
     }
     if (fromDate > toDate) {
-      toast.error("From date cannot be later than To date. Correct the date range and try again.");
+      toast.error(
+        "From date cannot be later than To date. Correct the date range and try again.",
+      );
       return;
     }
     setRows([]);
@@ -298,7 +318,12 @@ export default function InventoryInterface() {
     setLoading(true);
     void (async () => {
       try {
-        const result = await fetchInventoryPage(report, page, pageSize, controller.signal);
+        const result = await fetchInventoryPage(
+          report,
+          page,
+          pageSize,
+          controller.signal,
+        );
         if (controller.signal.aborted) return;
         setRows(result.data);
         setTotal(result.pagination.total);
@@ -308,7 +333,11 @@ export default function InventoryInterface() {
         setRows([]);
         setTotal(0);
         setTotalPages(1);
-        toast.error(error instanceof Error ? error.message : "Unable to generate the inventory report.");
+        toast.error(
+          error instanceof Error
+            ? error.message
+            : "Unable to generate the inventory report.",
+        );
       } finally {
         if (!controller.signal.aborted) setLoading(false);
       }
@@ -326,7 +355,7 @@ export default function InventoryInterface() {
       if (expectedTotal > MAX_PDF_ROWS) {
         throw new Error(
           `This report contains ${expectedTotal.toLocaleString()} movements. ` +
-          `For a PDF export, narrow your date range to at most ${MAX_PDF_ROWS.toLocaleString()} rows.`,
+            `For a PDF export, narrow your date range to at most ${MAX_PDF_ROWS.toLocaleString()} rows.`,
         );
       }
 
@@ -340,7 +369,11 @@ export default function InventoryInterface() {
         reportRows = [];
         const totalApiPages = Math.ceil(expectedTotal / PDF_PAGE_SIZE);
         for (let nextPage = 1; nextPage <= totalApiPages; nextPage++) {
-          const result = await fetchInventoryPage(report, nextPage, PDF_PAGE_SIZE);
+          const result = await fetchInventoryPage(
+            report,
+            nextPage,
+            PDF_PAGE_SIZE,
+          );
           if (result.pagination.total !== expectedTotal) {
             throw new Error(
               "Inventory changed since this report was generated. Generate the report again before downloading.",
@@ -363,9 +396,15 @@ export default function InventoryInterface() {
         filters: report,
         generatedAt: new Date(),
       });
-      toast.success(`Downloaded inventory report (${reportRows.length} movements).`);
+      toast.success(
+        `Downloaded inventory report (${reportRows.length} movements).`,
+      );
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Unable to download inventory report.");
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Unable to download inventory report.",
+      );
     } finally {
       setDownloading(false);
     }
@@ -374,7 +413,9 @@ export default function InventoryInterface() {
   const onPosted = () => {
     setShowForm(false);
     clearGeneratedReport();
-    toast.info("Inventory posted. Select dates and click Generate report to see the latest history.");
+    toast.info(
+      "Inventory posted. Select dates and click Generate report to see the latest history.",
+    );
   };
 
   return (
@@ -385,7 +426,8 @@ export default function InventoryInterface() {
             Inventory
           </h1>
           <p className="mt-1 text-sm leading-6 text-slate-500">
-            Record purchases and manual stock adjustments, with a permanent audit trail.
+            Record purchases and manual stock adjustments, with a permanent
+            audit trail.
           </p>
         </div>
         <button
@@ -402,13 +444,19 @@ export default function InventoryInterface() {
           <h2 className="text-xs font-bold uppercase tracking-wide text-slate-800">
             History report filters
           </h2>
-          <button type="button" onClick={clearFilters} className="text-xs font-bold text-indigo-700 hover:underline">
+          <button
+            type="button"
+            onClick={clearFilters}
+            className="text-xs font-bold text-indigo-700 hover:underline"
+          >
             Clear filters
           </button>
         </div>
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <label className="block">
-            <span className="mb-1.5 block text-xs font-semibold text-slate-600">From date *</span>
+            <span className="mb-1.5 block text-xs font-semibold text-slate-600">
+              From date *
+            </span>
             <input
               required
               type="date"
@@ -418,7 +466,9 @@ export default function InventoryInterface() {
             />
           </label>
           <label className="block">
-            <span className="mb-1.5 block text-xs font-semibold text-slate-600">To date *</span>
+            <span className="mb-1.5 block text-xs font-semibold text-slate-600">
+              To date *
+            </span>
             <input
               required
               type="date"
@@ -428,7 +478,9 @@ export default function InventoryInterface() {
             />
           </label>
           <label className="block">
-            <span className="mb-1.5 block text-xs font-semibold text-slate-600">Activity type</span>
+            <span className="mb-1.5 block text-xs font-semibold text-slate-600">
+              Activity type
+            </span>
             <select
               value={type}
               onChange={(event) => {
@@ -444,7 +496,9 @@ export default function InventoryInterface() {
             </select>
           </label>
           <div className="min-w-0">
-            <label className="mb-1.5 block text-xs font-semibold text-slate-600">Products (multiple)</label>
+            <label className="mb-1.5 block text-xs font-semibold text-slate-600">
+              Products (multiple)
+            </label>
             <InventoryProductFilter
               selected={selectedProducts}
               onChange={(next) => {
@@ -482,10 +536,13 @@ export default function InventoryInterface() {
 
       {!report ? (
         <div className="rounded-2xl border border-dashed border-slate-200 bg-white px-5 py-14 text-center">
-          <h2 className="text-sm font-bold text-slate-800">No inventory report generated</h2>
+          <h2 className="text-sm font-bold text-slate-800">
+            No inventory report generated
+          </h2>
           <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-slate-500">
-            Choose a From date and To date, optionally filter by activity or products,
-            then click Generate inventory report. No history is fetched on page load.
+            Choose a From date and To date, optionally filter by activity or
+            products, then click Generate inventory report. No history is
+            fetched on page load.
           </p>
         </div>
       ) : (
@@ -494,7 +551,9 @@ export default function InventoryInterface() {
             <p className="text-sm font-semibold text-slate-800">
               Report: {report.fromDate} to {report.toDate}
               <span className="ml-2 text-xs font-normal text-slate-500">
-                {loading ? "Loading results..." : `${total.toLocaleString()} movement${total === 1 ? "" : "s"}`}
+                {loading
+                  ? "Loading results..."
+                  : `${total.toLocaleString()} movement${total === 1 ? "" : "s"}`}
               </span>
             </p>
           </div>
@@ -525,14 +584,18 @@ export default function InventoryInterface() {
             />
           </div>
           <p className="text-xs text-slate-500">
-            Download exports all matching movements, not only the visible page. For long reports,
-            PDF preparation makes additional paginated requests only when you click Download.
+            Download exports all matching movements, not only the visible page.
+            For long reports, PDF preparation makes additional paginated
+            requests only when you click Download.
           </p>
         </div>
       )}
 
       {showForm && (
-        <InventoryForm onClose={() => setShowForm(false)} onSuccess={onPosted} />
+        <InventoryForm
+          onClose={() => setShowForm(false)}
+          onSuccess={onPosted}
+        />
       )}
     </div>
   );

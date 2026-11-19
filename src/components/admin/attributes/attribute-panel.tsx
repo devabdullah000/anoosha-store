@@ -22,9 +22,7 @@ const attributeColumns: DataTableColumn<Attribute>[] = [
     header: "Attribute",
     width: "25%",
     render: (attribute) => (
-      <p className="font-semibold text-slate-900">
-        {attribute.name}
-      </p>
+      <p className="font-semibold text-slate-900">{attribute.name}</p>
     ),
   },
   {
@@ -42,9 +40,7 @@ const attributeColumns: DataTableColumn<Attribute>[] = [
     header: "Unit",
     width: "15%",
     render: (attribute) => (
-      <span className="text-slate-600">
-        {attribute.unit || "—"}
-      </span>
+      <span className="text-slate-600">{attribute.unit || "—"}</span>
     ),
   },
   {
@@ -91,8 +87,9 @@ export function AttributesInterface(_props: AdminPanelProps) {
   const [refreshKey, setRefreshKey] = useState(0);
 
   const [formMode, setFormMode] = useState<FormMode>(null);
-  const [selectedAttribute, setSelectedAttribute] =
-    useState<Attribute | null>(null);
+  const [selectedAttribute, setSelectedAttribute] = useState<Attribute | null>(
+    null,
+  );
 
   // SearchInput sends the GET request and returns its result here.
   const handleSearchResults = useCallback(
@@ -164,22 +161,16 @@ export function AttributesInterface(_props: AdminPanelProps) {
         .catch(() => null)) as ApiDeleteResponse | null;
 
       if (!response.ok || !result || result.success !== true) {
-        throw new Error(
-          result?.message ?? "Unable to delete attribute.",
-        );
+        throw new Error(result?.message ?? "Unable to delete attribute.");
       }
 
-      toast.success(
-        result.message ?? "Attribute deleted successfully.",
-      );
+      toast.success(result.message ?? "Attribute deleted successfully.");
 
       // Refresh the current search and page.
       setRefreshKey((current) => current + 1);
     } catch (error) {
       const message =
-        error instanceof Error
-          ? error.message
-          : "Unable to delete attribute.";
+        error instanceof Error ? error.message : "Unable to delete attribute.";
 
       toast.error(message);
 
@@ -199,8 +190,8 @@ export function AttributesInterface(_props: AdminPanelProps) {
           </h1>
 
           <p className="mt-1 max-w-2xl text-sm leading-6 text-slate-500">
-            Create and manage reusable attributes assigned to your
-            product variants.
+            Create and manage reusable attributes assigned to your product
+            variants.
           </p>
         </div>
 
@@ -217,12 +208,8 @@ export function AttributesInterface(_props: AdminPanelProps) {
             className="h-4 w-4"
             aria-hidden="true"
           >
-            <path
-              d="M12 5v14M5 12h14"
-              strokeLinecap="round"
-            />
+            <path d="M12 5v14M5 12h14" strokeLinecap="round" />
           </svg>
-
           Add attribute
         </button>
       </div>

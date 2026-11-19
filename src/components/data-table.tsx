@@ -76,35 +76,26 @@ export default function DataTable<T>({
   loadingMessage = "Loading records...",
   ariaLabel = "Data table",
 }: DataTableProps<T>) {
-  const [actionMenu, setActionMenu] =
-    useState<ActionMenuState | null>(null);
+  const [actionMenu, setActionMenu] = useState<ActionMenuState | null>(null);
 
-  const [rowPendingDelete, setRowPendingDelete] =
-    useState<T | null>(null);
+  const [rowPendingDelete, setRowPendingDelete] = useState<T | null>(null);
 
   const actionMenuRef = useRef<HTMLDivElement>(null);
 
-  const hasActions = Boolean(
-    onUpdateCallFunction || onDeleteCallFunction
-  );
+  const hasActions = Boolean(onUpdateCallFunction || onDeleteCallFunction);
 
-  const columnCount = Math.max(
-    columns.length + (actionButton ? 1 : 0),
-    1
-  );
+  const columnCount = Math.max(columns.length + (actionButton ? 1 : 0), 1);
 
   const activeMenuRow =
     actionMenu === null
       ? undefined
-      : data.find(
-          (row) => getRowId(row) === actionMenu.rowId
-        );
+      : data.find((row) => getRowId(row) === actionMenu.rowId);
 
   // Open the action menu in a portal so it is not clipped
   // by the table's horizontal scrolling container.
   const handleActionMenuToggle = (
     event: MouseEvent<HTMLButtonElement>,
-    rowId: RowId
+    rowId: RowId,
   ) => {
     if (actionMenu?.rowId === rowId) {
       setActionMenu(null);
@@ -115,9 +106,7 @@ export default function DataTable<T>({
 
     const menuWidth = 176;
     const menuHeight =
-      (onUpdateCallFunction ? 48 : 0) +
-      (onDeleteCallFunction ? 48 : 0) +
-      16;
+      (onUpdateCallFunction ? 48 : 0) + (onDeleteCallFunction ? 48 : 0) + 16;
 
     const preferredTop = rect.bottom + 8;
 
@@ -128,10 +117,7 @@ export default function DataTable<T>({
 
     const left = Math.max(
       8,
-      Math.min(
-        rect.right - menuWidth,
-        window.innerWidth - menuWidth - 8
-      )
+      Math.min(rect.right - menuWidth, window.innerWidth - menuWidth - 8),
     );
 
     setActionMenu({
@@ -317,9 +303,7 @@ export default function DataTable<T>({
                                   data-table-action-trigger
                                   aria-label={`Actions for row ${String(rowId)}`}
                                   aria-haspopup="menu"
-                                  aria-expanded={
-                                    actionMenu?.rowId === rowId
-                                  }
+                                  aria-expanded={actionMenu?.rowId === rowId}
                                   onClick={(event) =>
                                     handleActionMenuToggle(event, rowId)
                                   }
@@ -418,7 +402,7 @@ export default function DataTable<T>({
               </button>
             )}
           </div>,
-          document.body
+          document.body,
         )}
 
       {/* Delete confirmation popup */}
@@ -427,8 +411,8 @@ export default function DataTable<T>({
         title={deleteConfirmationTitle}
         description={
           rowPendingDelete !== null
-            ? deleteConfirmationMessage?.(rowPendingDelete) ??
-              "Are you sure you want to delete this record? This action cannot be undone."
+            ? (deleteConfirmationMessage?.(rowPendingDelete) ??
+              "Are you sure you want to delete this record? This action cannot be undone.")
             : undefined
         }
         confirmText={deleteConfirmText}

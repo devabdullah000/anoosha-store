@@ -19,7 +19,9 @@ export function AuthBootstrap() {
   const currentUser = session?.user;
   const userId = currentUser?.id;
   const email = currentUser?.email;
-  const roleValue = (currentUser as (typeof currentUser & { role?: string }) | undefined)?.role;
+  const roleValue = (
+    currentUser as (typeof currentUser & { role?: string }) | undefined
+  )?.role;
   const role = roleValue === "admin" ? "admin" : "user";
 
   useEffect(() => {
@@ -50,7 +52,11 @@ export function AuthBootstrap() {
         const data = (await response.json()) as GoogleSessionResponse;
         const googleEmail = data.profile?.email;
 
-        if (!cancelled && typeof googleEmail === "string" && googleEmail.length > 0) {
+        if (
+          !cancelled &&
+          typeof googleEmail === "string" &&
+          googleEmail.length > 0
+        ) {
           // Google sessions are always customers. Never trust a client-supplied role.
           dispatch(setAuthProfile({ email: googleEmail, role: "user" }));
         } else if (!cancelled) {

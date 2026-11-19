@@ -1,5 +1,9 @@
 import { requireAdminServer } from "@/lib/auth/require-admin-server";
-import { getProduct, updateProduct, deleteProduct } from "../../../../../lib/server/products";
+import {
+  getProduct,
+  updateProduct,
+  deleteProduct,
+} from "../../../../../lib/server/products";
 import { serverError, errorResponse } from "@/lib/server/api-response";
 
 export const dynamic = "force-dynamic";

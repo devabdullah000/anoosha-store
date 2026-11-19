@@ -7,10 +7,9 @@ import { and, eq } from "drizzle-orm";
 import { emailOTP, jwt } from "better-auth/plugins";
 import { drizzle } from "drizzle-orm/d1";
 import * as authSchema from "@/db/auth-schema";
+import { LONG_SESSIONS,SHORT_SESSIONS } from "./constants";
 
-const ONE_WEEK_SECONDS = 7 * 24 * 60 * 60;
-const ONE_YEAR_SECONDS = 365 * 24 * 60 * 60;
-
+// This file has helper functions related to authentication
 type AuthRuntimeEnv = CloudflareEnv & {
   BETTER_AUTH_URL: string;
   BETTER_AUTH_SECRET: string;
@@ -270,8 +269,8 @@ export function getAuthContext() {
     
 // One-year database-backed session with 15-minute cookie caching.
 session: {
-  expiresIn: ONE_YEAR_SECONDS,
-  updateAge: ONE_WEEK_SECONDS,
+  expiresIn: LONG_SESSIONS,
+  updateAge: SHORT_SESSIONS,
 
   cookieCache: {
     enabled: true,

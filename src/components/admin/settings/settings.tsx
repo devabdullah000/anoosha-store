@@ -1,9 +1,9 @@
-
 "use client";
 
 import { useState, type ComponentType, type ReactNode } from "react";
-
+import { LuLockKeyhole, LuImages } from "react-icons/lu";
 import AdminPasswordReset from "./admin-password-reset";
+import SliderControl from "./slider-control";
 
 type SettingsComponentProps = {
   adminEmail: string;
@@ -25,26 +25,17 @@ const SETTINGS_MODULES: SettingModule[] = [
   {
     id: "admin-password",
     title: "Administrator password",
-    description:
-      "Reset your admin password using an email verification code.",
-    icon: (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        className="h-6 w-6"
-        aria-hidden="true"
-      >
-        <rect x="4" y="10" width="16" height="11" rx="2" />
-        <path
-          d="M8 10V7a4 4 0 0 1 8 0v3m-4 4v3"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    ),
+    description: "Reset your admin password using an email verification code.",
+    icon: <LuLockKeyhole className="h-6 w-6" aria-hidden="true" />,
     component: AdminPasswordReset,
+  },
+  {
+    id: "hero-slider",
+    title: "Hero slider",
+    description:
+      "Manage homepage banners, images, content, and autoplay settings.",
+    icon: <LuImages className="h-6 w-6" aria-hidden="true" />,
+    component: SliderControl,
   },
 ];
 
@@ -91,10 +82,7 @@ export default function SettingsInterface({
           Back to settings
         </button>
 
-        <SelectedComponent
-          key={selectedModule.id}
-          adminEmail={adminEmail}
-        />
+        <SelectedComponent key={selectedModule.id} adminEmail={adminEmail} />
       </section>
     );
   }

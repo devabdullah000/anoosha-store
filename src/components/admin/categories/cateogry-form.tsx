@@ -26,9 +26,7 @@ export default function CategoryForm({
   onSuccess,
 }: CategoryFormProps) {
   const [name, setName] = useState(category?.name ?? "");
-  const [description, setDescription] = useState(
-    category?.description ?? "",
-  );
+  const [description, setDescription] = useState(category?.description ?? "");
 
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState("");
@@ -61,9 +59,7 @@ export default function CategoryForm({
 
   const isUpdate = mode === "update";
 
-  const handleSubmit = async (
-    event: React.FormEvent<HTMLFormElement>,
-  ) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (submitting) return;
@@ -105,16 +101,11 @@ export default function CategoryForm({
         }),
       });
 
-      const result = (await response.json().catch(() => null)) as
-        | ApiResponse
-        | null;
+      const result = (await response
+        .json()
+        .catch(() => null)) as ApiResponse | null;
 
-      if (
-        !response.ok ||
-        !result ||
-        result.success !== true ||
-        !result.data
-      ) {
+      if (!response.ok || !result || result.success !== true || !result.data) {
         throw new Error(
           result?.message ??
             `Unable to ${isUpdate ? "update" : "create"} category.`,
@@ -144,15 +135,11 @@ export default function CategoryForm({
     <div
       className="fixed inset-0 z-[120] flex items-center justify-center overflow-y-auto bg-slate-950/55 p-4 sm:p-6"
       onMouseDown={(event) => {
-        if (
-          event.target === event.currentTarget &&
-          !submitting
-        ) {
+        if (event.target === event.currentTarget && !submitting) {
           onClose();
         }
       }}
     >
-    
       <div className="my-auto w-full max-w-lg rounded-2xl bg-gradient-to-r from-pink-500 via-blue-500 to-cyan-400 p-[1px] shadow-2xl">
         <div
           role="dialog"
@@ -191,10 +178,7 @@ export default function CategoryForm({
                 className="h-5 w-5"
                 aria-hidden="true"
               >
-                <path
-                  d="m6 6 12 12M18 6 6 18"
-                  strokeLinecap="round"
-                />
+                <path d="m6 6 12 12M18 6 6 18" strokeLinecap="round" />
               </svg>
             </button>
           </div>

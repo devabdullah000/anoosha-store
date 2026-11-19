@@ -14,27 +14,13 @@ type PaginationProps = {
 
 type PageItem = number | "start-ellipsis" | "end-ellipsis";
 
-function getPageItems(
-  currentPage: number,
-  totalPages: number,
-): PageItem[] {
+function getPageItems(currentPage: number, totalPages: number): PageItem[] {
   if (totalPages <= 7) {
-    return Array.from(
-      { length: totalPages },
-      (_, index) => index + 1,
-    );
+    return Array.from({ length: totalPages }, (_, index) => index + 1);
   }
 
   if (currentPage <= 4) {
-    return [
-      1,
-      2,
-      3,
-      4,
-      5,
-      "end-ellipsis",
-      totalPages,
-    ];
+    return [1, 2, 3, 4, 5, "end-ellipsis", totalPages];
   }
 
   if (currentPage >= totalPages - 3) {
@@ -71,25 +57,13 @@ export default function Pagination({
 }: PaginationProps) {
   const safeTotalPages = Math.max(1, totalPages);
 
-  const safeCurrentPage = Math.min(
-    Math.max(currentPage, 1),
-    safeTotalPages,
-  );
+  const safeCurrentPage = Math.min(Math.max(currentPage, 1), safeTotalPages);
 
-  const startItem =
-    totalItems === 0
-      ? 0
-      : (safeCurrentPage - 1) * pageSize + 1;
+  const startItem = totalItems === 0 ? 0 : (safeCurrentPage - 1) * pageSize + 1;
 
-  const endItem = Math.min(
-    safeCurrentPage * pageSize,
-    totalItems,
-  );
+  const endItem = Math.min(safeCurrentPage * pageSize, totalItems);
 
-  const pageItems = getPageItems(
-    safeCurrentPage,
-    safeTotalPages,
-  );
+  const pageItems = getPageItems(safeCurrentPage, safeTotalPages);
 
   const baseButton =
     "grid h-9 min-w-9 place-items-center rounded-lg px-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-40";
@@ -114,9 +88,7 @@ export default function Pagination({
             Rows:
             <select
               value={pageSize}
-              onChange={(event) =>
-                onPageSizeChange(Number(event.target.value))
-              }
+              onChange={(event) => onPageSizeChange(Number(event.target.value))}
               className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs font-semibold text-slate-700 outline-none focus:border-indigo-300"
             >
               {pageSizeOptions.map((size) => (

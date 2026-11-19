@@ -1,6 +1,5 @@
 import "server-only";
 
-import { NextResponse } from "next/server";
 import {
   and,
   asc,
@@ -16,15 +15,7 @@ import { getDb } from "../../db/index";
 import { categories } from "../../db/product-schema";
 import { requireAdminServer } from "../auth/require-admin-server";
 import { successResponse,errorResponse,serverError} from "./api-response";
-
-type CategoryRecord = {
-  id: string;
-  name: string;
-  description: string | null;
-  productCount: number;
-  createdAt: string;
-  updatedAt: string;
-};
+import type { CategoryRecord } from "./server-types";
 
 function isObject(
   value: unknown,

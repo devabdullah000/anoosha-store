@@ -32,7 +32,9 @@ export function AuthModal({
   const [notice, setNotice] = useState("");
 
   useEffect(() => {
-    if (new URLSearchParams(window.location.search).get("googleError") === "1") {
+    if (
+      new URLSearchParams(window.location.search).get("googleError") === "1"
+    ) {
       setMode("login");
       setError("Google sign-in could not be completed. Please try again.");
       router.replace("/login", { scroll: false });
@@ -53,19 +55,27 @@ export function AuthModal({
     router.replace("/login", { scroll: false });
   }
 
-  async function finishSignIn(roleMode: FinishSignInMode = "read-database-role") {
+  async function finishSignIn(
+    roleMode: FinishSignInMode = "read-database-role",
+  ) {
     const result = await authClient.getSession({
       query: { disableCookieCache: true },
     });
     if (result.error || !result.data?.user) {
-      throw new Error(result.error?.message ?? "The session could not be validated.");
+      throw new Error(
+        result.error?.message ?? "The session could not be validated.",
+      );
     }
 
     const user = result.data.user as typeof result.data.user & { role?: Role };
     // Login reads the role already assigned to the account in D1.
     // A newly verified signup is always a customer, never an admin.
     const role: Role =
-      roleMode === "force-user" ? "user" : user.role === "admin" ? "admin" : "user";
+      roleMode === "force-user"
+        ? "user"
+        : user.role === "admin"
+          ? "admin"
+          : "user";
 
     dispatch(setAuthProfile({ email: user.email, role }));
     clearAccessTokenCache();
@@ -99,8 +109,10 @@ export function AuthModal({
     setError("");
     setNotice("");
     try {
-      if (password !== confirmPassword) throw new Error("Passwords do not match.");
-      if (password.length < 8) throw new Error("Password must contain at least 8 characters.");
+      if (password !== confirmPassword)
+        throw new Error("Passwords do not match.");
+      if (password.length < 8)
+        throw new Error("Password must contain at least 8 characters.");
 
       const result = await authClient.signUp.email({
         email: email.trim().toLowerCase(),
@@ -111,9 +123,13 @@ export function AuthModal({
       if (result.error) throw new Error(result.error.message);
 
       changeMode("verify");
-      setNotice("We sent a 6-digit verification code to your email. It expires in 10 minutes.");
+      setNotice(
+        "We sent a 6-digit verification code to your email. It expires in 10 minutes.",
+      );
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Unable to create account.");
+      setError(
+        cause instanceof Error ? cause.message : "Unable to create account.",
+      );
     } finally {
       setEmailBusy(false);
     }
@@ -140,7 +156,11 @@ export function AuthModal({
       if (login.error) throw new Error(login.error.message);
       await finishSignIn("force-user");
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "The code could not be verified.");
+      setError(
+        cause instanceof Error
+          ? cause.message
+          : "The code could not be verified.",
+      );
     } finally {
       setEmailBusy(false);
     }
@@ -156,9 +176,13 @@ export function AuthModal({
         type: "email-verification",
       });
       if (result.error) throw new Error(result.error.message);
-      setNotice("A new verification code has been sent. Use the latest code in your email.");
+      setNotice(
+        "A new verification code has been sent. Use the latest code in your email.",
+      );
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Unable to resend the code.");
+      setError(
+        cause instanceof Error ? cause.message : "Unable to resend the code.",
+      );
     } finally {
       setEmailBusy(false);
     }
@@ -175,9 +199,15 @@ export function AuthModal({
       });
       if (result.error) throw new Error(result.error.message);
       changeMode("reset");
-      setNotice("If an account exists for this email, a 6-digit reset code has been sent. It expires in 10 minutes.");
+      setNotice(
+        "If an account exists for this email, a 6-digit reset code has been sent. It expires in 10 minutes.",
+      );
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Unable to request a reset code.");
+      setError(
+        cause instanceof Error
+          ? cause.message
+          : "Unable to request a reset code.",
+      );
     } finally {
       setEmailBusy(false);
     }
@@ -194,9 +224,15 @@ export function AuthModal({
         email: email.trim().toLowerCase(),
       });
       if (result.error) throw new Error(result.error.message);
-      setNotice("If an account exists for this email, a new reset code has been sent. Use the latest code.");
+      setNotice(
+        "If an account exists for this email, a new reset code has been sent. Use the latest code.",
+      );
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Unable to resend the reset code.");
+      setError(
+        cause instanceof Error
+          ? cause.message
+          : "Unable to resend the reset code.",
+      );
     } finally {
       setEmailBusy(false);
     }
@@ -208,7 +244,8 @@ export function AuthModal({
     setError("");
     setNotice("");
     try {
-      if (newPassword.length < 8) throw new Error("New password must contain at least 8 characters.");
+      if (newPassword.length < 8)
+        throw new Error("New password must contain at least 8 characters.");
       const result = await authClient.emailOtp.resetPassword({
         email: email.trim().toLowerCase(),
         otp: otp.trim(),
@@ -220,9 +257,13 @@ export function AuthModal({
       setConfirmPassword("");
       setOtp("");
       changeMode("login");
-      setNotice("Your password has been reset. Sign in with your new password.");
+      setNotice(
+        "Your password has been reset. Sign in with your new password.",
+      );
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Unable to reset password.");
+      setError(
+        cause instanceof Error ? cause.message : "Unable to reset password.",
+      );
     } finally {
       setEmailBusy(false);
     }
@@ -254,7 +295,8 @@ export function AuthModal({
       className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-slate-950/75 p-3 backdrop-blur-sm sm:p-6"
       role="presentation"
       onMouseDown={(event) => {
-        if (event.target === event.currentTarget && !emailBusy && !googleBusy) onClose();
+        if (event.target === event.currentTarget && !emailBusy && !googleBusy)
+          onClose();
       }}
     >
       <section
@@ -280,32 +322,49 @@ export function AuthModal({
               AS
             </span>
             <div>
-              <p className="text-xs font-extrabold tracking-[0.19em] text-slate-950">ANOOSHA STORE</p>
-              <p className="mt-0.5 text-xs text-slate-500">Mobile & gaming accessories</p>
+              <p className="text-xs font-extrabold tracking-[0.19em] text-slate-950">
+                ANOOSHA STORE
+              </p>
+              <p className="mt-0.5 text-xs text-slate-500">
+                Mobile & gaming accessories
+              </p>
             </div>
           </div>
 
           <div className="mb-6">
-            <h2 id="auth-modal-title" className="text-2xl font-black tracking-tight text-slate-950 sm:text-[28px]">
+            <h2
+              id="auth-modal-title"
+              className="text-2xl font-black tracking-tight text-slate-950 sm:text-[28px]"
+            >
               {mode === "verify" && "Verify your email"}
               {mode === "forgot" && "Forgot your password?"}
-              </h2>
+            </h2>
             <p className="mt-2 text-sm leading-6 text-slate-500">
-              {mode === "login" && "Sign in to manage your account and continue shopping."}
-              {mode === "signup" && "Create an account with your email address and a secure password."}
-              {mode === "verify" && `Enter the 6-digit verification code sent to ${email}.`}
+              {mode === "login" &&
+                "Sign in to manage your account and continue shopping."}
+              {mode === "signup" &&
+                "Create an account with your email address and a secure password."}
+              {mode === "verify" &&
+                `Enter the 6-digit verification code sent to ${email}.`}
               {mode === "forgot" && "We will email you a one-time reset code."}
-              {mode === "reset" && `Enter the latest code sent to ${email}, then choose a new password.`}
+              {mode === "reset" &&
+                `Enter the latest code sent to ${email}, then choose a new password.`}
             </p>
           </div>
 
           {error && (
-            <p role="alert" className="mb-4 rounded-xl border border-rose-100 bg-rose-50 px-3.5 py-3 text-sm leading-5 text-rose-700">
+            <p
+              role="alert"
+              className="mb-4 rounded-xl border border-rose-100 bg-rose-50 px-3.5 py-3 text-sm leading-5 text-rose-700"
+            >
               {error}
             </p>
           )}
           {notice && (
-            <p role="status" className="mb-4 rounded-xl border border-blue-100 bg-blue-50 px-3.5 py-3 text-sm leading-5 text-blue-800">
+            <p
+              role="status"
+              className="mb-4 rounded-xl border border-blue-100 bg-blue-50 px-3.5 py-3 text-sm leading-5 text-blue-800"
+            >
               {notice}
             </p>
           )}
@@ -335,18 +394,30 @@ export function AuthModal({
                 required
               />
               <div className="-mt-1 text-right">
-                <button type="button" onClick={() => changeMode("forgot")} className="text-sm font-semibold text-blue-700 underline-offset-4 transition hover:text-blue-900 hover:underline">
+                <button
+                  type="button"
+                  onClick={() => changeMode("forgot")}
+                  className="text-sm font-semibold text-blue-700 underline-offset-4 transition hover:text-blue-900 hover:underline"
+                >
                   Forgot password?
                 </button>
               </div>
-              <button className={primaryButton} disabled={emailBusy} type="submit">
+              <button
+                className={primaryButton}
+                disabled={emailBusy}
+                type="submit"
+              >
                 {emailBusy ? "Signing in…" : "Login"}
               </button>
               <Divider />
               <GoogleButton busy={googleBusy} onClick={handleGoogleSignIn} />
               <p className="pt-1 text-center text-sm text-slate-500">
                 Don&apos;t have an account?{" "}
-                <button type="button" onClick={() => changeMode("signup")} className="font-bold text-slate-950 underline decoration-blue-400 decoration-2 underline-offset-4 hover:text-blue-700">
+                <button
+                  type="button"
+                  onClick={() => changeMode("signup")}
+                  className="font-bold text-slate-950 underline decoration-blue-400 decoration-2 underline-offset-4 hover:text-blue-700"
+                >
                   Sign up
                 </button>
               </p>
@@ -388,14 +459,22 @@ export function AuthModal({
                 minLength={8}
                 required
               />
-              <button className={primaryButton} disabled={emailBusy} type="submit">
+              <button
+                className={primaryButton}
+                disabled={emailBusy}
+                type="submit"
+              >
                 {emailBusy ? "Sending verification code…" : "Create account"}
               </button>
               <Divider />
               <GoogleButton busy={googleBusy} onClick={handleGoogleSignIn} />
               <p className="pt-1 text-center text-sm text-slate-500">
                 Already registered?{" "}
-                <button type="button" onClick={() => changeMode("login")} className="font-bold text-slate-950 underline decoration-blue-400 decoration-2 underline-offset-4 hover:text-blue-700">
+                <button
+                  type="button"
+                  onClick={() => changeMode("login")}
+                  className="font-bold text-slate-950 underline decoration-blue-400 decoration-2 underline-offset-4 hover:text-blue-700"
+                >
                   Login
                 </button>
               </p>
@@ -404,14 +483,32 @@ export function AuthModal({
 
           {mode === "verify" && (
             <form onSubmit={handleVerify} className="space-y-4">
-              <OtpField value={otp} onChange={setOtp} inputClass={inputClass} label="6-digit verification code" />
-              <button className={primaryButton} disabled={emailBusy || otp.length !== 6} type="submit">
+              <OtpField
+                value={otp}
+                onChange={setOtp}
+                inputClass={inputClass}
+                label="6-digit verification code"
+              />
+              <button
+                className={primaryButton}
+                disabled={emailBusy || otp.length !== 6}
+                type="submit"
+              >
                 {emailBusy ? "Verifying…" : "Verify email and continue"}
               </button>
-              <button type="button" onClick={resendVerificationCode} disabled={emailBusy} className={textButton}>
+              <button
+                type="button"
+                onClick={resendVerificationCode}
+                disabled={emailBusy}
+                className={textButton}
+              >
                 {emailBusy ? "Please wait…" : "Resend verification code"}
               </button>
-              <button type="button" onClick={backToLogin} className={textButton}>
+              <button
+                type="button"
+                onClick={backToLogin}
+                className={textButton}
+              >
                 Back to login
               </button>
             </form>
@@ -432,10 +529,18 @@ export function AuthModal({
                   onChange={(event) => setEmail(event.target.value)}
                 />
               </label>
-              <button className={primaryButton} disabled={emailBusy} type="submit">
+              <button
+                className={primaryButton}
+                disabled={emailBusy}
+                type="submit"
+              >
                 {emailBusy ? "Requesting code…" : "Send reset code"}
               </button>
-              <button type="button" onClick={backToLogin} className={textButton}>
+              <button
+                type="button"
+                onClick={backToLogin}
+                className={textButton}
+              >
                 Back to login
               </button>
             </form>
@@ -443,7 +548,12 @@ export function AuthModal({
 
           {mode === "reset" && (
             <form onSubmit={handleResetPassword} className="space-y-4">
-              <OtpField value={otp} onChange={setOtp} inputClass={inputClass} label="6-digit reset code" />
+              <OtpField
+                value={otp}
+                onChange={setOtp}
+                inputClass={inputClass}
+                label="6-digit reset code"
+              />
               <PasswordField
                 label="New password"
                 autoComplete="new-password"
@@ -454,18 +564,31 @@ export function AuthModal({
                 minLength={8}
                 required
               />
-              <button className={primaryButton} disabled={emailBusy || otp.length !== 6} type="submit">
+              <button
+                className={primaryButton}
+                disabled={emailBusy || otp.length !== 6}
+                type="submit"
+              >
                 {emailBusy ? "Updating password…" : "Reset password"}
               </button>
-              <button type="button" onClick={resendResetCode} disabled={emailBusy} className={textButton}>
+              <button
+                type="button"
+                onClick={resendResetCode}
+                disabled={emailBusy}
+                className={textButton}
+              >
                 {emailBusy ? "Please wait…" : "Resend reset code"}
               </button>
-              <button type="button" onClick={backToLogin} className={textButton}>
+              <button
+                type="button"
+                onClick={backToLogin}
+                className={textButton}
+              >
                 Back to login
               </button>
             </form>
           )}
-          </div>
+        </div>
       </section>
     </div>
   );
@@ -475,7 +598,9 @@ function Divider() {
   return (
     <div className="flex items-center gap-3" aria-hidden="true">
       <span className="h-px flex-1 bg-slate-200" />
-      <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">or</span>
+      <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
+        or
+      </span>
       <span className="h-px flex-1 bg-slate-200" />
     </div>
   );
@@ -504,7 +629,9 @@ function OtpField({
         placeholder="••••••"
         required
         value={value}
-        onChange={(event) => onChange(event.target.value.replace(/\D/g, "").slice(0, 6))}
+        onChange={(event) =>
+          onChange(event.target.value.replace(/\D/g, "").slice(0, 6))
+        }
       />
     </label>
   );
@@ -546,7 +673,11 @@ function PasswordField({
         />
         <button
           type="button"
-          aria-label={visible ? `Hide ${label.toLowerCase()}` : `Show ${label.toLowerCase()}`}
+          aria-label={
+            visible
+              ? `Hide ${label.toLowerCase()}`
+              : `Show ${label.toLowerCase()}`
+          }
           aria-pressed={visible}
           onClick={() => setVisible((current) => !current)}
           className="absolute inset-y-0 right-2 inline-flex w-9 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
@@ -560,8 +691,19 @@ function PasswordField({
 
 function EyeIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-5 w-5" aria-hidden="true">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M2.5 12s3.3-6 9.5-6 9.5 6 9.5 6-3.3 6-9.5 6-9.5-6-9.5-6Z" />
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      className="h-5 w-5"
+      aria-hidden="true"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M2.5 12s3.3-6 9.5-6 9.5 6 9.5 6-3.3 6-9.5 6-9.5-6-9.5-6Z"
+      />
       <circle cx="12" cy="12" r="2.7" />
     </svg>
   );
@@ -569,14 +711,35 @@ function EyeIcon() {
 
 function EyeOffIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-5 w-5" aria-hidden="true">
-      <path strokeLinecap="round" strokeLinejoin="round" d="m3 3 18 18M10.6 6.2A10.5 10.5 0 0 1 12 6c6.2 0 9.5 6 9.5 6a15 15 0 0 1-3 3.8M6.2 6.3C3.8 7.8 2.5 12 2.5 12s3.3 6 9.5 6c1.4 0 2.6-.3 3.7-.8" />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9.9 9.9a3 3 0 0 0 4.2 4.2" />
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      className="h-5 w-5"
+      aria-hidden="true"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="m3 3 18 18M10.6 6.2A10.5 10.5 0 0 1 12 6c6.2 0 9.5 6 9.5 6a15 15 0 0 1-3 3.8M6.2 6.3C3.8 7.8 2.5 12 2.5 12s3.3 6 9.5 6c1.4 0 2.6-.3 3.7-.8"
+      />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M9.9 9.9a3 3 0 0 0 4.2 4.2"
+      />
     </svg>
   );
 }
 
-function GoogleButton({ busy, onClick }: { busy: boolean; onClick: () => void }) {
+function GoogleButton({
+  busy,
+  onClick,
+}: {
+  busy: boolean;
+  onClick: () => void;
+}) {
   return (
     <button
       type="button"
@@ -585,10 +748,22 @@ function GoogleButton({ busy, onClick }: { busy: boolean; onClick: () => void })
       className="inline-flex min-h-11 w-full items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:border-slate-300 hover:bg-slate-50 hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-100 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-60"
     >
       <svg aria-hidden="true" viewBox="0 0 48 48" className="h-5 w-5 shrink-0">
-        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.62 17.74 9.5 24 9.5Z" />
-        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.24 5.48-4.7 7.18l7.59 5.89c4.42-4.08 7.15-10.08 7.15-17.54Z" />
-        <path fill="#FBBC05" d="M10.54 28.59A14.4 14.4 0 0 1 9.75 24c0-1.59.27-3.13.76-4.59l-7.98-6.19A23.9 23.9 0 0 0 0 24c0 3.88.93 7.55 2.56 10.78l7.98-6.19Z" />
-        <path fill="#34A853" d="M24 48c6.47 0 11.9-2.13 15.87-5.81l-7.59-5.89c-2.11 1.42-4.81 2.27-8.28 2.27-6.26 0-11.57-4.12-13.46-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48Z" />
+        <path
+          fill="#EA4335"
+          d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.62 17.74 9.5 24 9.5Z"
+        />
+        <path
+          fill="#4285F4"
+          d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.24 5.48-4.7 7.18l7.59 5.89c4.42-4.08 7.15-10.08 7.15-17.54Z"
+        />
+        <path
+          fill="#FBBC05"
+          d="M10.54 28.59A14.4 14.4 0 0 1 9.75 24c0-1.59.27-3.13.76-4.59l-7.98-6.19A23.9 23.9 0 0 0 0 24c0 3.88.93 7.55 2.56 10.78l7.98-6.19Z"
+        />
+        <path
+          fill="#34A853"
+          d="M24 48c6.47 0 11.9-2.13 15.87-5.81l-7.59-5.89c-2.11 1.42-4.81 2.27-8.28 2.27-6.26 0-11.57-4.12-13.46-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48Z"
+        />
       </svg>
       {busy ? "Redirecting to Google…" : "Continue with Google"}
     </button>

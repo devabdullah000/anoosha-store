@@ -40,7 +40,9 @@ export async function GET(request: NextRequest) {
       sessionSecret,
     );
 
-    const authorizationUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
+    const authorizationUrl = new URL(
+      "https://accounts.google.com/o/oauth2/v2/auth",
+    );
     authorizationUrl.searchParams.set("client_id", clientId);
     authorizationUrl.searchParams.set("redirect_uri", redirectUri);
     authorizationUrl.searchParams.set("response_type", "code");

@@ -15,7 +15,8 @@ export function AdminAuthGuard({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (status === "unauthenticated") router.replace("/login");
-    else if (status === "authenticated" && profile?.role !== "admin") router.replace("/");
+    else if (status === "authenticated" && profile?.role !== "admin")
+      router.replace("/");
   }, [profile?.role, router, status]);
 
   if (status !== "authenticated" || profile?.role !== "admin") {
@@ -23,7 +24,9 @@ export function AdminAuthGuard({ children }: { children: ReactNode }) {
       <main className="grid min-h-[50vh] place-items-center px-4">
         <div className="text-center">
           <div className="mx-auto mb-3 h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-slate-900" />
-          <p className="text-sm text-slate-500">Checking administrator access…</p>
+          <p className="text-sm text-slate-500">
+            Checking administrator access…
+          </p>
         </div>
       </main>
     );

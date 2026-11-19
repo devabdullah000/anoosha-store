@@ -1,4 +1,3 @@
-
 import Link from "next/link";
 
 import {
@@ -10,12 +9,7 @@ import {
 
 function ArrowUpRight() {
   return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 20 20"
-      fill="none"
-      className="h-4 w-4"
-    >
+    <svg aria-hidden="true" viewBox="0 0 20 20" fill="none" className="h-4 w-4">
       <path
         d="M5 15 15 5M6 5h9v9"
         stroke="currentColor"
@@ -42,13 +36,7 @@ function SocialIcon({ name }: { name: string }) {
           stroke="currentColor"
           strokeWidth="1.7"
         />
-        <circle
-          cx="12"
-          cy="12"
-          r="4"
-          stroke="currentColor"
-          strokeWidth="1.7"
-        />
+        <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.7" />
         <circle cx="17.5" cy="6.5" r="1" fill="currentColor" />
       </svg>
     );
@@ -111,7 +99,6 @@ export function Footer() {
 
   return (
     <footer className="relative mt-12 overflow-hidden bg-[#F8F9FC] text-slate-900 transition-colors duration-300 dark:bg-[#080D1B] dark:text-white">
-
       {/* Gradient accent matching navbar and login button */}
       <div
         aria-hidden="true"
@@ -130,10 +117,8 @@ export function Footer() {
       />
 
       <div className="relative mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-12">
-
         {/* Main footer content */}
         <div className="grid grid-cols-1 gap-10 py-11 sm:grid-cols-2 lg:grid-cols-12 lg:gap-10 lg:py-12">
-
           {/* Brand section */}
           <div className="lg:col-span-4">
             <Link
@@ -169,7 +154,6 @@ export function Footer() {
               className="group mt-5 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-pink-500 via-blue-500 to-cyan-400 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/10 transition hover:brightness-110 active:scale-[0.98]"
             >
               Explore our store
-
               <span className="transition-transform group-hover:translate-x-1">
                 <ArrowUpRight />
               </span>
@@ -232,7 +216,6 @@ export function Footer() {
         {/* Compact copyright section */}
         <div className="mt-3 border-t border-slate-200 py-4 dark:border-white/10">
           <div className="flex flex-col items-center justify-between gap-2 text-center sm:flex-row sm:gap-4 sm:text-left">
-
             <p className="text-xs leading-5 text-slate-500 dark:text-slate-500">
               © {currentYear} {footer_brand.name}.{" "}
               {footer_bottom_text.copyright}

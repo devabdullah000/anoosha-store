@@ -7,7 +7,10 @@ export async function POST(request: NextRequest) {
   const requestOrigin = new URL(request.url).origin;
   const requestHeaderOrigin = request.headers.get("origin");
   if (!requestHeaderOrigin || requestHeaderOrigin !== requestOrigin) {
-    return NextResponse.json({ message: "Invalid request origin." }, { status: 403 });
+    return NextResponse.json(
+      { message: "Invalid request origin." },
+      { status: 403 },
+    );
   }
 
   const response = NextResponse.json(

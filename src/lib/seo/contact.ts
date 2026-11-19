@@ -1,0 +1,13 @@
+import {
+  CONTACT_SEO_DESCRIPTION,
+  CONTACT_SEO_KEYWORDS,
+  CONTACT_SEO_PATH,
+  CONTACT_SEO_TITLE,
+} from "../constants";
+
+export const CONTACT_SEO_PARAMS = {
+  title: CONTACT_SEO_TITLE,
+  description: CONTACT_SEO_DESCRIPTION,
+  path: CONTACT_SEO_PATH,
+  keywords: CONTACT_SEO_KEYWORDS,
+};

@@ -3,23 +3,27 @@ import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { inArray, sql } from "drizzle-orm";
 import { getDb } from "../../db/index";
 import { productImageCleanupJobs } from "../../db/product-schema";
-
-/** Wrangler bindings: IMAGES_BUCKET, R2_PUBLIC_BASE_URL, CF_ZONE_ID, CF_CACHE_PURGE_TOKEN */
-type ImageEnvironment = {
-  IMAGES_BUCKET?: R2Bucket;
-  R2_PUBLIC_BASE_URL?: string;
-  CF_ZONE_ID?: string;
-  CF_CACHE_PURGE_TOKEN?: string;
-};
+import type { ImageEnvironment,FileData,ImageCleanupJob,ImageCleanupReport } from "./server-types";
+import { MAX_IMAGE_BYTES } from "../constants";
 
 export class ImageConfigurationError extends Error {}
+export class ImageInputError extends Error {}
+export const fileTypes = new Map([
+  ["image/jpeg", "jpg"],
+  ["image/png", "png"],
+  ["image/webp", "webp"],
+  ["image/avif", "avif"],
+]);
 
 export async function imageEnvironment() {
   const context = await getCloudflareContext({ async: true });
   const env = context.env as typeof context.env & ImageEnvironment;
-  if (!env.IMAGES_BUCKET) throw new ImageConfigurationError("IMAGES_BUCKET R2 binding is missing.");
+  if (!env.IMAGES_BUCKET)
+    throw new ImageConfigurationError("IMAGES_BUCKET R2 binding is missing.");
   if (!env.R2_PUBLIC_BASE_URL || !/^https:\/\//i.test(env.R2_PUBLIC_BASE_URL)) {
-    throw new ImageConfigurationError("R2_PUBLIC_BASE_URL must be an HTTPS R2 custom domain.");
+    throw new ImageConfigurationError(
+      "R2_PUBLIC_BASE_URL must be an HTTPS R2 custom domain.",
+    );
   }
   return {
     bucket: env.IMAGES_BUCKET,
@@ -33,38 +37,60 @@ export function imageUrl(baseUrl: string, key: string) {
   return `${baseUrl}/${key.split("/").map(encodeURIComponent).join("/")}`;
 }
 
-type FileData = { uploadId: string; file: File };
-const fileTypes = new Map([
-  ["image/jpeg", "jpg"],
-  ["image/png", "png"],
-  ["image/webp", "webp"],
-  ["image/avif", "avif"],
-]);
-const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 
 function verifySignature(contentType: string, bytes: Uint8Array): boolean {
-  if (contentType === "image/jpeg") return bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
-  if (contentType === "image/png") return bytes.length >= 8 && [137, 80, 78, 71, 13, 10, 26, 10].every((v, i) => bytes[i] === v);
-  if (contentType === "image/webp") return bytes.length >= 12 && String.fromCharCode(...bytes.slice(0, 4)) === "RIFF" && String.fromCharCode(...bytes.slice(8, 12)) === "WEBP";
+  if (contentType === "image/jpeg")
+    return (
+      bytes.length >= 3 &&
+      bytes[0] === 0xff &&
+      bytes[1] === 0xd8 &&
+      bytes[2] === 0xff
+    );
+  if (contentType === "image/png")
+    return (
+      bytes.length >= 8 &&
+      [137, 80, 78, 71, 13, 10, 26, 10].every((v, i) => bytes[i] === v)
+    );
+  if (contentType === "image/webp")
+    return (
+      bytes.length >= 12 &&
+      String.fromCharCode(...bytes.slice(0, 4)) === "RIFF" &&
+      String.fromCharCode(...bytes.slice(8, 12)) === "WEBP"
+    );
   if (contentType === "image/avif") {
-    if (bytes.length < 16 || String.fromCharCode(...bytes.slice(4, 8)) !== "ftyp") return false;
-    const brand = String.fromCharCode(...bytes.slice(8, Math.min(32, bytes.length)));
+    if (
+      bytes.length < 16 ||
+      String.fromCharCode(...bytes.slice(4, 8)) !== "ftyp"
+    )
+      return false;
+    const brand = String.fromCharCode(
+      ...bytes.slice(8, Math.min(32, bytes.length)),
+    );
     return brand.includes("avif") || brand.includes("avis");
   }
   return false;
 }
 
-export class ImageInputError extends Error {}
-
 /** Validate files before any R2 write. Keep uploads to <=40 MiB/request. */
-export async function validateImageFiles(form: FormData, ids: string[]): Promise<FileData[]> {
+export async function validateImageFiles(
+  form: FormData,
+  ids: string[],
+): Promise<FileData[]> {
   const expected = new Set(ids);
-  if (expected.size !== ids.length) throw new ImageInputError("Duplicate image upload IDs.");
-  if (ids.length > 100) throw new ImageInputError("At most 100 new images per request are allowed.");
+  if (expected.size !== ids.length)
+    throw new ImageInputError("Duplicate image upload IDs.");
+  if (ids.length > 100)
+    throw new ImageInputError(
+      "At most 100 new images per request are allowed.",
+    );
   let total = 0;
   for (const [key, value] of form.entries()) {
     if (key === "payload") continue;
-    if (!key.startsWith("file:") || !expected.has(key.slice(5)) || !(value instanceof File)) {
+    if (
+      !key.startsWith("file:") ||
+      !expected.has(key.slice(5)) ||
+      !(value instanceof File)
+    ) {
       throw new ImageInputError("Unexpected image file or field in request.");
     }
   }
@@ -72,16 +98,28 @@ export async function validateImageFiles(form: FormData, ids: string[]): Promise
   for (const uploadId of ids) {
     const values = form.getAll(`file:${uploadId}`);
     if (values.length !== 1 || !(values[0] instanceof File)) {
-      throw new ImageInputError("One image file is required for every new image slot.");
+      throw new ImageInputError(
+        "One image file is required for every new image slot.",
+      );
     }
     const file = values[0];
-    if (!fileTypes.has(file.type) || !file.size || file.size > MAX_IMAGE_BYTES) {
-      throw new ImageInputError("Images must be JPEG, PNG, WebP or AVIF, up to 5 MB each.");
+    if (
+      !fileTypes.has(file.type) ||
+      !file.size ||
+      file.size > MAX_IMAGE_BYTES
+    ) {
+      throw new ImageInputError(
+        "Images must be JPEG, PNG, WebP or AVIF, up to 5 MB each.",
+      );
     }
     total += file.size;
-    if (total > 40 * 1024 * 1024) throw new ImageInputError("Total uploaded images cannot exceed 40 MB.");
+    if (total > 40 * 1024 * 1024)
+      throw new ImageInputError("Total uploaded images cannot exceed 40 MB.");
     const signature = new Uint8Array(await file.slice(0, 32).arrayBuffer());
-    if (!verifySignature(file.type, signature)) throw new ImageInputError("An uploaded image has an invalid file signature.");
+    if (!verifySignature(file.type, signature))
+      throw new ImageInputError(
+        "An uploaded image has an invalid file signature.",
+      );
     files.push({ uploadId, file });
   }
   return files;
@@ -115,11 +153,21 @@ export async function uploadImages(
     return uploaded;
   } catch (error) {
     if (attemptedKeys.length) {
-      try { await bucket.delete(attemptedKeys); }
-      catch (cleanupError) {
-        console.error("Failed to compensate partial/ambiguous R2 uploads", cleanupError);
-        try { await queueOrphanImageCleanup(attemptedKeys); }
-        catch (queueError) { console.error("Urgent: orphan R2 keys could not be queued", { attemptedKeys, queueError }); }
+      try {
+        await bucket.delete(attemptedKeys);
+      } catch (cleanupError) {
+        console.error(
+          "Failed to compensate partial/ambiguous R2 uploads",
+          cleanupError,
+        );
+        try {
+          await queueOrphanImageCleanup(attemptedKeys);
+        } catch (queueError) {
+          console.error("Urgent: orphan R2 keys could not be queued", {
+            attemptedKeys,
+            queueError,
+          });
+        }
       }
     }
     throw error;
@@ -136,44 +184,55 @@ export async function queueOrphanImageCleanup(keys: string[]) {
   const db = getDb();
   const distinct = [...new Set(keys)];
   for (let start = 0; start < distinct.length; start += 25) {
-    await db.insert(productImageCleanupJobs).values(
-      distinct.slice(start, start + 25).map((storageKey) => ({
-        id: `imgclean_${crypto.randomUUID()}`,
-        storageKey,
-      })),
-    ).onConflictDoNothing({ target: productImageCleanupJobs.storageKey });
+    await db
+      .insert(productImageCleanupJobs)
+      .values(
+        distinct.slice(start, start + 25).map((storageKey) => ({
+          id: `imgclean_${crypto.randomUUID()}`,
+          storageKey,
+        })),
+      )
+      .onConflictDoNothing({ target: productImageCleanupJobs.storageKey });
   }
 }
-
-export type ImageCleanupJob = { id: string; storageKey: string };
-export type ImageCleanupReport = { completed: number; pending: number; warnings: string[] };
-
-type ImageConfig = Awaited<ReturnType<typeof imageEnvironment>>;
+export type ImageConfig = Awaited<ReturnType<typeof imageEnvironment>>;
 
 export function requireImagePurgeConfig(config: ImageConfig) {
   if (!config.zoneId || !config.purgeToken) {
     throw new ImageConfigurationError(
       "Image removal requires CF_ZONE_ID and CF_CACHE_PURGE_TOKEN. " +
-      "Configure the zone for images.anooshastore.com and an API token with Zone.Cache Purge permission.",
+        "Configure the zone for images.anooshastore.com and an API token with Zone.Cache Purge permission.",
     );
   }
   if (!/^[a-f0-9]{32}$/i.test(config.zoneId.trim())) {
-    throw new ImageConfigurationError("CF_ZONE_ID must be the 32-character zone ID for anooshastore.com.");
+    throw new ImageConfigurationError(
+      "CF_ZONE_ID must be the 32-character zone ID for anooshastore.com.",
+    );
   }
 }
 
 function cloudflareErrorDetails(payload: unknown): string {
-  if (typeof payload !== "object" || payload === null || !("errors" in payload)) return "No error details returned";
+  if (typeof payload !== "object" || payload === null || !("errors" in payload))
+    return "No error details returned";
   const errors = payload.errors;
   if (!Array.isArray(errors)) return "No error details returned";
-  return errors.map((item: unknown) => {
-    if (typeof item !== "object" || item === null) return "Unknown Cloudflare error";
-    const entry = item as { code?: number; message?: string };
-    return `${entry.code ?? ""} ${entry.message ?? "Unknown Cloudflare error"}`.trim();
-  }).slice(0, 3).join("; ") || "No error details returned";
+  return (
+    errors
+      .map((item: unknown) => {
+        if (typeof item !== "object" || item === null)
+          return "Unknown Cloudflare error";
+        const entry = item as { code?: number; message?: string };
+        return `${entry.code ?? ""} ${entry.message ?? "Unknown Cloudflare error"}`.trim();
+      })
+      .slice(0, 3)
+      .join("; ") || "No error details returned"
+  );
 }
 
-async function purgeImageUrls(keys: string[], config: ImageConfig): Promise<void> {
+async function purgeImageUrls(
+  keys: string[],
+  config: ImageConfig,
+): Promise<void> {
   if (!keys.length) return;
   requireImagePurgeConfig(config);
   const files = keys.map((key) => imageUrl(config.baseUrl, key));
@@ -194,17 +253,27 @@ async function purgeImageUrls(keys: string[], config: ImageConfig): Promise<void
       );
       const payload: unknown = await response.json().catch(() => null);
       if (
-        response.ok && typeof payload === "object" && payload !== null &&
-        "success" in payload && payload.success === true
-      ) return;
+        response.ok &&
+        typeof payload === "object" &&
+        payload !== null &&
+        "success" in payload &&
+        payload.success === true
+      )
+        return;
       const details = cloudflareErrorDetails(payload);
-      lastError = new Error(`Cloudflare CDN purge HTTP ${response.status}: ${details}`);
+      lastError = new Error(
+        `Cloudflare CDN purge HTTP ${response.status}: ${details}`,
+      );
       // Wrong token, wrong zone and invalid requests won't improve on retry.
       if ([400, 401, 403, 404].includes(response.status)) break;
     } catch (cause) {
-      lastError = cause instanceof Error ? cause : new Error("Cloudflare CDN is unreachable.");
+      lastError =
+        cause instanceof Error
+          ? cause
+          : new Error("Cloudflare CDN is unreachable.");
     }
-    if (attempt < 2) await new Promise((resolve) => setTimeout(resolve, 250 * (attempt + 1)));
+    if (attempt < 2)
+      await new Promise((resolve) => setTimeout(resolve, 250 * (attempt + 1)));
   }
   throw lastError;
 }
@@ -229,24 +298,36 @@ export async function processImageCleanupJobs(
       await config.bucket.delete(batch.map((job) => job.storageKey));
       deleted.push(...batch);
     } catch (cause) {
-      console.error("R2 bulk image delete failed; trying individual objects", cause);
+      console.error(
+        "R2 bulk image delete failed; trying individual objects",
+        cause,
+      );
       for (const job of batch) {
         try {
           await config.bucket.delete(job.storageKey);
           deleted.push(job);
         } catch (error) {
-          failures.push({ id: job.id, error: `R2 delete: ${String(error)}`.slice(0, 500) });
+          failures.push({
+            id: job.id,
+            error: `R2 delete: ${String(error)}`.slice(0, 500),
+          });
         }
       }
     }
     if (!deleted.length) continue;
     try {
-      await purgeImageUrls(deleted.map((job) => job.storageKey), config);
+      await purgeImageUrls(
+        deleted.map((job) => job.storageKey),
+        config,
+      );
       completed.push(...deleted.map((job) => job.id));
     } catch (error) {
-      const detail = error instanceof Error ? error.message : "Cloudflare purge failed";
+      const detail =
+        error instanceof Error ? error.message : "Cloudflare purge failed";
       console.error("CDN purge pending; retained cleanup jobs", detail);
-      failures.push(...deleted.map((job) => ({ id: job.id, error: detail.slice(0, 500) })));
+      failures.push(
+        ...deleted.map((job) => ({ id: job.id, error: detail.slice(0, 500) })),
+      );
     }
   }
 
@@ -254,29 +335,43 @@ export async function processImageCleanupJobs(
   const modifications = [];
   if (completed.length) {
     modifications.push(
-      db.delete(productImageCleanupJobs)
+      db
+        .delete(productImageCleanupJobs)
         .where(inArray(productImageCleanupJobs.id, completed)),
     );
   }
   for (const failure of failures) {
-    modifications.push(db.update(productImageCleanupJobs).set({
-      attempts: sql`${productImageCleanupJobs.attempts} + 1`,
-      lastError: failure.error,
-    }).where(inArray(productImageCleanupJobs.id, [failure.id])));
+    modifications.push(
+      db
+        .update(productImageCleanupJobs)
+        .set({
+          attempts: sql`${productImageCleanupJobs.attempts} + 1`,
+          lastError: failure.error,
+        })
+        .where(inArray(productImageCleanupJobs.id, [failure.id])),
+    );
   }
   if (modifications.length) {
     try {
       // A single D1 batch records all completed / pending cleanup states.
       const { env } = await getCloudflareContext({ async: true });
-      await env.DB.batch(modifications.map((query) => {
-        const { sql: statement, params } = query.toSQL();
-        return env.DB.prepare(statement).bind(...params);
-      }));
+      await env.DB.batch(
+        modifications.map((query) => {
+          const { sql: statement, params } = query.toSQL();
+          return env.DB.prepare(statement).bind(...params);
+        }),
+      );
     } catch (error) {
-      console.error("Could not acknowledge image cleanup; jobs will be retried", error);
+      console.error(
+        "Could not acknowledge image cleanup; jobs will be retried",
+        error,
+      );
       return {
-        completed: 0, pending: jobs.length,
-        warnings: ["Image cleanup finished in storage but database acknowledgement failed; retry cleanup from Products."],
+        completed: 0,
+        pending: jobs.length,
+        warnings: [
+          "Image cleanup finished in storage but database acknowledgement failed; retry cleanup from Products.",
+        ],
       };
     }
   }
@@ -284,18 +379,24 @@ export async function processImageCleanupJobs(
     completed: completed.length,
     pending: failures.length,
     warnings: failures.length
-      ? [`${failures.length} image cleanup operation(s) remain pending. Last error: ${failures[0].error}. Use Retry image cleanup in Products.`]
+      ? [
+          `${failures.length} image cleanup operation(s) remain pending. Last error: ${failures[0].error}. Use Retry image cleanup in Products.`,
+        ]
       : [],
   };
 }
 
-export async function retryPendingImageCleanup(limit = 100): Promise<ImageCleanupReport> {
+export async function retryPendingImageCleanup(
+  limit = 100,
+): Promise<ImageCleanupReport> {
   const config = await imageEnvironment();
   requireImagePurgeConfig(config);
-  const rows = await getDb().select({
-    id: productImageCleanupJobs.id,
-    storageKey: productImageCleanupJobs.storageKey,
-  }).from(productImageCleanupJobs)
+  const rows = await getDb()
+    .select({
+      id: productImageCleanupJobs.id,
+      storageKey: productImageCleanupJobs.storageKey,
+    })
+    .from(productImageCleanupJobs)
     .orderBy(productImageCleanupJobs.createdAt)
     .limit(Math.min(Math.max(limit, 1), 100));
   return processImageCleanupJobs(rows, config);

@@ -1,14 +1,10 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { toast } from "react-toastify";
 
-import type {
-  Attribute,
-  AttributeDisplayType,
-} from "./attributes-types";
+import type { Attribute, AttributeDisplayType } from "./attributes-types";
 
 type AttributeFormProps = {
   mode: "create" | "update";
@@ -40,10 +36,9 @@ export default function AttributeForm({
 }: AttributeFormProps) {
   const [name, setName] = useState(attribute?.name ?? "");
 
-  const [displayType, setDisplayType] =
-    useState<AttributeDisplayType>(
-      attribute?.displayType ?? "dropdown",
-    );
+  const [displayType, setDisplayType] = useState<AttributeDisplayType>(
+    attribute?.displayType ?? "dropdown",
+  );
 
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState("");
@@ -52,12 +47,7 @@ export default function AttributeForm({
     setName(attribute?.name ?? "");
     setDisplayType(attribute?.displayType ?? "dropdown");
     setFormError("");
-  }, [
-    attribute?.id,
-    attribute?.name,
-    attribute?.displayType,
-    mode,
-  ]);
+  }, [attribute?.id, attribute?.name, attribute?.displayType, mode]);
 
   useEffect(() => {
     if (submitting) return;
@@ -81,9 +71,7 @@ export default function AttributeForm({
 
   const isUpdate = mode === "update";
 
-  const handleSubmit = async (
-    event: FormEvent<HTMLFormElement>,
-  ) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (submitting) return;
@@ -96,9 +84,7 @@ export default function AttributeForm({
     }
 
     if (normalizedName.length > 120) {
-      setFormError(
-        "Attribute name cannot exceed 120 characters.",
-      );
+      setFormError("Attribute name cannot exceed 120 characters.");
       return;
     }
 
@@ -126,25 +112,16 @@ export default function AttributeForm({
         .json()
         .catch(() => null)) as ApiResponse | null;
 
-      if (
-        !response.ok ||
-        !result ||
-        result.success !== true ||
-        !result.data
-      ) {
+      if (!response.ok || !result || result.success !== true || !result.data) {
         throw new Error(
           result?.message ??
-            `Unable to ${
-              isUpdate ? "update" : "create"
-            } attribute.`,
+            `Unable to ${isUpdate ? "update" : "create"} attribute.`,
         );
       }
 
       toast.success(
         result.message ??
-          `Attribute ${
-            isUpdate ? "updated" : "created"
-          } successfully.`,
+          `Attribute ${isUpdate ? "updated" : "created"} successfully.`,
       );
 
       onSuccess(result.data);
@@ -168,10 +145,7 @@ export default function AttributeForm({
     <div
       className="fixed inset-0 z-[120] flex items-center justify-center overflow-y-auto bg-slate-950/55 p-4 sm:p-6"
       onMouseDown={(event) => {
-        if (
-          event.target === event.currentTarget &&
-          !submitting
-        ) {
+        if (event.target === event.currentTarget && !submitting) {
           onClose();
         }
       }}
@@ -189,9 +163,7 @@ export default function AttributeForm({
                 id="attribute-form-title"
                 className="text-lg font-bold text-slate-900"
               >
-                {isUpdate
-                  ? "Update attribute"
-                  : "Add attribute"}
+                {isUpdate ? "Update attribute" : "Add attribute"}
               </h2>
 
               <p className="mt-1 text-sm leading-6 text-slate-500">
@@ -216,18 +188,12 @@ export default function AttributeForm({
                 className="h-5 w-5"
                 aria-hidden="true"
               >
-                <path
-                  d="m6 6 12 12M18 6 6 18"
-                  strokeLinecap="round"
-                />
+                <path d="m6 6 12 12M18 6 6 18" strokeLinecap="round" />
               </svg>
             </button>
           </div>
 
-          <form
-            onSubmit={handleSubmit}
-            className="mt-7 space-y-5"
-          >
+          <form onSubmit={handleSubmit} className="mt-7 space-y-5">
             {/* Attribute name */}
             <div>
               <label
@@ -235,9 +201,7 @@ export default function AttributeForm({
                 className="mb-2 block text-sm font-semibold text-slate-700"
               >
                 Attribute name
-                <span className="ml-1 text-rose-500">
-                  *
-                </span>
+                <span className="ml-1 text-rose-500">*</span>
               </label>
 
               <input
@@ -268,29 +232,21 @@ export default function AttributeForm({
                 className="mb-2 block text-sm font-semibold text-slate-700"
               >
                 Display type
-                <span className="ml-1 text-rose-500">
-                  *
-                </span>
+                <span className="ml-1 text-rose-500">*</span>
               </label>
 
               <select
                 id="attribute-display-type"
                 value={displayType}
                 onChange={(event) => {
-                  setDisplayType(
-                    event.target
-                      .value as AttributeDisplayType,
-                  );
+                  setDisplayType(event.target.value as AttributeDisplayType);
                   setFormError("");
                 }}
                 disabled={submitting}
                 className={selectClasses}
               >
                 {displayTypeOptions.map((option) => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                  >
+                  <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
                 ))}
