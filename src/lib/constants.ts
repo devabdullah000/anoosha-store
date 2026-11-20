@@ -92,6 +92,8 @@ export const STOREFRONT_PAGES = [
   { href: "/orders", name: "Orders" },
 ] as const;
 
+export const STORE_NAME=""
+
 /* ==================================================================
    SOCIAL LINKS & ICON CONFIGURATION
    ================================================================== */

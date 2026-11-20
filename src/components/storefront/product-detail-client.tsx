@@ -1,6 +1,18 @@
 "use client";
 
-import { useCallback, useState, type CSSProperties } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
+import { useRouter } from "next/navigation";
+import {
+  addToCart,
+  announceCartChanged,
+  CartApiError,
+} from "@/lib/cart/client";
 import Link from "next/link";
 import {
   LuArrowLeft,
@@ -22,7 +34,6 @@ import type {
   VariantAttribute,
 } from "@/lib/storefront/types";
 import {
-  ADD_TO_CART_EVENT,
   HEADING_FOR_PRODUCT_DETAILS,
   ORDER_NOW_EVENT,
   PRODUCT_ADD_TO_CART_BUTTON_TEXT,
@@ -115,6 +126,7 @@ export default function ProductDetailClient({
   onAddToCart,
   onOrderNow,
 }: ProductDetailClientProps) {
+  const router = useRouter();
   const [variantId, setVariantId] = useState(
     product.variants.find((candidate) => candidate.isDefault)?.id ??
       product.variants[0]?.id ??
@@ -125,8 +137,23 @@ export default function ProductDetailClient({
   const [imageIndex, setImageIndex] = useState(0);
   const [notice, setNotice] = useState<Notice | null>(null);
   const [busy, setBusy] = useState(false);
+  const requestInFlight = useRef(false);
 
   const closeNotice = useCallback(() => setNotice(null), []);
+
+  // When the card links to ?variant=..., preselect that exact variant.
+  // This runs after hydration, preserving the existing server-rendered page.
+  useEffect(() => {
+    const requestedId = new URLSearchParams(window.location.search).get(
+      "variant",
+    );
+    if (!requestedId || !product.variants.some((v) => v.id === requestedId))
+      return;
+    setVariantId(requestedId);
+    setSelected({});
+    setQuantity(1);
+    setImageIndex(0);
+  }, [product.id, product.variants]);
 
   const variant =
     product.variants.find((candidate) => candidate.id === variantId) ??
@@ -268,7 +295,7 @@ export default function ProductDetailClient({
   };
 
   const submit = async (kind: "cart" | "order") => {
-    if (busy || !variant) return;
+    if (requestInFlight.current || !variant) return;
 
     const intent = validate();
     if (!intent) return;
@@ -296,15 +323,28 @@ export default function ProductDetailClient({
       });
     }
 
-    const handler = kind === "cart" ? onAddToCart : onOrderNow;
+    // A successful Add to Cart must actually persist via /api/cart/items.
+    // Keep the optional external handler for callers that supply one.
+    const handler =
+      kind === "cart"
+        ? (onAddToCart ??
+          (async (selection: PurchaseIntent) => {
+            await addToCart({
+              variantId: selection.variantId,
+              quantity: selection.quantity,
+              attributes: selection.attributes,
+            });
+            announceCartChanged();
+          }))
+        : onOrderNow;
+
     if (!handler) {
+      // Orders have not been integrated yet: emit an event, not a fake order.
       window.dispatchEvent(
-        new CustomEvent(kind === "cart" ? ADD_TO_CART_EVENT : ORDER_NOW_EVENT, {
-          detail: intent,
-        }),
+        new CustomEvent(ORDER_NOW_EVENT, { detail: intent }),
       );
       notify(
-        "Your selection is valid, but cart and checkout services have not been connected yet. No cart item or order was created.",
+        "Your selection is valid, but checkout has not been connected yet. No order was created.",
         "info",
         "Ready for integration",
       );
@@ -312,6 +352,7 @@ export default function ProductDetailClient({
     }
 
     try {
+      requestInFlight.current = true;
       setBusy(true);
       await handler(intent);
       notify(
@@ -322,12 +363,25 @@ export default function ProductDetailClient({
         kind === "cart" ? "Added to cart" : "Order started",
       );
     } catch (error) {
+      if (error instanceof CartApiError && error.status === 401) {
+        router.push("/login");
+        return;
+      }
+      if (error instanceof CartApiError && error.status === 403) {
+        notify(
+          "Administrator accounts cannot use the shopping cart.",
+          "info",
+          "Customer accounts only",
+        );
+        return;
+      }
       notify(
         error instanceof Error
           ? error.message
           : "The action could not be completed. Please retry.",
       );
     } finally {
+      requestInFlight.current = false;
       setBusy(false);
     }
   };
