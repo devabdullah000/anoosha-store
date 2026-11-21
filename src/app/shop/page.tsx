@@ -16,7 +16,66 @@ import { pageMetadata } from "@/lib/storefront-pages";
 import { SHOP_METADATA } from "@/lib/seo/shop";
 import { SHOP_PAGE_DESCRIPTION, SHOP_PAGE_SUBTITLE1, SHOP_PAGE_SUBTITLE2,SHOP_PAGE_TITLE } from "@/lib/constants";
 
-export const metadata: Metadata = pageMetadata(SHOP_METADATA);
+type ShopMetadataProps = {
+  searchParams: Promise<{
+    page?: string | string[];
+    q?: string | string[];
+  }>;
+};
+
+export async function generateMetadata({
+  searchParams,
+}: ShopMetadataProps): Promise<Metadata> {
+  const params = await searchParams;
+
+  const rawPage = Array.isArray(params.page)
+    ? params.page[0]
+    : params.page;
+
+  const parsedPage = Number(rawPage);
+
+  const page =
+    Number.isSafeInteger(parsedPage) && parsedPage > 1
+      ? parsedPage
+      : 1;
+
+  const query = Array.isArray(params.q)
+    ? params.q[0]
+    : params.q;
+
+  const isSearchPage = Boolean(query?.trim());
+
+  const canonical =
+    page === 1
+      ? SHOP_METADATA.path
+      : `/shop?page=${page}`;
+
+  const base = pageMetadata(SHOP_METADATA);
+
+  return {
+    ...base,
+
+    // Prevent duplicate branding from a parent title template.
+    title: {
+      absolute: `${SHOP_METADATA.title} | Anoosha Store`,
+    },
+
+    alternates: {
+      ...base.alternates,
+      canonical: isSearchPage ? undefined : canonical,
+    },
+
+    openGraph: {
+      ...base.openGraph,
+      url: isSearchPage ? SHOP_METADATA.path : canonical,
+    },
+
+    robots: {
+      index: !isSearchPage,
+      follow: true,
+    },
+  };
+}
 
 export default async function ShopPage({
   searchParams,

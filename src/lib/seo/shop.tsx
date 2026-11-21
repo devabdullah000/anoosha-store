@@ -1,8 +1,19 @@
+
 import { StaticPageHref } from "../constants";
+
 export const SHOP_METADATA = {
-  title: "Shop Mobile & Gaming Accessories",
+  title: "Buy Mobile & Gaming Accessories Online in Pakistan",
   description:
-    "Browse Anoosha Store collections, organized by category. Discover mobile accessories, gaming essentials, new arrivals and more in Pakistan.",
+    "Shop mobile accessories, gaming gear, and tech essentials at Anoosha Store. Explore collections, discover new arrivals, and shop online in Pakistan.",
   path: "/shop" as StaticPageHref,
-  keywords: ["shop", "collections", "categories", "new arrivals"],
+  keywords: [
+    "buy mobile accessories online",
+    "mobile accessories Pakistan",
+    "gaming accessories Pakistan",
+    "phone accessories",
+    "gaming gear",
+    "tech accessories",
+    "online accessories store",
+    "new arrivals",
+  ],
 };

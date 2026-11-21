@@ -1,46 +1,191 @@
+
+import { cache } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LuArrowLeft, LuChevronRight } from "react-icons/lu";
-import { categoryProducts } from "@/lib/storefront/queries";
+
+import {
+  categoryProducts as fetchCategoryProducts,
+} from "@/lib/storefront/queries";
+
 import {
   asLimit,
   asPage,
   canonical,
   categoryHref,
+  SITE_URL,
 } from "@/lib/storefront/utils";
+
 import ProductCard from "@/components/storefront/product-card";
 import StorefrontPagination from "@/components/storefront/storefront-pagination";
 import css from "@/components/storefront/storefront.module.css";
+
 export const dynamic = "force-dynamic";
+
 type Props = {
   params: Promise<{ categoryId: string }>;
-  searchParams: Promise<{ page?: string; limit?: string }>;
+  searchParams: Promise<{
+    page?: string;
+    limit?: string;
+  }>;
 };
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const id = (await params).categoryId;
-  const data = await categoryProducts(id, 1, 10);
-  if (!data)
-    return {
-      title: "Category not found | Anoosha Store",
-      robots: { index: false },
-    };
-  const url = canonical(categoryHref(id));
-  const description =
-    data.category.description ||
-    `Explore ${data.category.name} at Anoosha Store. Shop a curated range of mobile and gaming accessories in Pakistan.`;
+
+// Reuse category data across metadata and page rendering.
+// This deduplicates identical queries within a server render.
+const categoryProducts = cache(fetchCategoryProducts);
+
+// Clean and normalize category descriptions for SEO.
+function seoDescription(
+  value: string,
+  fallback: string,
+): string {
+  const cleaned = value
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  const text = cleaned || fallback;
+
+  if (text.length <= 160) return text;
+
+  return (
+    text
+      .slice(0, 157)
+      .replace(/\s+\S*$/, "")
+      .trimEnd() + "..."
+  );
+}
+
+export async function generateMetadata({
+  params,
+  searchParams,
+}: Props): Promise<Metadata> {
+  const { categoryId } = await params;
+  const query = await searchParams;
+
+  // Use the same pagination values as CategoryPage.
+  const page = asPage(query.page);
+  const limit = asLimit(query.limit);
+
+  // Derive the default page size from the existing utility.
+  const defaultLimit = asLimit(undefined);
+
+  const data = await categoryProducts(
+    categoryId,
+    page,
+    limit,
+  );
+
+  // Invalid or deleted categories return a real 404.
+  if (!data) notFound();
+
+  const { category, listing } = data;
+
+  const categoryName = category.name.trim();
+
+  // Differentiate paginated category pages.
+  const pageSuffix = page > 1
+    ? ` - Page ${page}`
+    : "";
+
+  const title =
+    `${categoryName}${pageSuffix} | Anoosha Store`;
+
+  const fallbackDescription =
+    `Explore ${categoryName} at Anoosha Store. ` +
+    `Browse available products, discover accessories, ` +
+    `and shop online in Pakistan.`;
+
+  const description = seoDescription(
+    category.description || "",
+    fallbackDescription,
+  );
+
+  // Build an absolute canonical URL.
+  const canonicalUrl = new URL(
+    canonical(categoryHref(categoryId)),
+  );
+
+  // Each paginated page must have its own canonical URL.
+  if (page > 1) {
+    canonicalUrl.searchParams.set(
+      "page",
+      String(page),
+    );
+  }
+
+  // Preserve alternative page sizes in canonical URLs
+  // because they can display different product sets.
+  const isDefaultLimit = limit === defaultLimit;
+
+  if (!isDefaultLimit) {
+    canonicalUrl.searchParams.set(
+      "limit",
+      String(limit),
+    );
+  }
+
+  const url = canonicalUrl.toString();
+
+  // Index normal category listings and their valid pages.
+  // Avoid indexing empty pages or alternate page-size URLs.
+  const shouldIndex =
+    listing.data.length > 0 && isDefaultLimit;
+
   return {
-    title: `${data.category.name} | Anoosha Store`,
+    metadataBase: new URL(SITE_URL),
+
+    title: {
+      absolute: title,
+    },
+
     description,
-    alternates: { canonical: url },
+
+    keywords: [
+      categoryName,
+      `${categoryName} Pakistan`,
+      `buy ${categoryName} online`,
+      "Anoosha Store",
+      "online shopping Pakistan",
+      "mobile accessories",
+      "gaming accessories",
+    ],
+
+    alternates: {
+      canonical: url,
+    },
+
     openGraph: {
-      title: `${data.category.name} | Anoosha Store`,
+      type: "website",
+      siteName: "Anoosha Store",
+      locale: "en_PK",
+      title,
       description,
       url,
-      type: "website",
+    },
+
+    twitter: {
+      card: "summary",
+      title,
+      description,
+    },
+
+    robots: {
+      index: shouldIndex,
+      follow: true,
+      googleBot: {
+        index: shouldIndex,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        "max-video-preview": -1,
+      },
     },
   };
 }
+
 export default async function CategoryPage({ params, searchParams }: Props) {
   const id = (await params).categoryId,
     p = await searchParams;

@@ -82,6 +82,7 @@ export const TYPES: Record<string, string> = {
 };
 
 export const STOREFRONT_PAGES = [
+  { href: "/", name: "Home" },
   { href: "/about", name: "About Us" },
   { href: "/contact", name: "Contact Us" },
   { href: "/faq", name: "FAQs" },

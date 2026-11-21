@@ -34,9 +34,7 @@ export default function TermsPage() {
       description={Terms_AND_Condition_DESCRIPTION}
       icon={<LuFileText className="h-3.5 w-3.5" />}
       related={[
-        "/privacy-policy",
-        "/return-policy",
-        "/shipping-policy",
+        "/shipping-and-return-policy",
         "/contact",
       ]}
     >

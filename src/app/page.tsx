@@ -1,17 +1,27 @@
+
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LuArrowRight, LuChevronRight } from "react-icons/lu";
-import { taggedProducts, categoryHighlights } from "@/lib/storefront/queries";
+
+import {
+  taggedProducts,
+  categoryHighlights,
+} from "@/lib/storefront/queries";
+
 import { publicHero } from "@/lib/storefront/hero";
 import { categoryHref } from "@/lib/storefront/utils";
+
 import SmartSlider from "@/components/storefront/smart-slider";
 import ProductRail from "@/components/storefront/product-rail";
 import Reveal from "@/components/storefront/reveal";
+
 import css from "@/components/storefront/storefront.module.css";
+
 import {
   HOME_PAGE_SEO_PARAMS,
   HOME_PAGE_STRUCTURED_SCHEMA,
 } from "@/lib/seo/homepage";
+
 import {
   HOME_PAGE_TINYLINKS as tinyLinks,
   FEATURED_PRODUCTS_SECTION_EYEBROW,
@@ -31,8 +41,18 @@ import {
   HOME_PAGE_NO_CATEGROIES_TEXT,
   HOME_PAGE_LEFT_BUTTON_TEXT,
 } from "@/lib/constants";
+
+/* ============================================================
+   HOME PAGE CONFIGURATION
+   ============================================================ */
+
 export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = HOME_PAGE_SEO_PARAMS;
+
+/* ============================================================
+   HOME PAGE COMPONENT
+   ============================================================ */
 
 export default async function HomePage() {
   const [hero, featured, latest, categories] = await Promise.all([
