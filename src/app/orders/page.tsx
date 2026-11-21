@@ -30,7 +30,7 @@ export default async function OrdersPage({ searchParams }: Props) {
         <h1 className="mt-3 mb-8 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">
           Your orders
         </h1>
-        
+
         <OrdersClient items={data.data} page={data.page} total={data.total} />
       </div>
     </main>

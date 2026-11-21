@@ -1,4 +1,3 @@
-
 import {
   actor,
   bodyJson,
@@ -17,9 +16,7 @@ export async function GET(request: Request) {
   try {
     const user = await actor("user");
 
-    const page = Number(
-      new URL(request.url).searchParams.get("page") || "1",
-    );
+    const page = Number(new URL(request.url).searchParams.get("page") || "1");
 
     return Response.json(
       {
@@ -40,9 +37,7 @@ export async function POST(request: Request) {
 
     const user = await actor("user");
 
-    const input = parsePlaceOrder(
-      await bodyJson(request),
-    );
+    const input = parsePlaceOrder(await bodyJson(request));
 
     const result = await placeOrder(user, input);
 

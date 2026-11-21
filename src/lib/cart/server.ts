@@ -355,7 +355,9 @@ export async function loadCart(user: CartIdentity): Promise<CartPayload> {
       available,
       canAddAnotherVariant: available && row.hasUncartedVariant === 1,
       unitPricePaisa: livePrice,
-      originalUnitPricePaisa: available ? row.salePrice! : row.unitPriceSnapshot,
+      originalUnitPricePaisa: available
+        ? row.salePrice!
+        : row.unitPriceSnapshot,
       discountPercentage: available ? row.discountPercentage! : 0,
       appliedPromotionName: available ? row.appliedPromotionName : null,
       appliedPromotionId: available ? row.appliedPromotionId : null,

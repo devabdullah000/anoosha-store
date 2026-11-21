@@ -55,8 +55,8 @@ export type VariantAttribute = {
   id: string;
   name: string;
   value: string;
-  displayType: 'dropdown' | 'button' | 'color';
-  valueType: 'text' | 'number' | 'boolean' | 'color';
+  displayType: "dropdown" | "button" | "color";
+  valueType: "text" | "number" | "boolean" | "color";
   unit: string | null;
 };
 

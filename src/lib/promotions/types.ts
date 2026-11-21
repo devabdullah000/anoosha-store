@@ -13,14 +13,32 @@ export type PromotionTargets = {
   excludedVariantIds: string[]; // applies to store scope
 };
 export type PromotionListRow = {
-  id:string; name:string; description:string|null; discountPercentage:number;
-  scope:PromotionScope; isActive:boolean; productsCount:number; variantsCount:number;
-  createdAt:string; updatedAt:string;
+  id: string;
+  name: string;
+  description: string | null;
+  discountPercentage: number;
+  scope: PromotionScope;
+  isActive: boolean;
+  productsCount: number;
+  variantsCount: number;
+  createdAt: string;
+  updatedAt: string;
 };
-export type PromotionDetail = PromotionListRow & { targets:PromotionTargets };
-export type Page<T> = {data:T[];page:number;pageSize:number;total:number};
+export type PromotionDetail = PromotionListRow & { targets: PromotionTargets };
+export type Page<T> = {
+  data: T[];
+  page: number;
+  pageSize: number;
+  total: number;
+};
 export type CatalogProduct = {
-  id:string;name:string;categoryId:string;categoryName:string;hasVariants:boolean;
-  variants:Array<{id:string;name:string;sku:string;stock:number}>;
+  id: string;
+  name: string;
+  categoryId: string;
+  categoryName: string;
+  hasVariants: boolean;
+  variants: Array<{ id: string; name: string; sku: string; stock: number }>;
 };
-export type CatalogPage = Page<CatalogProduct> & {categories:Array<{id:string;name:string}>};
+export type CatalogPage = Page<CatalogProduct> & {
+  categories: Array<{ id: string; name: string }>;
+};

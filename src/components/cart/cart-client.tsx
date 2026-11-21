@@ -389,7 +389,9 @@ export default function CartClient({
                             {money(item.unitPricePaisa)} / unit
                           </span>
                           {item.discountPercentage > 0 && (
-                            <span className={`rounded-lg px-2.5 py-1.5 ${item.appliedPromotionName ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"}`}>
+                            <span
+                              className={`rounded-lg px-2.5 py-1.5 ${item.appliedPromotionName ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"}`}
+                            >
                               {item.appliedPromotionName
                                 ? `${item.appliedPromotionName} · ${item.discountPercentage}% promotion`
                                 : `${item.discountPercentage}% individual discount`}
@@ -409,8 +411,13 @@ export default function CartClient({
 
                         {item.discountPercentage > 0 && (
                           <p className="mt-2 text-xs text-slate-500">
-                            Original unit price: <span className="line-through">{money(item.originalUnitPricePaisa)}</span>
-                            {item.appliedPromotionName ? " · Individual discount is not combined with the promotion." : ""}
+                            Original unit price:{" "}
+                            <span className="line-through">
+                              {money(item.originalUnitPricePaisa)}
+                            </span>
+                            {item.appliedPromotionName
+                              ? " · Individual discount is not combined with the promotion."
+                              : ""}
                           </p>
                         )}
                         {item.priceChanged && (
@@ -551,15 +558,21 @@ export default function CartClient({
                   </div>
                   <button
                     type="button"
-                    disabled={!cart.items.length || !cart.checkoutReady || busyId !== null || refreshing || !!error}
+                    disabled={
+                      !cart.items.length ||
+                      !cart.checkoutReady ||
+                      busyId !== null ||
+                      refreshing ||
+                      !!error
+                    }
                     onClick={() => router.push("/checkout")}
                     className="mt-5 min-h-12 w-full rounded-xl bg-gradient-to-r from-pink-500 via-blue-600 to-cyan-500 px-4 text-sm font-extrabold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     Checkout · Cash on delivery
                   </button>
                   <p className="mt-3 text-center text-[11px] leading-5 text-slate-400">
-                    Prices and stock are revalidated atomically when you
-                    place the order.
+                    Prices and stock are revalidated atomically when you place
+                    the order.
                   </p>
                 </div>
               </aside>

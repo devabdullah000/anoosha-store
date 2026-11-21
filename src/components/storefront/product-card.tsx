@@ -354,7 +354,9 @@ export default function ProductCard({
 
                     {selectedPromotionName && (
                       <p className="rounded-lg bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-700">
-                        {selectedPromotionName} · {selectedVariant.discountPercentage}% promotional discount
+                        {selectedPromotionName} ·{" "}
+                        {selectedVariant.discountPercentage}% promotional
+                        discount
                       </p>
                     )}
                     {requiredDropdowns.map((attribute: VariantAttribute) => (
@@ -438,7 +440,9 @@ export default function ProductCard({
                         </span>
                         <span className="shrink-0 text-right">
                           {variant.appliedPromotionName && (
-                            <span className="mb-1 block text-[10px] font-bold text-emerald-700">Promotion applied</span>
+                            <span className="mb-1 block text-[10px] font-bold text-emerald-700">
+                              Promotion applied
+                            </span>
                           )}
                           <Price
                             salePrice={variant.salePrice}
@@ -487,7 +491,10 @@ export default function ProductCard({
               className="h-full w-full object-contain p-5 transition-transform duration-700 group-hover:scale-[1.075]"
             />
             {promotionName && (
-              <span className="absolute left-3 top-3 max-w-[70%] truncate rounded-lg bg-emerald-600 px-2.5 py-1.5 text-[10px] font-extrabold text-white shadow-sm" title={promotionName}>
+              <span
+                className="absolute left-3 top-3 max-w-[70%] truncate rounded-lg bg-emerald-600 px-2.5 py-1.5 text-[10px] font-extrabold text-white shadow-sm"
+                title={promotionName}
+              >
                 {promotionName} · {product.discountPercentage}% off
               </span>
             )}

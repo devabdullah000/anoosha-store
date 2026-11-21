@@ -14,6 +14,7 @@ import { ProductsInterface } from "./products";
 import InventoryInterface from "./inventory/inventory-panel";
 import OrdersInterface from "../orders/admin-orders-manager";
 import PromotionsInterface from "./promotions/promotions-panel";
+import SalesReportInterface from "./sales-report/sales-report-panel";
 import SettingsInterface from "./settings/settings";
 import { ADMIN_PANEL_MAIN_TEXT } from "@/lib/constants";
 
@@ -158,6 +159,10 @@ export function OrdersPanel(_props: AdminPanelProps) {
 
 export function PromotionsPanel(_props: AdminPanelProps) {
   return <PromotionsInterface />;
+}
+
+export function SalesReportPanel(_props: AdminPanelProps) {
+  return <SalesReportInterface />;
 }
 
 export function SettingsPanel({ adminEmail }: AdminPanelProps) {

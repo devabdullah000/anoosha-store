@@ -1,12 +1,17 @@
-import type { PageInfo, StoreVariant, VariantAttribute } from './types';
-import { STORE_URL } from '../constants';
-import type { AttributeChoice } from './types';
+import type { PageInfo, StoreVariant, VariantAttribute } from "./types";
+import { STORE_URL } from "../constants";
+import type { AttributeChoice } from "./types";
 
-export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL || STORE_URL
-).replace(/\/+$/, '');
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || STORE_URL).replace(
+  /\/+$/,
+  "",
+);
 
-export function pagination(page: number, limit: number, total: number): PageInfo {
+export function pagination(
+  page: number,
+  limit: number,
+  total: number,
+): PageInfo {
   const totalPages = Math.max(1, Math.ceil(total / limit));
   const safePage = Math.min(Math.max(1, page), totalPages);
   return {
@@ -29,7 +34,10 @@ export function asLimit(value: string | null | undefined): number {
 }
 
 export function pricePaisa(
-  variant: Pick<StoreVariant, 'salePrice' | 'hasDiscount' | 'discountPercentage'>,
+  variant: Pick<
+    StoreVariant,
+    "salePrice" | "hasDiscount" | "discountPercentage"
+  >,
 ): number {
   return variant.hasDiscount
     ? Math.round((variant.salePrice * (100 - variant.discountPercentage)) / 100)
@@ -37,7 +45,7 @@ export function pricePaisa(
 }
 
 export function money(paisa: number): string {
-  return `Rs. ${(paisa / 100).toLocaleString('en-PK', {
+  return `Rs. ${(paisa / 100).toLocaleString("en-PK", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
@@ -50,14 +58,14 @@ export function descriptionPreview(
   if (shortDescription?.trim()) {
     return { text: shortDescription.trim(), truncated: false };
   }
-  const clean = description.replace(/\s+/g, ' ').trim();
+  const clean = description.replace(/\s+/g, " ").trim();
   return clean.length > 58
     ? { text: `${clean.slice(0, 55).trimEnd()}...`, truncated: true }
     : { text: clean, truncated: false };
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
+  return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
 function decodeValue(input: string): unknown {
@@ -65,16 +73,20 @@ function decodeValue(input: string): unknown {
 
   // Some existing admin forms may have JSON-stringified a JSON string.
   for (let attempt = 0; attempt < 2; attempt++) {
-    if (typeof value !== 'string') break;
+    if (typeof value !== "string") break;
     const text = value.trim();
-    if (!text.startsWith('{') && !text.startsWith('[') && !text.startsWith('"')) {
+    if (
+      !text.startsWith("{") &&
+      !text.startsWith("[") &&
+      !text.startsWith('"')
+    ) {
       break;
     }
     try {
       value = JSON.parse(text) as unknown;
     } catch {
       // Avoid accidentally rendering the entire JSON payload as a choice.
-      return text.startsWith('{') || text.startsWith('[') ? null : text;
+      return text.startsWith("{") || text.startsWith("[") ? null : text;
     }
   }
 
@@ -82,10 +94,10 @@ function decodeValue(input: string): unknown {
 }
 
 function availableQuantity(value: unknown): number | null {
-  if (typeof value === 'number' && Number.isSafeInteger(value) && value >= 0) {
+  if (typeof value === "number" && Number.isSafeInteger(value) && value >= 0) {
     return value;
   }
-  if (typeof value === 'string' && /^\d+$/.test(value)) {
+  if (typeof value === "string" && /^\d+$/.test(value)) {
     const parsed = Number(value);
     return Number.isSafeInteger(parsed) ? parsed : null;
   }
@@ -102,7 +114,9 @@ function availableQuantity(value: unknown): number | null {
  *
  * A quantity of zero means the option must not be selectable.
  */
-export function attributeChoices(attribute: VariantAttribute): AttributeChoice[] {
+export function attributeChoices(
+  attribute: VariantAttribute,
+): AttributeChoice[] {
   const decoded = decodeValue(attribute.value);
   let items: unknown[];
 
@@ -128,26 +142,27 @@ export function attributeChoices(attribute: VariantAttribute): AttributeChoice[]
   const choices: AttributeChoice[] = [];
 
   for (const item of items) {
-    let label = '';
+    let label = "";
     let quantity: number | null = null;
     let color: string | null = null;
 
-    if (typeof item === 'string' || typeof item === 'number') {
+    if (typeof item === "string" || typeof item === "number") {
       label = String(item).trim();
     } else if (isRecord(item)) {
-      if (typeof item.label === 'string') {
+      if (typeof item.label === "string") {
         label = item.label.trim();
-      } else if (typeof item.value === 'string') {
+      } else if (typeof item.value === "string") {
         label = item.value.trim();
       }
       quantity = availableQuantity(item.quantity);
-      color = typeof item.color === 'string'
-        ? item.color.trim()
-        : typeof item.hex === 'string'
-          ? item.hex.trim()
-          : typeof item.value === 'string'
-            ? item.value.trim()
-            : null;
+      color =
+        typeof item.color === "string"
+          ? item.color.trim()
+          : typeof item.hex === "string"
+            ? item.hex.trim()
+            : typeof item.value === "string"
+              ? item.value.trim()
+              : null;
     }
 
     if (!label || unique.has(label)) continue;

@@ -48,7 +48,9 @@ export default function CheckoutClient({
   const [direct, setDirect] = useState<OrderSource | null>(null);
   const [quote, setQuote] = useState<OrderQuote | null>(null);
   // The initial cart is rendered on the server; refresh it only on a 409 price change.
-  const [currentCart, setCurrentCart] = useState<CartPayload | null>(initialCart);
+  const [currentCart, setCurrentCart] = useState<CartPayload | null>(
+    initialCart,
+  );
   const [loading, setLoading] = useState(mode === "direct");
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -187,9 +189,15 @@ export default function CheckoutClient({
             setQuote(await quoteDirect(direct));
           }
           requestId.current = crypto.randomUUID(); // New attempt after a confirmed conflict.
-          setNotice("A product, promotion, or price changed before order confirmation. Your displayed prices are refreshed. Review the totals and place the order again.");
+          setNotice(
+            "A product, promotion, or price changed before order confirmation. Your displayed prices are refreshed. Review the totals and place the order again.",
+          );
         } catch (refreshError) {
-          setNotice(refreshError instanceof Error ? refreshError.message : "Prices changed. Please refresh checkout.");
+          setNotice(
+            refreshError instanceof Error
+              ? refreshError.message
+              : "Prices changed. Please refresh checkout.",
+          );
         }
         return;
       }
@@ -344,14 +352,16 @@ export default function CheckoutClient({
                       </strong>
                       {line.appliedPromotionName && (
                         <span className="mt-1 block text-[11px] font-bold text-emerald-700">
-                          {line.appliedPromotionName} · {line.discountPercentage}% promotion
+                          {line.appliedPromotionName} ·{" "}
+                          {line.discountPercentage}% promotion
                         </span>
                       )}
-                      {!line.appliedPromotionName && line.discountPercentage > 0 && (
-                        <span className="mt-1 block text-[11px] font-bold text-amber-700">
-                          {line.discountPercentage}% individual discount
-                        </span>
-                      )}
+                      {!line.appliedPromotionName &&
+                        line.discountPercentage > 0 && (
+                          <span className="mt-1 block text-[11px] font-bold text-amber-700">
+                            {line.discountPercentage}% individual discount
+                          </span>
+                        )}
                       {line.discountPercentage > 0 && (
                         <span className="block text-[11px] text-slate-400 line-through">
                           {money(line.originalUnitPaisa)} / unit

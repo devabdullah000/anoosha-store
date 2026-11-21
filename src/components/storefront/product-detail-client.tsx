@@ -534,7 +534,8 @@ export default function ProductDetailClient({
               <div className="mt-5 rounded-[1.45rem] border border-slate-100 bg-white/90 p-5 shadow-[0_16px_60px_-45px_rgba(15,23,42,.4)] sm:p-6">
                 {promotionName && (
                   <p className="mb-3 inline-flex rounded-lg bg-emerald-50 px-3 py-1.5 text-xs font-extrabold text-emerald-700">
-                    {promotionName} · {variant.discountPercentage}% promotional discount
+                    {promotionName} · {variant.discountPercentage}% promotional
+                    discount
                   </p>
                 )}
                 <Price

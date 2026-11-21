@@ -6,7 +6,11 @@ import { LuArrowLeft, LuArrowRight, LuArrowUpRight } from "react-icons/lu";
 import type { ProductCardModel } from "@/lib/storefront/types";
 import ProductCard from "./product-card";
 import css from "./storefront.module.css";
-import { SHOP_EXPLORER_BUTTON_TEXT,NO_ITEM_FOR_LATEST_OR_FEATURED_BUTTON,NO_ITEM_FOR_LATEST_OR_FEATURED_SECTION } from "@/lib/constants";
+import {
+  SHOP_EXPLORER_BUTTON_TEXT,
+  NO_ITEM_FOR_LATEST_OR_FEATURED_BUTTON,
+  NO_ITEM_FOR_LATEST_OR_FEATURED_SECTION,
+} from "@/lib/constants";
 
 type ProductRailProps = {
   products: ProductCardModel[];
