@@ -92,7 +92,7 @@ export const STOREFRONT_PAGES = [
   { href: "/orders", name: "Orders" },
 ] as const;
 
-export const STORE_NAME=""
+export const STORE_NAME="Anoosha Store"
 
 /* ==================================================================
    SOCIAL LINKS & ICON CONFIGURATION

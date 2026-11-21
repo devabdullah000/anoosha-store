@@ -8,6 +8,7 @@ import {
   type CSSProperties,
 } from "react";
 import { useRouter } from "next/navigation";
+import { DIRECT_CHECKOUT_KEY } from "@/lib/orders/types";
 import {
   addToCart,
   announceCartChanged,
@@ -299,6 +300,24 @@ export default function ProductDetailClient({
 
     const intent = validate();
     if (!intent) return;
+
+    // Direct checkout uses the existing validated selection. /checkout
+    // verifies the customer session and fetches an authoritative D1 quote.
+    if (kind === "order" && !onOrderNow) {
+      sessionStorage.setItem(
+        DIRECT_CHECKOUT_KEY,
+        JSON.stringify({
+          mode: "direct",
+          item: {
+            variantId: intent.variantId,
+            quantity: intent.quantity,
+            attributes: intent.attributes,
+          },
+        }),
+      );
+      router.push("/checkout?mode=direct");
+      return;
+    }
 
     if (kind === "order") {
       // Debugging/integration payload; no personally identifying information.

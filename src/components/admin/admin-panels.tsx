@@ -12,6 +12,7 @@ import { CategoriesInterface } from "./categories/category-panel";
 import { AttributesInterface } from "./attributes/attribute-panel";
 import { ProductsInterface } from "./products";
 import InventoryInterface from "./inventory/inventory-panel";
+import OrdersInterface from "../orders/admin-orders-manager";
 import SettingsInterface from "./settings/settings";
 import { ADMIN_PANEL_MAIN_TEXT } from "@/lib/constants";
 
@@ -151,34 +152,7 @@ export function InventoryPanel(_props: AdminPanelProps) {
 }
 
 export function OrdersPanel(_props: AdminPanelProps) {
-  return (
-    <section className="space-y-6">
-      <div>
-        <p className="text-xs font-bold uppercase tracking-[0.18em] text-indigo-600">
-          Workspace
-        </p>
-        <h2 className="mt-2 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
-          Orders
-        </h2>
-        <p className="mt-2 text-sm leading-6 text-slate-500">
-          Order management workspace.
-        </p>
-      </div>
-      <div className="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
-        <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-indigo-50 text-xl text-indigo-700">
-          ▣
-        </div>
-        <h3 className="mt-4 text-base font-bold text-slate-900">
-          Order management is not connected yet
-        </h3>
-        <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
-          The current catalog API package does not include order endpoints. This
-          section is ready for your order list, order details, COD status and
-          fulfillment workflows.
-        </p>
-      </div>
-    </section>
-  );
+  return <OrdersInterface />;
 }
 
 export function SettingsPanel({ adminEmail }: AdminPanelProps) {

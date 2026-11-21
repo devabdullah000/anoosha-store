@@ -538,14 +538,15 @@ export default function CartClient({
                   </div>
                   <button
                     type="button"
-                    disabled
-                    className="mt-5 min-h-12 w-full cursor-not-allowed rounded-xl bg-gradient-to-r from-pink-500 via-blue-600 to-cyan-500 px-4 text-sm font-extrabold text-white opacity-50"
+                    disabled={!cart.items.length || !cart.checkoutReady || busyId !== null || refreshing || !!error}
+                    onClick={() => router.push("/checkout")}
+                    className="mt-5 min-h-12 w-full rounded-xl bg-gradient-to-r from-pink-500 via-blue-600 to-cyan-500 px-4 text-sm font-extrabold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    Checkout — coming soon
+                    Checkout · Cash on delivery
                   </button>
                   <p className="mt-3 text-center text-[11px] leading-5 text-slate-400">
-                    The Orders module must revalidate stock and pricing before
-                    purchase.
+                    Prices and stock are revalidated atomically when you
+                    place the order.
                   </p>
                 </div>
               </aside>
