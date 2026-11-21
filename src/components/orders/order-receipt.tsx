@@ -99,7 +99,9 @@ export default function OrderReceipt({ order }: { order: OrderInfo }) {
                 <td className="px-3 py-4 text-right">
                   {money(item.originalUnitPaisa)}
                   <p className="text-emerald-600">
-                    {item.discountPercentage}% off
+                    {item.appliedPromotionName
+                      ? `${item.appliedPromotionName} · ${item.discountPercentage}% promotional discount`
+                      : `${item.discountPercentage}% off`}
                   </p>
                   <p className="text-slate-500">
                     {money(item.finalUnitPaisa)} net

@@ -131,7 +131,7 @@ export const NAVBAR_CONFIG: NavbarConfig = {
     { name: "Cart", link: "/cart" },
     { name: "About Us", link: "/about" },
     { name: "Contact Us", link: "/contact" },
-    { name: "Terms And Conditions", link: "/terms-and-conditions" },
+    { name: "FAQs", link: "/faq" },
     { name: "Privacy Policy", link: "/privacy-policy" },
   ],
 

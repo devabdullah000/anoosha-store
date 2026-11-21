@@ -61,6 +61,8 @@ export default function ProductCard({
   product: ProductCardModel;
 }) {
   const router = useRouter();
+  // Metadata comes from the same storefront query as the effective price.
+  const promotionName = product.appliedPromotionName;
   const [busy, setBusy] = useState(false);
   const [loadingVariants, setLoadingVariants] = useState(false);
   const [notice, setNotice] = useState<Notice | null>(null);
@@ -82,6 +84,7 @@ export default function ProductCard({
   const selectedVariant = fullProduct?.variants.find(
     (variant) => variant.id === activeVariantId,
   );
+  const selectedPromotionName = selectedVariant?.appliedPromotionName;
   const requiredDropdowns =
     selectedVariant?.attributes.filter(
       (attribute) => attribute.displayType === "dropdown",
@@ -349,6 +352,11 @@ export default function ProductCard({
                       </p>
                     </div>
 
+                    {selectedPromotionName && (
+                      <p className="rounded-lg bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-700">
+                        {selectedPromotionName} · {selectedVariant.discountPercentage}% promotional discount
+                      </p>
+                    )}
                     {requiredDropdowns.map((attribute: VariantAttribute) => (
                       <div key={attribute.id}>
                         <label
@@ -429,6 +437,9 @@ export default function ProductCard({
                           </span>
                         </span>
                         <span className="shrink-0 text-right">
+                          {variant.appliedPromotionName && (
+                            <span className="mb-1 block text-[10px] font-bold text-emerald-700">Promotion applied</span>
+                          )}
                           <Price
                             salePrice={variant.salePrice}
                             hasDiscount={variant.hasDiscount}
@@ -475,6 +486,11 @@ export default function ProductCard({
               loading="lazy"
               className="h-full w-full object-contain p-5 transition-transform duration-700 group-hover:scale-[1.075]"
             />
+            {promotionName && (
+              <span className="absolute left-3 top-3 max-w-[70%] truncate rounded-lg bg-emerald-600 px-2.5 py-1.5 text-[10px] font-extrabold text-white shadow-sm" title={promotionName}>
+                {promotionName} · {product.discountPercentage}% off
+              </span>
+            )}
             <span className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full border border-white/80 bg-white/90 text-slate-700 shadow-sm backdrop-blur-sm transition duration-300 group-hover:rotate-45 group-hover:text-indigo-700">
               <LuArrowUpRight className="h-4 w-4" />
             </span>

@@ -20,9 +20,18 @@ export type OrderSource =
         attributes: CartSelection[];
       };
     };
+export type ExpectedOrderPrice = {
+  variantId: string;
+  quantity: number;
+  unitPaisa: number;
+  discountPercentage: number;
+  appliedPromotionId: string | null;
+};
 export type PlaceOrderBody = OrderSource & {
   shipping: ShippingDetails;
   idempotencyKey: string;
+  /** Client-visible price expectation; the server must independently validate it. */
+  expectedPrices?: ExpectedOrderPrice[];
 };
 export type OrderLine = {
   id: string;
@@ -36,6 +45,7 @@ export type OrderLine = {
   imageKey: string | null;
   originalUnitPaisa: number;
   discountPercentage: number;
+  appliedPromotionName?: string | null;
   finalUnitPaisa: number;
   grossPaisa: number;
   discountPaisa: number;
@@ -91,6 +101,10 @@ export type OrderListItem = Pick<
 > & { canCustomerCancel: boolean };
 export type QuoteLine = {
   variantId: string;
+  originalUnitPaisa: number;
+  discountPercentage: number;
+  appliedPromotionName: string | null;
+  appliedPromotionId: string | null;
   name: string;
   variantName: string;
   quantity: number;

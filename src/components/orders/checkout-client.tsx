@@ -11,7 +11,7 @@ import {
 } from "react-icons/lu";
 import type { CartPayload } from "@/lib/cart/types";
 import { money } from "@/lib/storefront/utils";
-import { announceCartChanged } from "@/lib/cart/client";
+import { announceCartChanged, getCart } from "@/lib/cart/client";
 import { placeOrder, quoteDirect, OrderApiError } from "@/lib/orders/client";
 import { DIRECT_CHECKOUT_KEY } from "@/lib/orders/types";
 import { normalizePakistanMobile } from "@/lib/orders/phone";
@@ -47,6 +47,8 @@ export default function CheckoutClient({
   const [shipping, setShipping] = useState(initialShipping);
   const [direct, setDirect] = useState<OrderSource | null>(null);
   const [quote, setQuote] = useState<OrderQuote | null>(null);
+  // The initial cart is rendered on the server; refresh it only on a 409 price change.
+  const [currentCart, setCurrentCart] = useState<CartPayload | null>(initialCart);
   const [loading, setLoading] = useState(mode === "direct");
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -96,22 +98,26 @@ export default function CheckoutClient({
     };
   }, [mode]);
   const cartReady =
-    mode === "cart" && !!initialCart?.items.length && initialCart.checkoutReady;
+    mode === "cart" && !!currentCart?.items.length && currentCart.checkoutReady;
   const lines =
     mode === "direct"
       ? (quote?.lines ?? [])
-      : (initialCart?.items.map((i) => ({
+      : (currentCart?.items.map((i) => ({
           variantId: i.variantId,
           name: i.productName,
           variantName: i.variantName,
           quantity: i.quantity,
           unitPaisa: i.unitPricePaisa,
+          originalUnitPaisa: i.originalUnitPricePaisa,
+          discountPercentage: i.discountPercentage,
+          appliedPromotionName: i.appliedPromotionName,
+          appliedPromotionId: i.appliedPromotionId,
           linePaisa: i.unitPricePaisa * i.quantity,
         })) ?? []);
   const subtotal =
     mode === "direct"
       ? (quote?.subtotalPaisa ?? 0)
-      : (initialCart?.subtotalPaisa ?? 0);
+      : (currentCart?.subtotalPaisa ?? 0);
   const ready = mode === "direct" ? !!direct && !!quote : cartReady;
   function set(field: keyof ShippingDetails, value: string) {
     setShipping((s) => ({ ...s, [field]: value }));
@@ -150,6 +156,13 @@ export default function CheckoutClient({
         ...source,
         shipping,
         idempotencyKey: requestId.current,
+        expectedPrices: lines.map((line) => ({
+          variantId: line.variantId,
+          quantity: line.quantity,
+          unitPaisa: line.unitPaisa,
+          discountPercentage: line.discountPercentage,
+          appliedPromotionId: line.appliedPromotionId,
+        })),
       });
       if (mode === "direct") sessionStorage.removeItem(DIRECT_CHECKOUT_KEY);
       else announceCartChanged();
@@ -161,6 +174,23 @@ export default function CheckoutClient({
       }
       if (e instanceof OrderApiError && e.status === 403) {
         router.replace("/admin/dashboard");
+        return;
+      }
+      if (e instanceof OrderApiError && e.status === 409) {
+        try {
+          // Only one extra Worker call on the failed/changed-price path.
+          if (mode === "cart") {
+            setCurrentCart(null);
+            setCurrentCart(await getCart());
+          } else if (direct) {
+            setQuote(null);
+            setQuote(await quoteDirect(direct));
+          }
+          requestId.current = crypto.randomUUID(); // New attempt after a confirmed conflict.
+          setNotice("A product, promotion, or price changed before order confirmation. Your displayed prices are refreshed. Review the totals and place the order again.");
+        } catch (refreshError) {
+          setNotice(refreshError instanceof Error ? refreshError.message : "Prices changed. Please refresh checkout.");
+        }
         return;
       }
       setNotice(e instanceof Error ? e.message : "Unable to place order.");
@@ -312,6 +342,21 @@ export default function CheckoutClient({
                       <strong className="block text-slate-900">
                         {line.name}
                       </strong>
+                      {line.appliedPromotionName && (
+                        <span className="mt-1 block text-[11px] font-bold text-emerald-700">
+                          {line.appliedPromotionName} · {line.discountPercentage}% promotion
+                        </span>
+                      )}
+                      {!line.appliedPromotionName && line.discountPercentage > 0 && (
+                        <span className="mt-1 block text-[11px] font-bold text-amber-700">
+                          {line.discountPercentage}% individual discount
+                        </span>
+                      )}
+                      {line.discountPercentage > 0 && (
+                        <span className="block text-[11px] text-slate-400 line-through">
+                          {money(line.originalUnitPaisa)} / unit
+                        </span>
+                      )}
                       <span className="text-slate-500">
                         {line.variantName} · {line.quantity} ×{" "}
                         {money(line.unitPaisa)}

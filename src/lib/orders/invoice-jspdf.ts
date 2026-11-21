@@ -183,7 +183,7 @@ export async function downloadOrderInvoicePdf(order: OrderInfo): Promise<void> {
     for (const selection of item.selections)
       description.push(`${selection.name}: ${selection.values.join(", ")}`);
     description.push(
-      `Unit: ${MONEY(item.originalUnitPaisa)} | ${item.discountPercentage}% discount | Net: ${MONEY(item.finalUnitPaisa)}`,
+      `Unit: ${MONEY(item.originalUnitPaisa)} | ${item.appliedPromotionName ? `${safePdfText(item.appliedPromotionName)} promotion` : "Individual"} ${item.discountPercentage}% | Net: ${MONEY(item.finalUnitPaisa)}`,
     );
     const rows = description.flatMap((line, idx) =>
       wrapped(line, 226, idx === 0 ? 10 : 8.5),

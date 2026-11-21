@@ -388,6 +388,13 @@ export default function CartClient({
                           <span className="rounded-lg bg-slate-100 px-2.5 py-1.5 text-slate-700">
                             {money(item.unitPricePaisa)} / unit
                           </span>
+                          {item.discountPercentage > 0 && (
+                            <span className={`rounded-lg px-2.5 py-1.5 ${item.appliedPromotionName ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"}`}>
+                              {item.appliedPromotionName
+                                ? `${item.appliedPromotionName} · ${item.discountPercentage}% promotion`
+                                : `${item.discountPercentage}% individual discount`}
+                            </span>
+                          )}
                           <span className="rounded-lg bg-indigo-50 px-2.5 py-1.5 text-indigo-700">
                             Quantity: {item.quantity}
                           </span>
@@ -400,6 +407,12 @@ export default function CartClient({
                           </span>
                         </div>
 
+                        {item.discountPercentage > 0 && (
+                          <p className="mt-2 text-xs text-slate-500">
+                            Original unit price: <span className="line-through">{money(item.originalUnitPricePaisa)}</span>
+                            {item.appliedPromotionName ? " · Individual discount is not combined with the promotion." : ""}
+                          </p>
+                        )}
                         {item.priceChanged && (
                           <p className="mt-3 text-xs font-semibold text-amber-700">
                             Price changed since addition: previous unit price{" "}

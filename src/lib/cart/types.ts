@@ -21,6 +21,12 @@ export type CartItem = {
   /** True only if this product has another active variant not in this user's cart. */
   canAddAnotherVariant: boolean;
   unitPricePaisa: number;
+  /** Pre-discount sale price (PKR paisa). */
+  originalUnitPricePaisa: number;
+  /** Effective discount: promotion wins, individual discount is ignored. */
+  discountPercentage: number;
+  appliedPromotionName: string | null;
+  appliedPromotionId: string | null;
   previousUnitPricePaisa: number;
   priceChanged: boolean;
   selections: CartSelection[];

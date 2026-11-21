@@ -13,6 +13,8 @@ export type ProductCardModel = {
   salePrice: number; // PKR paisa
   hasDiscount: boolean;
   discountPercentage: number;
+  /** Name of the active promotion for the representative variant (or null). */
+  appliedPromotionName: string | null;
   stock: number;
   imageUrl: string | null;
   fallbackImageUrl?: string | null;
@@ -68,6 +70,8 @@ export type StoreVariant = {
   salePrice: number;
   hasDiscount: boolean;
   discountPercentage: number;
+  /** Active promotion affecting this variant; null means individual pricing. */
+  appliedPromotionName: string | null;
   isDefault: boolean;
   stock: number;
   images: VariantImage[];

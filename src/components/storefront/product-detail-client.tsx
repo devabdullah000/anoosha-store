@@ -129,7 +129,8 @@ export default function ProductDetailClient({
 }: ProductDetailClientProps) {
   const router = useRouter();
   const [variantId, setVariantId] = useState(
-    product.variants.find((candidate) => candidate.isDefault)?.id ??
+    product.variants.find((candidate) => candidate.appliedPromotionName)?.id ??
+      product.variants.find((candidate) => candidate.isDefault)?.id ??
       product.variants[0]?.id ??
       "",
   );
@@ -159,6 +160,7 @@ export default function ProductDetailClient({
   const variant =
     product.variants.find((candidate) => candidate.id === variantId) ??
     product.variants[0];
+  const promotionName = variant?.appliedPromotionName;
   const dropdowns =
     variant?.attributes.filter(
       (attribute) => attribute.displayType === "dropdown",
@@ -327,6 +329,7 @@ export default function ProductDetailClient({
         variantName: variant.name,
         sku: variant.sku,
         unitPricePaisa: pricePaisa(variant),
+        appliedPromotionName: promotionName ?? null,
         selectedDropdowns: dropdowns.map((attribute) => ({
           attributeId: attribute.id,
           name: attribute.name,
@@ -529,6 +532,11 @@ export default function ProductDetailClient({
               )}
 
               <div className="mt-5 rounded-[1.45rem] border border-slate-100 bg-white/90 p-5 shadow-[0_16px_60px_-45px_rgba(15,23,42,.4)] sm:p-6">
+                {promotionName && (
+                  <p className="mb-3 inline-flex rounded-lg bg-emerald-50 px-3 py-1.5 text-xs font-extrabold text-emerald-700">
+                    {promotionName} · {variant.discountPercentage}% promotional discount
+                  </p>
+                )}
                 <Price
                   salePrice={variant.salePrice}
                   hasDiscount={variant.hasDiscount}

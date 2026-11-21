@@ -11,6 +11,7 @@ import {
   OverviewPanel,
   ProductsPanel,
   SettingsPanel,
+  PromotionsPanel,
   type AdminPanelProps,
 } from "./admin-panels";
 
@@ -21,12 +22,13 @@ export type AdminSectionId =
   | "attributes"
   | "inventory"
   | "orders"
+  | "promotions"
   | "settings";
 
 export type AdminNavigationItem = {
   id: AdminSectionId;
   name: string;
-  icon: "overview" | "products" | "categories" | "attributes" | "inventory" | "orders" | "settings";
+  icon: "overview" | "products" | "categories" | "attributes" | "inventory" | "orders" | "promotions" | "settings";
   component: ComponentType<AdminPanelProps>;
 };
 
@@ -39,6 +41,7 @@ export const ADMIN_NAVIGATION: AdminNavigationItem[] = [
   { id: "attributes", name: "Attributes", icon: "attributes", component: AttributesPanel },
   { id: "inventory", name: "Inventory", icon: "inventory", component: InventoryPanel },
   { id: "orders", name: "Orders", icon: "orders", component: OrdersPanel },
+  { id: "promotions", name: "Promotions", icon: "promotions", component: PromotionsPanel },
   { id: "settings", name: "Settings", icon: "settings", component: SettingsPanel },
 ];
 

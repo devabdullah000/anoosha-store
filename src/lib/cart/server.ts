@@ -1,4 +1,9 @@
 import "server-only";
+import {
+  promotionPriceJoins,
+  effectiveHasDiscount,
+  effectiveDiscount,
+} from "@/lib/promotions/sql";
 
 import { getCurrentUser } from "@/lib/auth/require-auth";
 import { storefrontEnv } from "@/lib/storefront/runtime";
@@ -186,6 +191,8 @@ type DbRow = {
   salePrice: number | null;
   hasDiscount: number | null;
   discountPercentage: number | null;
+  appliedPromotionName: string | null;
+  appliedPromotionId: string | null;
   stock: number | null;
   imageKey: string | null;
   hasUncartedVariant: number;
@@ -220,9 +227,13 @@ const cartReadSql = `
     CASE WHEN p.status = 1 AND p.deleted_at IS NULL
                    AND v.status = 1 AND v.deleted_at IS NULL THEN v.sale_price END AS salePrice,
     CASE WHEN p.status = 1 AND p.deleted_at IS NULL
-                   AND v.status = 1 AND v.deleted_at IS NULL THEN v.has_discount END AS hasDiscount,
+                   AND v.status = 1 AND v.deleted_at IS NULL THEN ${effectiveHasDiscount} END AS hasDiscount,
     CASE WHEN p.status = 1 AND p.deleted_at IS NULL
-                   AND v.status = 1 AND v.deleted_at IS NULL THEN v.discount_percentage END AS discountPercentage,
+                   AND v.status = 1 AND v.deleted_at IS NULL THEN ${effectiveDiscount} END AS discountPercentage,
+    CASE WHEN p.status = 1 AND p.deleted_at IS NULL
+                   AND v.status = 1 AND v.deleted_at IS NULL THEN promo_active.name END AS appliedPromotionName,
+    CASE WHEN p.status = 1 AND p.deleted_at IS NULL
+                   AND v.status = 1 AND v.deleted_at IS NULL THEN promo_active.id END AS appliedPromotionId,
     CASE WHEN p.status = 1 AND p.deleted_at IS NULL
                    AND v.status = 1 AND v.deleted_at IS NULL THEN v.stock END AS stock,
     (SELECT pi.storage_key FROM product_images pi
@@ -248,6 +259,7 @@ const cartReadSql = `
     a.display_type AS displayType, a.value_type AS valueType, a.unit
   FROM cart_items ci
   LEFT JOIN product_variants v ON v.id = ci.variant_id
+  ${promotionPriceJoins}
   LEFT JOIN products p ON p.id = v.product_id
   LEFT JOIN variant_attributes va ON va.variant_id = ci.variant_id
   LEFT JOIN attributes a ON a.id = va.attribute_id
@@ -343,6 +355,10 @@ export async function loadCart(user: CartIdentity): Promise<CartPayload> {
       available,
       canAddAnotherVariant: available && row.hasUncartedVariant === 1,
       unitPricePaisa: livePrice,
+      originalUnitPricePaisa: available ? row.salePrice! : row.unitPriceSnapshot,
+      discountPercentage: available ? row.discountPercentage! : 0,
+      appliedPromotionName: available ? row.appliedPromotionName : null,
+      appliedPromotionId: available ? row.appliedPromotionId : null,
       previousUnitPricePaisa: row.unitPriceSnapshot,
       priceChanged: available && row.unitPriceSnapshot !== livePrice,
       selections,
@@ -393,8 +409,8 @@ async function editableVariant(
   const query = `
     SELECT p.id AS productId, p.name AS productName,
       v.id AS variantId, v.name AS variantName, v.stock,
-      v.sale_price AS salePrice, v.has_discount AS hasDiscount,
-      v.discount_percentage AS discountPercentage,
+      v.sale_price AS salePrice, ${effectiveHasDiscount} AS hasDiscount,
+      ${effectiveDiscount} AS discountPercentage,
       (SELECT pi.storage_key FROM product_images pi
         WHERE pi.variant_id = v.id ORDER BY pi.is_primary DESC, pi.sort_order ASC LIMIT 1) AS imageKey,
       ci.quantity AS currentQuantity, ci.selections_json AS currentSelections,
@@ -402,6 +418,7 @@ async function editableVariant(
       a.display_type AS displayType, a.value_type AS valueType, a.unit
     FROM product_variants v
     JOIN products p ON p.id = v.product_id
+    ${promotionPriceJoins}
     LEFT JOIN cart_items ci ON ci.variant_id = v.id AND ci.user_id = ? AND ci.user_email = ?
     LEFT JOIN variant_attributes va ON va.variant_id = v.id
     LEFT JOIN attributes a ON a.id = va.attribute_id

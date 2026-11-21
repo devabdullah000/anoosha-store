@@ -1,32 +1,62 @@
+
 import {
   actor,
+  bodyJson,
   orderErrorResponse,
   orderList,
+  parsePlaceOrder,
+  placeOrder,
   privateHeaders,
+  sameOrigin,
 } from "@/lib/orders/server";
-import type { OrderStatus } from "@/lib/orders/types";
+
 export const dynamic = "force-dynamic";
+
+// Customer order history
 export async function GET(request: Request) {
   try {
-    const admin = await actor("admin");
-    const q = new URL(request.url).searchParams;
-    const raw = q.get("status");
-    const allowed = ["pending", "processing", "delivered", "cancelled"];
-    const status =
-      raw && allowed.includes(raw) ? (raw as OrderStatus) : undefined;
+    const user = await actor("user");
+
+    const page = Number(
+      new URL(request.url).searchParams.get("page") || "1",
+    );
+
     return Response.json(
       {
         success: true,
-        data: await orderList(
-          admin,
-          Number(q.get("page") || 1),
-          status,
-          Number(q.get("pageSize") || 10),
-        ),
+        data: await orderList(user, page),
       },
       { headers: privateHeaders },
     );
-  } catch (e) {
-    return orderErrorResponse(e);
+  } catch (error) {
+    return orderErrorResponse(error);
+  }
+}
+
+// Customer order placement
+export async function POST(request: Request) {
+  try {
+    sameOrigin(request);
+
+    const user = await actor("user");
+
+    const input = parsePlaceOrder(
+      await bodyJson(request),
+    );
+
+    const result = await placeOrder(user, input);
+
+    return Response.json(
+      {
+        success: true,
+        data: result,
+      },
+      {
+        status: 201,
+        headers: privateHeaders,
+      },
+    );
+  } catch (error) {
+    return orderErrorResponse(error);
   }
 }

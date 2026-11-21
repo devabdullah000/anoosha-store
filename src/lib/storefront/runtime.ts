@@ -20,3 +20,12 @@ export function r2Url(key: string, baseUrl?: string): string {
 export function safeImageKey(key: string): boolean {
   return !!key && key.length < 500 && !key.includes('..') && !key.includes('\\') && !key.startsWith('/') && !key.includes('//');
 }
+
+export function r2FallbackUrl(key: string): string {
+  const encodedKey = key
+    .split("/")
+    .map(encodeURIComponent)
+    .join("/");
+
+  return `/api/storefront/media/${encodedKey}`;
+}

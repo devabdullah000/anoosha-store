@@ -9,6 +9,7 @@ import {
   LuWarehouse,
   LuFileText,
   LuSettings,
+  LuBadgePercent
 } from "react-icons/lu";
 import {
   ADMIN_NAVIGATION,
@@ -36,6 +37,9 @@ function NavIcon({ name, active = false }: { name: string; active?: boolean }) {
 
     case "orders":
       return <LuFileText className={ICON_CLASS} />;
+
+    case "promotions":
+      return <LuBadgePercent className={ICON_CLASS} />;
 
     case "settings":
       return <LuSettings className={ICON_CLASS} />;
