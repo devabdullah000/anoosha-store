@@ -7,7 +7,7 @@ import { and, eq } from "drizzle-orm";
 import { emailOTP, jwt } from "better-auth/plugins";
 import { drizzle } from "drizzle-orm/d1";
 import * as authSchema from "@/db/auth-schema";
-import { LONG_SESSIONS,SHORT_SESSIONS } from "./constants";
+import { LONG_SESSIONS, SHORT_SESSIONS } from "./constants";
 
 // This file has helper functions related to authentication
 type AuthRuntimeEnv = CloudflareEnv & {
@@ -122,7 +122,10 @@ export function getAuthContext() {
 
     baseURL,
 
-    trustedOrigins: [baseURL],
+    trustedOrigins: [
+      "https://anooshastore.com",
+      "https://www.anooshastore.com",
+    ],
 
     secret: required(env.BETTER_AUTH_SECRET, "BETTER_AUTH_SECRET"),
 
@@ -266,19 +269,17 @@ export function getAuthContext() {
       },
     },
 
-    
-// One-year database-backed session with 15-minute cookie caching.
-session: {
-  expiresIn: LONG_SESSIONS,
-  updateAge: SHORT_SESSIONS,
+    // One-year database-backed session with 1-hour cookie caching.
+    session: {
+      expiresIn: LONG_SESSIONS,
+      updateAge: SHORT_SESSIONS,
 
-  cookieCache: {
-    enabled: true,
-    maxAge: 60 * 60, // 15 minutes
-    strategy: "compact",
-  },
-},
-
+      cookieCache: {
+        enabled: true,
+        maxAge: 60 * 60, // 1 hour
+        strategy: "compact",
+      },
+    },
 
     // Google OAuth is intentionally not configured in Better Auth.
     // The independent Google flow is implemented under /api/google-auth and

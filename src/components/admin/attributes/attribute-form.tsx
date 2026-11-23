@@ -143,7 +143,7 @@ export default function AttributeForm({
 
   return (
     <div
-      className="fixed inset-0 z-[120] flex items-center justify-center overflow-y-auto bg-slate-950/55 p-4 sm:p-6"
+      className="fixed inset-0 z-[5000] flex items-center justify-center overflow-y-auto bg-slate-950/55 p-4 sm:p-6"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget && !submitting) {
           onClose();

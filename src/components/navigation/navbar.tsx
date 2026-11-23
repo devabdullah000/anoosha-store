@@ -20,6 +20,13 @@ import {
   LuChevronDown,
   LuChevronRight,
   LuLayoutDashboard,
+  LuLayers,
+  LuTags,
+  LuWarehouse,
+  LuFileText,
+  LuBadgePercent,
+  LuChartNoAxesColumn,
+  LuSettings,
   LuMenu,
   LuX,
   LuUserRound,
@@ -54,6 +61,23 @@ const NAV_ICONS: Record<string, IconType> = {
   "/contact": LuMail,
   "/faq": LuCircleHelp,
   "/privacy-policy": LuShieldCheck,
+};
+
+// Match the icons already used by the desktop admin sidebar.
+// ADMIN_NAVIGATION stores icon identifiers rather than React components.
+const ADMIN_NAV_ICONS: Record<
+  (typeof ADMIN_NAVIGATION)[number]["icon"],
+  IconType
+> = {
+  overview: LuLayoutDashboard,
+  products: LuPackage,
+  categories: LuLayers,
+  attributes: LuTags,
+  inventory: LuWarehouse,
+  orders: LuFileText,
+  promotions: LuBadgePercent,
+  sales: LuChartNoAxesColumn,
+  settings: LuSettings,
 };
 
 const gradientButton =
@@ -187,7 +211,7 @@ export function Navbar() {
                           : "text-slate-600 hover:bg-slate-100 hover:text-indigo-700"
                       }`}
                     >
-                      <LuLayoutDashboard
+                      <LuShieldCheck
                         className="h-[17px] w-[17px]"
                         aria-hidden="true"
                       />
@@ -576,33 +600,37 @@ export function Navbar() {
                     <div className="space-y-1.5">
 
                       {pathname.startsWith("/admin/dashboard") ? (
-                        ADMIN_NAVIGATION.map((item) => (
-                          <button
-                            key={item.id}
-                            type="button"
-                            onClick={() => {
-                              requestAdminNavigation(item.id);
-                              closeMenus();
-                            }}
-                            className="group flex w-full items-center gap-3 rounded-xl border border-transparent px-3 py-3 text-left transition-all duration-200 hover:border-indigo-100 hover:bg-indigo-50"
-                          >
-                            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-slate-100 text-slate-500 transition-colors group-hover:bg-indigo-100 group-hover:text-indigo-700">
-                              <LuLayoutDashboard
-                                className="h-[18px] w-[18px]"
+                        ADMIN_NAVIGATION.map((item) => {
+                          const Icon = ADMIN_NAV_ICONS[item.icon] ?? LuLayoutDashboard;
+
+                          return (
+                            <button
+                              key={item.id}
+                              type="button"
+                              onClick={() => {
+                                requestAdminNavigation(item.id);
+                                closeMenus();
+                              }}
+                              className="group flex w-full items-center gap-3 rounded-xl border border-transparent px-3 py-3 text-left transition-all duration-200 hover:border-indigo-100 hover:bg-indigo-50"
+                            >
+                              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-slate-100 text-slate-500 transition-colors group-hover:bg-indigo-100 group-hover:text-indigo-700">
+                                <Icon
+                                  className="h-[18px] w-[18px]"
+                                  aria-hidden="true"
+                                />
+                              </span>
+
+                              <span className="min-w-0 flex-1 text-sm font-bold text-slate-700 group-hover:text-indigo-800">
+                                {item.name}
+                              </span>
+
+                              <LuChevronRight
+                                className="h-4 w-4 shrink-0 text-slate-300 transition-transform group-hover:translate-x-1 group-hover:text-indigo-500"
                                 aria-hidden="true"
                               />
-                            </span>
-
-                            <span className="min-w-0 flex-1 text-sm font-bold text-slate-700 group-hover:text-indigo-800">
-                              {item.name}
-                            </span>
-
-                            <LuChevronRight
-                              className="h-4 w-4 shrink-0 text-slate-300 transition-transform group-hover:translate-x-1 group-hover:text-indigo-500"
-                              aria-hidden="true"
-                            />
-                          </button>
-                        ))
+                            </button>
+                          );
+                        })
                       ) : (
                         <Link
                           href="/admin/dashboard"

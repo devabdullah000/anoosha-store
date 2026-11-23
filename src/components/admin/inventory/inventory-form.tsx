@@ -172,7 +172,7 @@ export default function InventoryForm({ onClose, onSuccess }: Props) {
 
   return (
     <div
-      className="fixed inset-0 z-[90] flex items-center justify-center bg-slate-950/65 p-2 sm:p-5"
+      className="fixed inset-0 z-[5000] flex items-center justify-center bg-slate-950/65 p-2 sm:p-5"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget && !busy && !pending)
           onClose();

@@ -24,7 +24,7 @@ export type AdminSectionId =
   | "inventory"
   | "orders"
   | "promotions"
-  | "sales-report"
+  | "sales"
   | "settings";
 
 export type AdminNavigationItem = {
@@ -38,7 +38,7 @@ export type AdminNavigationItem = {
     | "inventory"
     | "orders"
     | "promotions"
-    | "sales-report"
+    | "sales"
     | "settings";
   component: ComponentType<AdminPanelProps>;
 };
@@ -84,7 +84,7 @@ export const ADMIN_NAVIGATION: AdminNavigationItem[] = [
     component: PromotionsPanel,
   },
   {
-    id: "sales-report",
+    id: "sales",
     name: "Sales Report",
     icon: "overview",
     component: SalesReportInterface,
