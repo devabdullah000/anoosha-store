@@ -1,88 +1,78 @@
-/**
- * For more details on how to configure Wrangler, refer to:
- * https://developers.cloudflare.com/workers/wrangler/configuration/
- */
-/**
- * For more details on how to configure Wrangler, refer to:
- * https://developers.cloudflare.com/workers/wrangler/configuration/
- */
 {
   "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "an-cloudflare-1",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-11-04",
+  "compatibility_flags": [
+    "nodejs_compat",
+    "global_fetch_strictly_public"
+  ],
+
   "vars": {
     "BETTER_AUTH_URL": "https://anooshastore.com",
     "GOOGLE_REDIRECT_URI": "https://anooshastore.com/api/google-auth/callback",
     "NEXTJS_ENV": "production",
-    "RESEND_FROM": "Anoosha Store <noreply@anooshastore.com>",
+    "RESEND_FROM": "Anoosha Store <noreply@anooshastore.com>"
   },
-  "name": "an-cloudflare-1",
-  "main": ".open-next/worker.js",
-  "compatibility_date": "2026-11-04",
-  "compatibility_flags": ["global_fetch_strictly_public"],
+
+  "workers_dev": true,
+  "routes": [
+    { "pattern": "anooshastore.com", "custom_domain": true },
+    { "pattern": "www.anooshastore.com", "custom_domain": true }
+  ],
+
+  // Only asset-manifest matches bypass the Worker. Prerendered route HTML
+  // is not necessarily a Workers Static Asset.
   "assets": {
     "binding": "ASSETS",
     "directory": ".open-next/assets",
+    "run_worker_first": false
   },
-  "images": {
-    // Enable image optimization
-    // see https://opennext.js.org/cloudflare/howtos/image
-    "binding": "IMAGES",
-  },
+  "images": { "binding": "IMAGES" },
   "services": [
     {
-      // Self-reference service binding, the service name must match the worker name
-      // see https://opennext.js.org/cloudflare/caching
       "binding": "WORKER_SELF_REFERENCE",
-      "service": "an-cloudflare-1",
-    },
+      "service": "an-cloudflare-1"
+    }
   ],
-  "observability": {
-    "enabled": true,
-  },
+  "observability": { "enabled": true },
   "upload_source_maps": true,
+
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "anoosha-store",
       "database_id": "5387633a-29a3-4003-be1b-9679cce9ed79",
       "migrations_dir": "drizzle",
-      "remote": true,
-    },
+      "remote": true
+    }
   ],
-  // Cloudflare R2 - Live product images bucket
+
   "r2_buckets": [
     {
       "binding": "IMAGES_BUCKET",
       "bucket_name": "anoosha-store-images",
-      "remote": true,
+      "remote": true
     },
+    {
+      "binding": "NEXT_INC_CACHE_R2_BUCKET",
+      "bucket_name": "anoosha-store-next-cache",
+      "remote": true
+    }
   ],
-  "workers_dev": true,
 
-  "routes": [
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "NEXT_CACHE_DO_QUEUE",
+        "class_name": "DOQueueHandler"
+      }
+    ]
+  },
+  "migrations": [
     {
-      "pattern": "anooshastore.com",
-      "custom_domain": true,
-    },
-    {
-      "pattern": "www.anooshastore.com",
-      "custom_domain": true,
-    },
-  ],
-  /**
-   * Smart Placement
-   * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
-   */
-  // "placement": {  "mode": "smart" }
-  /**
-   * Bindings
-   * Bindings allow your Worker to interact with resources on the Cloudflare Developer Platform, including
-   * databases, object storage, AI inference, real-time communication and more.
-   * https://developers.cloudflare.com/workers/runtime-apis/bindings/
-   */
-  /**
-   * Environment Variables
-   * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
-   * Note: Use secrets to store sensitive data.
-   * https://developers.cloudflare.com/workers/configuration/secrets/
-   */
+      "tag": "cache-queue-v1",
+      "new_sqlite_classes": ["DOQueueHandler"]
+    }
+  ]
 }

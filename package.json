@@ -11,6 +11,7 @@
     "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts",
+    "cf-worker-typegen": "wrangler types --env-interface CloudflareEnv ./worker-configuration.d.ts",
     "generate-migrations": "drizzle-kit generate",
     "migrate-remote": "wrangler d1 migrations apply anoosha-store --remote",
     "migrations-list-remote": "wrangler d1 migrations list anoosha-store --remote",
