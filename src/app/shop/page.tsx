@@ -94,7 +94,7 @@ export default async function ShopPage({
           aria-label="Breadcrumb"
           className="flex items-center gap-2 text-xs font-bold text-slate-400"
         >
-          <Link href="/" className="hover:text-indigo-700">
+          <Link href="/" className="hover:text-indigo-700" prefetch={false}>
             Home
           </Link>
           <LuChevronRight />
@@ -165,6 +165,7 @@ export default async function ShopPage({
                   <Link
                     href={categoryHref(category.id)}
                     className="inline-flex items-center gap-1 text-xs font-extrabold text-indigo-700 transition hover:gap-2"
+                    prefetch={false}
                   >
                     See more <LuArrowRight />
                   </Link>
@@ -185,6 +186,7 @@ export default async function ShopPage({
                     <Link
                       href={categoryHref(category.id)}
                       className="inline-flex items-center gap-2 rounded-xl border border-indigo-200 bg-white px-4 py-2.5 text-xs font-bold text-indigo-700 transition hover:bg-indigo-50"
+                      prefetch={false}
                     >
                       Explore all {category.productCount} products
                       <LuArrowRight />
@@ -198,7 +200,7 @@ export default async function ShopPage({
         {!result.data.length && (
           <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-14 text-center text-sm text-slate-500">
             Our collections are being prepared.{" "}
-            <Link href="/contact" className="font-bold text-indigo-700">
+            <Link href="/contact" className="font-bold text-indigo-700" prefetch={false}>
               Contact us
             </Link>{" "}
             if you need help.
@@ -218,18 +220,21 @@ export default async function ShopPage({
             <Link
               href="/faq"
               className="rounded-full bg-indigo-50 px-5 py-2.5 text-xs font-bold text-indigo-700"
+              prefetch={false}
             >
               FAQs
             </Link>
             <Link
               href="/terms-and-conditions"
               className="rounded-full bg-indigo-50 px-5 py-2.5 text-xs font-bold text-indigo-700"
+              prefetch={false}
             >
               Terms and Conditions
             </Link>
             <Link
               href="/shipping-and-return-policy"
               className="rounded-full bg-indigo-50 px-5 py-2.5 text-xs font-bold text-indigo-700"
+              prefetch={false}
             >
               Shipping and Returns
             </Link>

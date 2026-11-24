@@ -214,9 +214,12 @@ export async function GET(request: NextRequest) {
       sessionSecret,
     );
 
-    const response = NextResponse.redirect(
-      new URL(state.returnTo, request.url),
-    );
+    // A non-secret one-time marker survives redirects from www to the apex.
+    // sessionStorage does not cross subdomains, so the browser needs a hint to
+    // recover its UI profile once from the newly signed HttpOnly cookie.
+    const landing = new URL(state.returnTo, request.url);
+    landing.searchParams.set("googleAuthComplete", "1");
+    const response = NextResponse.redirect(landing);
     response.cookies.set(GOOGLE_SESSION_COOKIE, sessionToken, {
       httpOnly: true,
       secure: new URL(request.url).protocol === "https:",

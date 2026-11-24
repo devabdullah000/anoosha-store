@@ -8,11 +8,11 @@ export type AuthProfile = {
   role: UserRole;
 };
 
-export type AuthStatus = "loading" | "authenticated" | "unauthenticated";
+export type AuthStatus = "loading" | "cached" | "authenticated" | "unauthenticated";
 
 export type AuthState = {
   profile: AuthProfile | null;
-  /** Validation state is deliberately not persisted; the server cookie is authoritative. */
+  /** "cached" is display-only; protected routes require server verification. */
   status: AuthStatus;
 };
 
@@ -36,8 +36,13 @@ const authSlice = createSlice({
     setAuthLoading(state) {
       state.status = "loading";
     },
+    // Leaving a protected section no longer confers a verified auth status.
+    // Its profile stays available for purely cosmetic public navbar display.
+    setAuthPreview(state) {
+      state.status = state.profile ? "cached" : "unauthenticated";
+    },
   },
 });
 
-export const { setAuthProfile, clearAuthProfile, setAuthLoading } = authSlice.actions;
+export const { setAuthProfile, clearAuthProfile, setAuthLoading, setAuthPreview } = authSlice.actions;
 export default authSlice.reducer;

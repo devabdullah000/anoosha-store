@@ -187,6 +187,7 @@ export default function ContactForm() {
           <Link
             href="/privacy-policy"
             className="font-semibold text-indigo-700 hover:underline"
+            prefetch={false}
           >
             Privacy Policy
           </Link>

@@ -94,6 +94,7 @@ export default function ProductRail({
       {href && (
         <Link
           href={href}
+          prefetch={false}
           className="inline-flex items-center gap-1.5 rounded-full border border-indigo-100 bg-white/90 px-4 py-2.5 text-xs font-extrabold text-indigo-700 transition hover:border-indigo-300 hover:bg-indigo-50"
         >
           {SHOP_EXPLORER_BUTTON_TEXT}
@@ -188,6 +189,7 @@ export default function ProductRail({
           <Link
             href="/shop"
             className="font-bold text-indigo-700 hover:underline"
+            prefetch={false}
           >
             {NO_ITEM_FOR_LATEST_OR_FEATURED_BUTTON}
           </Link>

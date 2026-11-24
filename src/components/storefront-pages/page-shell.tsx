@@ -56,6 +56,7 @@ export function PageShell({
         >
           <Link
             href={NAVBAR_CONFIG.homeHref}
+            prefetch={false}
             className="transition hover:text-indigo-700"
           >
             Home
@@ -125,6 +126,7 @@ export function PageShell({
               <Link
                 key={link.link}
                 href={link.link}
+                prefetch={false}
                 className={`${styles.interactiveCard} group flex min-h-20 items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-[#f9fbff] p-4 text-sm font-semibold text-slate-800`}
               >
                 {link.name}

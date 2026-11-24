@@ -1,10 +1,27 @@
+
 import type { Metadata } from "next";
 import Link from "next/link";
-import { LuCircleHelp, LuMessageCircle } from "react-icons/lu";
-import { breadcrumbSchema, pageMetadata, pageSchema } from "@/lib/storefront-pages";
-import { PageShell, SoftNote, StructuredData } from "@/components/storefront-pages/page-shell";
+
+import {
+  LuCircleHelp,
+  LuMessageCircle,
+} from "react-icons/lu";
+
+import {
+  breadcrumbSchema,
+  pageMetadata,
+  pageSchema,
+} from "@/lib/storefront-pages";
+
+import {
+  PageShell,
+  SoftNote,
+  StructuredData,
+} from "@/components/storefront-pages/page-shell";
+
 import { FaqList } from "@/components/storefront-pages/faq-list";
 import { FAQ_SEO_PARAMS } from "../../lib/seo/faq";
+
 import {
   FAQ_GROUPS,
   FAQ_HELP_CARD_BODY,
@@ -20,6 +37,7 @@ import {
   FAQ_SOFT_NOTE_TITLE,
 } from "../../lib/constants";
 
+// Static SEO metadata.
 export const metadata: Metadata = pageMetadata(FAQ_SEO_PARAMS);
 
 export default function FaqPage() {
@@ -34,6 +52,7 @@ export default function FaqPage() {
       icon={<LuCircleHelp className="h-3.5 w-3.5" />}
       related={FAQ_RELATED_ROUTES}
     >
+      {/* FAQ structured data */}
       <StructuredData
         data={[
           breadcrumbSchema(FAQ_SHELL_PATH),
@@ -44,28 +63,47 @@ export default function FaqPage() {
             mainEntity: faqs.map(({ q, a }) => ({
               "@type": "Question",
               name: q,
-              acceptedAnswer: { "@type": "Answer", text: a },
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: a,
+              },
             })),
           },
         ]}
       />
+
+      {/* FAQ content and support */}
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_280px]">
         <FaqList />
+
         <aside className="space-y-4 lg:sticky lg:top-24">
+          {/* Contact support card */}
           <div className="rounded-3xl bg-gradient-to-br from-indigo-950 to-[#1c2e61] p-6 text-white shadow-xl shadow-indigo-900/10">
             <LuMessageCircle className="h-7 w-7 text-cyan-200" />
-            <h2 className="mt-5 text-xl font-bold">{FAQ_HELP_CARD_TITLE}</h2>
+
+            <h2 className="mt-5 text-xl font-bold">
+              {FAQ_HELP_CARD_TITLE}
+            </h2>
+
             <p className="mt-3 text-sm leading-7 text-indigo-100/85">
               {FAQ_HELP_CARD_BODY}
             </p>
+
+            {/* Prevent automatic Contact page prefetch */}
             <Link
               href="/contact"
+              prefetch={false}
               className="mt-5 inline-flex rounded-xl bg-white px-4 py-3 text-sm font-bold text-indigo-800 transition hover:bg-indigo-50"
             >
               {FAQ_HELP_CARD_CTA}
             </Link>
           </div>
-          <SoftNote icon={<LuCircleHelp className="h-5 w-5" />} title={FAQ_SOFT_NOTE_TITLE}>
+
+          {/* Additional support information */}
+          <SoftNote
+            icon={<LuCircleHelp className="h-5 w-5" />}
+            title={FAQ_SOFT_NOTE_TITLE}
+          >
             {FAQ_SOFT_NOTE_BODY}
           </SoftNote>
         </aside>

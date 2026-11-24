@@ -96,9 +96,12 @@ export function Navbar() {
     (state) => state.auth.status
   );
 
-  // Existing authentication validation logic.
+  // Cached Redux profile is display-only on public pages. Protected SSR
+  // pages and all private APIs ALWAYS validate HttpOnly session cookies.
   const profile =
-    authStatus === "authenticated" ? persistedProfile : null;
+    authStatus === "authenticated" || authStatus === "cached"
+      ? persistedProfile
+      : null;
 
   const showCustomerCart =
     authStatus !== "loading" && profile?.role !== "admin";
@@ -152,8 +155,9 @@ export function Navbar() {
 
       closeMenus();
 
+      // Changing to the public home route after logout refreshes via
+      // navigation. Avoid a second redundant RSC request to router.refresh().
       router.replace(NAVBAR_CONFIG.homeHref);
-      router.refresh();
 
     } catch (cause) {
       setLogoutError(
@@ -184,6 +188,7 @@ export function Navbar() {
             {/* BRAND LOGO */}
             <Link
               href={NAVBAR_CONFIG.logoHref}
+              prefetch={false}
               aria-label={NAVBAR_CONFIG.logoAlt}
               onClick={closeMenus}
               className="group flex shrink-0 items-center rounded-xl outline-none transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-indigo-500"
@@ -205,6 +210,7 @@ export function Navbar() {
                   {profile?.role === "admin" ? (
                     <Link
                       href="/admin/dashboard"
+                      prefetch={false}
                       className={`group inline-flex shrink-0 items-center gap-2 rounded-xl px-3 py-2.5 text-[13px] font-bold transition-all duration-200 ${
                         pathname.startsWith("/admin/dashboard")
                           ? "bg-indigo-50 text-indigo-700"
@@ -228,6 +234,7 @@ export function Navbar() {
                         <Link
                           key={item.link}
                           href={item.link}
+                          prefetch={false}
                           aria-current={active ? "page" : undefined}
                           className={`group relative inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl px-2.5 py-2.5 text-[12px] font-bold transition-all duration-200 2xl:gap-2 2xl:px-3 2xl:text-[13px] ${
                             active
@@ -266,6 +273,7 @@ export function Navbar() {
               {showCustomerCart && (
                 <Link
                   href="/cart"
+                  prefetch={false}
                   aria-label="Open shopping cart"
                   title="My cart"
                   aria-current={
@@ -305,6 +313,7 @@ export function Navbar() {
                     <Link
                       href={NAVBAR_CONFIG.loginHref}
                       className={gradientButton}
+                      prefetch={false}
                     >
                       <LuLogIn
                         className="h-[17px] w-[17px]"
@@ -526,6 +535,7 @@ export function Navbar() {
                         href={NAVBAR_CONFIG.loginHref}
                         onClick={closeMenus}
                         className={`${gradientButton} mt-3 w-full`}
+                        prefetch={false}
                       >
                         <LuLogIn
                           className="h-[18px] w-[18px]"
@@ -552,6 +562,7 @@ export function Navbar() {
 
                     <Link
                       href="/cart"
+                      prefetch={false}
                       onClick={closeMenus}
                       aria-label="Open shopping cart"
                       aria-current={
@@ -634,6 +645,7 @@ export function Navbar() {
                       ) : (
                         <Link
                           href="/admin/dashboard"
+                          prefetch={false}
                           onClick={closeMenus}
                           className="group flex items-center gap-3 rounded-xl bg-indigo-50 px-3 py-3.5 text-sm font-bold text-indigo-800 transition hover:bg-indigo-100"
                         >
@@ -664,6 +676,7 @@ export function Navbar() {
                           <Link
                             key={item.link}
                             href={item.link}
+                            prefetch={false}
                             onClick={closeMenus}
                             aria-current={
                               active ? "page" : undefined

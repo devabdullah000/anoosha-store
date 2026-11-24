@@ -409,6 +409,7 @@ export default function ProductCard({
                     <Link
                       href={`${href}?variant=${encodeURIComponent(selectedVariant.id)}`}
                       className="block text-center text-xs font-semibold text-indigo-700 hover:underline"
+                      prefetch={false}
                     >
                       Configure more options on product details
                     </Link>
@@ -480,6 +481,7 @@ export default function ProductCard({
         >
           <Link
             href={href}
+            prefetch={false}
             className="relative block aspect-[1.12/1] overflow-hidden bg-gradient-to-br from-[#f3f5fc] via-[#fbfaff] to-[#eaf7ff]"
             aria-label={`View ${product.name}`}
           >
@@ -505,6 +507,7 @@ export default function ProductCard({
           <div className="flex flex-1 flex-col p-4 sm:p-5">
             <Link
               href={href}
+              prefetch={false}
               className="text-[15px] font-extrabold leading-snug tracking-tight text-slate-950 transition hover:text-indigo-600 sm:text-base"
             >
               {product.name}
@@ -512,6 +515,7 @@ export default function ProductCard({
             <div className="mt-2 flex flex-wrap gap-1.5">
               <Link
                 href={categoryHref(product.categoryId)}
+                prefetch={false}
                 className="rounded-md border border-indigo-100 bg-indigo-50/70 px-2 py-1 text-[10px] font-bold text-indigo-700 transition hover:bg-indigo-100"
               >
                 {product.categoryName}
@@ -529,6 +533,7 @@ export default function ProductCard({
                 <Link
                   href={href}
                   className="ml-1 font-bold text-indigo-600 hover:underline"
+                  prefetch={false}
                 >
                   See more
                 </Link>

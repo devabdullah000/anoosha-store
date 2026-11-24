@@ -417,6 +417,7 @@ export default function ProductDetailClient({
         <Link
           href="/shop"
           className="mt-5 inline-block text-indigo-700 hover:underline"
+          prefetch={false}
         >
           Visit our shop
         </Link>
@@ -434,16 +435,17 @@ export default function ProductDetailClient({
             aria-label="Breadcrumb"
             className="mb-6 flex flex-wrap items-center gap-2 text-xs font-medium text-slate-500 sm:mb-9"
           >
-            <Link href="/" className="hover:text-indigo-700">
+            <Link href="/" className="hover:text-indigo-700" prefetch={false}>
               Home
             </Link>
             <LuChevronRight aria-hidden="true" />
-            <Link href="/shop" className="hover:text-indigo-700">
+            <Link href="/shop" className="hover:text-indigo-700" prefetch={false}>
               Shop
             </Link>
             <LuChevronRight aria-hidden="true" />
             <Link
               href={categoryHref(product.categoryId)}
+              prefetch={false}
               className="hover:text-indigo-700"
             >
               {product.categoryName}
@@ -495,6 +497,7 @@ export default function ProductDetailClient({
             <div className="min-w-0 pt-1">
               <Link
                 href={categoryHref(product.categoryId)}
+                prefetch={false}
                 className="inline-flex rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-[.12em] text-indigo-700"
               >
                 {product.categoryName}
@@ -772,6 +775,7 @@ export default function ProductDetailClient({
           <div className="mt-16 flex flex-wrap items-center justify-between gap-4 border-t border-slate-200 pt-7">
             <Link
               href={categoryHref(product.categoryId)}
+              prefetch={false}
               className="inline-flex items-center gap-2 text-sm font-bold text-indigo-700 hover:underline"
             >
               <LuArrowLeft /> More in {product.categoryName}

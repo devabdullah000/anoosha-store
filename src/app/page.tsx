@@ -119,6 +119,7 @@ export default async function HomePage() {
               <Link
                 href="/shop"
                 className="mt-6 inline-flex items-center gap-2 rounded-full bg-slate-950 px-6 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-indigo-800"
+                prefetch={false}
               >
                 {HOME_PAGE_LEFT_BUTTON_TEXT}
                 <LuArrowRight />
@@ -137,6 +138,7 @@ export default async function HomePage() {
                   <Link
                     href={categoryHref(category.id)}
                     className="flex min-h-32 h-full flex-col justify-between rounded-[15px] bg-white/95 p-5 transition-colors duration-300 hover:bg-white"
+                    prefetch={false}
                   >
                     {/* Category number */}
                     <span className="text-xs font-bold text-slate-400">
@@ -208,6 +210,7 @@ export default async function HomePage() {
                   key={l.href}
                   href={l.href}
                   className="rounded-full border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold text-slate-700 transition hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-700"
+                  prefetch={false}
                 >
                   {l.label}
                 </Link>

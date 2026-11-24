@@ -123,6 +123,7 @@ export function Footer() {
           <div className="lg:col-span-4">
             <Link
               href={footer_brand.logoHref}
+              prefetch={false}
               aria-label={`${footer_brand.name} home`}
               className="inline-flex items-center gap-3"
             >
@@ -152,6 +153,7 @@ export function Footer() {
             <Link
               href="/shop"
               className="group mt-5 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-pink-500 via-blue-500 to-cyan-400 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/10 transition hover:brightness-110 active:scale-[0.98]"
+              prefetch={false}
             >
               Explore our store
               <span className="transition-transform group-hover:translate-x-1">
@@ -197,6 +199,7 @@ export function Footer() {
                     <li key={item.link}>
                       <Link
                         href={item.link}
+                        prefetch={false}
                         className="group inline-flex items-center gap-1 text-sm text-slate-600 transition-colors duration-200 hover:text-blue-600 dark:text-slate-400 dark:hover:text-white"
                       >
                         <span>{item.name}</span>

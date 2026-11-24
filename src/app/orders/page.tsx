@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth/require-auth";
 import { orderList } from "@/lib/orders/server";
 import OrdersClient from "@/components/orders/orders-client";
+import { VerifiedAuthProfile } from "@/components/auth/verified-auth-profile";
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "My Orders | Anoosha Store",
@@ -23,6 +24,7 @@ export default async function OrdersPage({ searchParams }: Props) {
   );
   return (
     <main className="min-h-[70vh] bg-[radial-gradient(ellipse_at_top_left,#fff2fb_0%,#fff_36%,#f1f9ff_110%)] px-4 py-10 sm:px-6 lg:px-8">
+      <VerifiedAuthProfile email={user.email} role="user" />
       <div className="mx-auto max-w-5xl">
         <p className="text-xs font-bold uppercase tracking-wider text-indigo-600">
           Your purchase history from Anoosha Store

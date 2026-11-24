@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth/require-auth";
 import { loadCart } from "@/lib/cart/server";
 import CheckoutClient from "@/components/orders/checkout-client";
+import { VerifiedAuthProfile } from "@/components/auth/verified-auth-profile";
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Checkout | Anoosha Store",
@@ -21,5 +22,10 @@ export default async function CheckoutPage({ searchParams }: Props) {
     mode === "cart"
       ? await loadCart({ id: user.id, email: user.email.trim().toLowerCase() })
       : null;
-  return <CheckoutClient mode={mode} initialCart={cart} email={user.email} />;
+  return (
+    <>
+      <VerifiedAuthProfile email={user.email} role="user" />
+      <CheckoutClient mode={mode} initialCart={cart} email={user.email} />
+    </>
+  );
 }

@@ -44,7 +44,7 @@ function record(x: unknown): x is Record<string, unknown> {
   return !!x && typeof x === "object" && !Array.isArray(x);
 }
 export async function actor(role: "user" | "admin"): Promise<OrderActor> {
-  const user = await getCurrentUser();
+  const user = await getCurrentUser({ forceFresh: role === "admin" });
   if (!user || typeof user.id !== "string" || typeof user.email !== "string")
     throw new OrderError(401, "Please sign in first.");
   if (user.role !== role)

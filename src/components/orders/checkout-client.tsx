@@ -212,6 +212,7 @@ export default function CheckoutClient({
         <Link
           href={mode === "cart" ? "/cart" : "/shop"}
           className="inline-flex items-center gap-2 text-sm font-bold text-indigo-700"
+          prefetch={false}
         >
           <LuArrowLeft />
           Back to shopping
@@ -414,6 +415,7 @@ export default function CheckoutClient({
                 <Link
                   href="/terms-and-conditions"
                   className="font-bold text-indigo-700"
+                  prefetch={false}
                 >
                   Terms & Conditions
                 </Link>

@@ -54,6 +54,7 @@ export default function OrdersClient({
           <Link
             href="/shop"
             className="mt-5 inline-flex rounded-xl bg-indigo-600 px-5 py-3 text-sm font-bold text-white"
+            prefetch={false}
           >
             Visit our shop
           </Link>
@@ -83,6 +84,7 @@ export default function OrdersClient({
                 <div className="flex flex-wrap items-center gap-2">
                   <Link
                     href={`/orders/${encodeURIComponent(o.id)}`}
+                    prefetch={false}
                     className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-indigo-200 px-4 text-xs font-extrabold text-indigo-700"
                   >
                     View receipt <LuArrowRight />

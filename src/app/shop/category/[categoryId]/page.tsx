@@ -199,11 +199,11 @@ export default async function CategoryPage({ params, searchParams }: Props) {
           aria-label="Breadcrumb"
           className="mb-8 flex flex-wrap items-center gap-2 text-xs font-bold text-slate-500"
         >
-          <Link href="/" className="hover:text-indigo-700">
+          <Link href="/" className="hover:text-indigo-700" prefetch={false}>
             Home
           </Link>
           <LuChevronRight />
-          <Link href="/shop" className="hover:text-indigo-700">
+          <Link href="/shop" className="hover:text-indigo-700" prefetch={false}>
             Shop
           </Link>
           <LuChevronRight />
@@ -243,6 +243,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
         <Link
           href="/shop"
           className="mt-10 inline-flex items-center gap-2 text-sm font-bold text-indigo-700 hover:underline"
+          prefetch={false}
         >
           <LuArrowLeft />
           Back to all categories

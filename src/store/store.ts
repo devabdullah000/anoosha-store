@@ -8,7 +8,6 @@ import {
 } from "redux-persist";
 
 import authReducer, {
-  type AuthProfile,
   type AuthState,
 } from "@/store/auth-slice";
 
@@ -67,7 +66,8 @@ const authTransform = createTransform<
 
   (outboundState) => ({
     profile: outboundState?.profile ?? null,
-    status: "loading",
+    // Rehydrated localStorage is not trusted as an authenticated session.
+    status: outboundState?.profile ? "cached" : "unauthenticated",
   }),
 
   {

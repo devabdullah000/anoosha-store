@@ -1,5 +1,6 @@
 import { requireAdmin } from "@/lib/auth/require-auth";
 import { AdminWorkspace } from "@/components/admin/admin-workspace";
+import { VerifiedAuthProfile } from "@/components/auth/verified-auth-profile";
 
 export const dynamic = "force-dynamic";
 
@@ -8,5 +9,10 @@ export default async function AdminDashboardPage() {
   // browser route for the admin workspace; all section changes are client state.
   const admin = await requireAdmin();
 
-  return <AdminWorkspace adminEmail={admin.email} />;
+  return (
+    <>
+      <VerifiedAuthProfile email={admin.email} role="admin" />
+      <AdminWorkspace adminEmail={admin.email} />
+    </>
+  );
 }

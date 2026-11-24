@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth/require-auth";
 
 export async function requireAdminServer() {
-  const user = await getCurrentUser();
+  const user = await getCurrentUser({ forceFresh: true });
 
   // No valid authenticated user.
   if (!user) {

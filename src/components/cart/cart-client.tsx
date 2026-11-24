@@ -279,7 +279,7 @@ export default function CartClient({
             aria-label="Breadcrumb"
             className="mb-7 flex items-center gap-2 text-xs font-semibold text-slate-500"
           >
-            <Link href="/" className="hover:text-indigo-600">
+            <Link href="/" className="hover:text-indigo-600" prefetch={false}>
               Home
             </Link>
             <span aria-hidden="true">/</span>
@@ -335,6 +335,7 @@ export default function CartClient({
                 <Link
                   href="/shop"
                   className="mt-7 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-pink-500 via-blue-600 to-cyan-500 px-6 text-sm font-extrabold text-white shadow-md"
+                  prefetch={false}
                 >
                   Continue shopping <LuArrowRight />
                 </Link>
@@ -362,6 +363,7 @@ export default function CartClient({
                               <Link
                                 href={productHref(item.productId)}
                                 className="break-words text-base font-black leading-snug text-slate-950 hover:text-indigo-600 sm:text-lg"
+                                prefetch={false}
                               >
                                 {item.productName}
                               </Link>
@@ -492,6 +494,7 @@ export default function CartClient({
                             <Link
                               href={productHref(item.productId)}
                               className="inline-flex min-h-10 items-center gap-1.5 rounded-xl px-3 text-xs font-extrabold text-indigo-700 hover:bg-indigo-50"
+                              prefetch={false}
                             >
                               Add another variant <LuArrowRight />
                             </Link>
@@ -504,6 +507,7 @@ export default function CartClient({
                 <Link
                   href="/shop"
                   className="inline-flex items-center gap-2 py-3 text-sm font-bold text-indigo-700 hover:underline"
+                  prefetch={false}
                 >
                   <LuArrowLeft /> Continue shopping
                 </Link>

@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth/require-auth";
 import { loadCart } from "@/lib/cart/server";
 import CartClient from "@/components/cart/cart-client";
+import { VerifiedAuthProfile } from "@/components/auth/verified-auth-profile";
 import { STORE_NAME } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
@@ -28,5 +29,10 @@ export default async function CartPage() {
     id: user.id,
     email: user.email.trim().toLowerCase(),
   });
-  return <CartClient initialCart={initialCart} />;
+  return (
+    <>
+      <VerifiedAuthProfile email={user.email} role="user" />
+      <CartClient initialCart={initialCart} />
+    </>
+  );
 }

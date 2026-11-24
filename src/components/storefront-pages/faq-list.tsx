@@ -48,6 +48,7 @@ export function FaqList() {
         <Link
           href="/contact"
           className="font-bold text-indigo-700 hover:underline"
+          prefetch={false}
         >
           Send us a message
         </Link>{" "}
@@ -58,7 +59,6 @@ export function FaqList() {
         >
           {SUPPORT_EMAIL}
         </a>
-        .
       </div>
     </div>
   );

@@ -163,7 +163,7 @@ function input(raw: unknown) {
   };
 }
 export async function requireAdmin() {
-  const user = await getCurrentUser();
+  const user = await getCurrentUser({ forceFresh: true });
   if (!user) throw new PromotionError(401, "Sign in to continue.");
   if (user.role !== "admin")
     throw new PromotionError(403, "Administrator access required.");

@@ -1,11 +1,31 @@
+
 import type { Metadata } from "next";
 import Link from "next/link";
-import { LuLockKeyhole, LuMail, LuShieldCheck } from "react-icons/lu";
-import { breadcrumbSchema, pageMetadata, pageSchema } from "@/lib/storefront-pages";
-import { PageShell, PolicySection, SoftNote, StructuredData } from "@/components/storefront-pages/page-shell";
-import { PRIVACY_POLICY_SEO_PARAMS } from "../../lib/seo/privacy-policy";
-import { SUPPORT_EMAIL,PRIVACY_POLICY_UPDATED as POLICY_UPDATED } from "../../lib/constants";
+
 import {
+  LuLockKeyhole,
+  LuMail,
+  LuShieldCheck,
+} from "react-icons/lu";
+
+import {
+  breadcrumbSchema,
+  pageMetadata,
+  pageSchema,
+} from "@/lib/storefront-pages";
+
+import {
+  PageShell,
+  PolicySection,
+  SoftNote,
+  StructuredData,
+} from "@/components/storefront-pages/page-shell";
+
+import { PRIVACY_POLICY_SEO_PARAMS } from "../../lib/seo/privacy-policy";
+
+import {
+  SUPPORT_EMAIL,
+  PRIVACY_POLICY_UPDATED as POLICY_UPDATED,
   PRIVACY_POLICY_PILLARS,
   PRIVACY_POLICY_RELATED_ROUTES,
   PRIVACY_POLICY_SECTIONS,
@@ -19,7 +39,10 @@ import {
   PRIVACY_POLICY_UPDATED_LABEL,
 } from "../../lib/constants";
 
-export const metadata: Metadata = pageMetadata(PRIVACY_POLICY_SEO_PARAMS);
+// Static SEO metadata.
+export const metadata: Metadata = pageMetadata(
+  PRIVACY_POLICY_SEO_PARAMS
+);
 
 const PILLAR_ICONS = {
   purpose: <LuShieldCheck className="h-6 w-6 text-indigo-700" />,
@@ -37,32 +60,53 @@ export default function PrivacyPage() {
       icon={<LuLockKeyhole className="h-3.5 w-3.5" />}
       related={PRIVACY_POLICY_RELATED_ROUTES}
     >
+      {/* SEO structured data */}
       <StructuredData
         data={[
           breadcrumbSchema(PRIVACY_POLICY_SHELL_PATH),
-          pageSchema(PRIVACY_POLICY_SHELL_PATH, PRIVACY_POLICY_SEO_DESCRIPTION),
+          pageSchema(
+            PRIVACY_POLICY_SHELL_PATH,
+            PRIVACY_POLICY_SEO_DESCRIPTION
+          ),
         ]}
       />
+
+      {/* Last updated */}
       <p className="mb-5 text-xs font-medium text-slate-500">
         {PRIVACY_POLICY_UPDATED_LABEL} {POLICY_UPDATED}
       </p>
 
       <div className="space-y-4">
+        {/* Privacy policy pillars */}
         <div className="grid gap-4 sm:grid-cols-3">
           {PRIVACY_POLICY_PILLARS.map((pillar) => (
-            <div key={pillar.key} className="rounded-2xl border border-indigo-100 bg-white p-5">
+            <div
+              key={pillar.key}
+              className="rounded-2xl border border-indigo-100 bg-white p-5"
+            >
               {PILLAR_ICONS[pillar.key]}
-              <h2 className="mt-3 text-sm font-bold text-slate-900">{pillar.title}</h2>
-              <p className="mt-2 text-sm leading-6 text-slate-500">{pillar.body}</p>
+
+              <h2 className="mt-3 text-sm font-bold text-slate-900">
+                {pillar.title}
+              </h2>
+
+              <p className="mt-2 text-sm leading-6 text-slate-500">
+                {pillar.body}
+              </p>
             </div>
           ))}
         </div>
 
+        {/* Privacy policy sections */}
         {PRIVACY_POLICY_SECTIONS.map((section) => (
-          <PolicySection key={section.key} title={section.title}>
+          <PolicySection
+            key={section.key}
+            title={section.title}
+          >
             {section.paragraphs.map((text, idx) => (
               <p key={idx}>{text}</p>
             ))}
+
             {section.bullets.length > 0 && (
               <ul>
                 {section.bullets.map((bullet) => (
@@ -70,28 +114,59 @@ export default function PrivacyPage() {
                 ))}
               </ul>
             )}
+
+            {/* Privacy and data requests */}
             {section.key === "rights" && (
               <p>
-                Contact <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a> for privacy or data requests.
+                Contact{" "}
+                <a href={`mailto:${SUPPORT_EMAIL}`}>
+                  {SUPPORT_EMAIL}
+                </a>{" "}
+                for privacy or data requests.
               </p>
             )}
+
+            {/* Contact page: prefetch disabled */}
             {section.key === "children" && (
               <p>
-                Reach our team via the <Link href="/contact">contact page</Link> if needed.
+                Reach our team via the{" "}
+                <Link
+                  href="/contact"
+                  prefetch={false}
+                >
+                  contact page
+                </Link>{" "}
+                if needed.
               </p>
             )}
+
+            {/* Terms page: prefetch disabled */}
             {section.key === "changes" && (
               <p>
-                Email <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a> or review{" "}
-                <Link href="/terms-and-conditions">Terms & Conditions</Link>.
+                Email{" "}
+                <a href={`mailto:${SUPPORT_EMAIL}`}>
+                  {SUPPORT_EMAIL}
+                </a>{" "}
+                or review{" "}
+                <Link
+                  href="/terms-and-conditions"
+                  prefetch={false}
+                >
+                  Terms & Conditions
+                </Link>
+                .
               </p>
             )}
           </PolicySection>
         ))}
       </div>
 
+      {/* Additional privacy information */}
       <div className="mt-5">
-        <SoftNote icon={<LuShieldCheck className="h-5 w-5" />} title={PRIVACY_POLICY_SOFT_NOTE_TITLE}>
+        <SoftNote
+          icon={<LuShieldCheck className="h-5 w-5" />}
+          title={PRIVACY_POLICY_SOFT_NOTE_TITLE}
+        >
           {PRIVACY_POLICY_SOFT_NOTE_BODY}
         </SoftNote>
       </div>

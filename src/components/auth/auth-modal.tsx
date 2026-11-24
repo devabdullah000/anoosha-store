@@ -4,6 +4,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { clearAccessTokenCache } from "@/lib/auth/access-token";
+import { markGoogleSignInPending } from "@/lib/auth/google-login-pending";
 import { setAuthProfile } from "@/store/auth-slice";
 import { useAppDispatch } from "@/store/hooks";
 
@@ -79,9 +80,10 @@ export function AuthModal({
 
     dispatch(setAuthProfile({ email: user.email, role }));
     clearAccessTokenCache();
-    onClose();
+    // AuthModal is rendered on /login: avoid onClose() triggering another
+    // router.replace("/") before this post-login navigation.
+    // Navigating to the destination obtains a fresh server-authorized page.
     router.replace(role === "admin" ? "/admin/dashboard" : "/");
-    router.refresh();
   }
 
   async function handleLogin(event: FormEvent<HTMLFormElement>) {
@@ -276,6 +278,9 @@ export function AuthModal({
     // This is a separate OAuth flow; it does not call Better Auth and does not
     // touch the email form's busy state or its button labels.
     try {
+      // Recover the Google profile once after the OAuth full-page redirect.
+      // Ordinary public navigation will make NO session requests.
+      markGoogleSignInPending();
       window.location.assign("/api/google-auth/start?returnTo=%2F");
     } catch {
       setGoogleBusy(false);

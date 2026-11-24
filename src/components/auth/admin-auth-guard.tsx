@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 import { useAppSelector } from "@/store/hooks";
 
 /**
- * Client-side role gate for admin UI components. It reads the Redux Persist
- * profile after AuthBootstrap validates the HttpOnly session cookie.
- * Keep requireAdmin() in the server page/route/action as the real security boundary.
+ * Optional client UI gate. The server page runs requireAdmin() first,
+ * then VerifiedAuthProfile passes that verified identity into Redux.
+ * This guard never grants server access based on Redux/localStorage.
  */
 export function AdminAuthGuard({ children }: { children: ReactNode }) {
   const router = useRouter();

@@ -138,6 +138,7 @@ export default function SmartSlider({
             </p>
             <Link
               href="/shop"
+              prefetch={false}
               className="mt-8 inline-flex w-fit items-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-extrabold text-slate-900 shadow-lg shadow-black/20 transition hover:-translate-y-0.5 hover:bg-cyan-50"
             >
               {DEFAULT_SLIDER_BUTTON_TEXT} <LuArrowRight />
@@ -193,6 +194,7 @@ export default function SmartSlider({
                       tabIndex={selected ? 0 : -1}
                       aria-hidden={!selected}
                       href={slide.buttonHref}
+                      prefetch={false}
                       className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-extrabold text-slate-950 transition hover:-translate-y-1 hover:bg-cyan-50"
                     >
                       {slide.buttonLabel} <LuArrowRight />
