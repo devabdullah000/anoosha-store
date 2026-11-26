@@ -8,7 +8,15 @@ import {
   uniqueIndex,
 } from "drizzle-orm/sqlite-core";
 
-/** Append-only historical order snapshots: deliberately NO FK to products or variants. */
+/** Supported checkout payment methods. */
+export const ORDER_PAYMENT_METHODS = ["cod", "easypaisa", "jazzcash"] as const;
+export type OrderPaymentMethod = (typeof ORDER_PAYMENT_METHODS)[number];
+
+/**
+ * Append-only historical order snapshots.
+ * Deliberately no foreign keys to products or variants: those records may
+ * change or be archived, while purchased item snapshots must remain intact.
+ */
 export const orders = sqliteTable(
   "orders",
   {
@@ -27,7 +35,11 @@ export const orders = sqliteTable(
     country: text("country").notNull().default("Pakistan"),
     storeNameSnapshot: text("store_name_snapshot").notNull(),
     storeAddressSnapshot: text("store_address_snapshot").notNull(),
-    paymentMethod: text("payment_method").notNull().default("cod"),
+    paymentMethod: text("payment_method", {
+      enum: ORDER_PAYMENT_METHODS,
+    })
+      .notNull()
+      .default("cod"),
     status: text("status").notNull().default("pending"),
     grossPaisa: integer("gross_paisa").notNull(),
     discountPaisa: integer("discount_paisa").notNull(),
@@ -57,7 +69,10 @@ export const orders = sqliteTable(
       "orders_status_check",
       sql`${t.status} IN ('pending','processing','delivered','cancelled')`,
     ),
-    check("orders_payment_check", sql`${t.paymentMethod}='cod'`),
+    check(
+      "orders_payment_check",
+      sql`${t.paymentMethod} IN ('cod','easypaisa','jazzcash')`,
+    ),
     check(
       "orders_totals_check",
       sql`${t.grossPaisa} >= 0 AND ${t.discountPaisa} >= 0 AND ${t.subtotalPaisa} >= 0 AND ${t.shippingPaisa} >= 0 AND ${t.totalPaisa}=${t.subtotalPaisa}+${t.shippingPaisa} AND ${t.subtotalPaisa}=${t.grossPaisa}-${t.discountPaisa}`,
@@ -133,9 +148,14 @@ export const ordersRelations = relations(orders, ({ many }) => ({
   items: many(orderItems),
   events: many(orderEvents),
 }));
+
 export const orderItemsRelations = relations(orderItems, ({ one }) => ({
-  order: one(orders, { fields: [orderItems.orderId], references: [orders.id] }),
+  order: one(orders, {
+    fields: [orderItems.orderId],
+    references: [orders.id],
+  }),
 }));
+
 export const orderEventsRelations = relations(orderEvents, ({ one }) => ({
   order: one(orders, {
     fields: [orderEvents.orderId],

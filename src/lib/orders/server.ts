@@ -19,6 +19,8 @@ import type {
   ShippingDetails,
 } from "./types";
 import { normalizePakistanMobile } from "./phone";
+import { isPaymentMethod } from "./payment";
+import type { PaymentMethod } from "./payment";
 
 export class OrderError extends Error {
   constructor(
@@ -36,7 +38,7 @@ export const privateHeaders = {
 };
 const uuid = () => crypto.randomUUID();
 const MAX_LINES = 30;
-const shippingFeePaisa = 0; // COD; change only with an explicit pricing/shipping policy.
+const shippingFeePaisa = 0; // Update only with an explicit pricing/shipping policy.
 const storeName = "Anoosha Store";
 // Store address must be read from the runtime Cloudflare binding, not at build/module load time.
 
@@ -165,6 +167,12 @@ function parseSource(raw: unknown): OrderSource {
 export function parsePlaceOrder(raw: unknown): PlaceOrderBody {
   if (!record(raw)) throw new OrderError(400, "Invalid order.");
   const source = parseSource(raw);
+  if (!isPaymentMethod(raw.paymentMethod))
+    throw new OrderError(
+      400,
+      "Select a payment method before placing your order.",
+    );
+  const paymentMethod = raw.paymentMethod;
   const key = clean(raw.idempotencyKey, "Request ID", 80, 16);
   if (!/^[a-zA-Z0-9_-]{16,80}$/.test(key))
     throw new OrderError(400, "Invalid request ID.");
@@ -212,6 +220,7 @@ export function parsePlaceOrder(raw: unknown): PlaceOrderBody {
   return {
     ...source,
     shipping: parseShipping(raw.shipping),
+    paymentMethod,
     idempotencyKey: key,
     ...(expectedPrices ? { expectedPrices } : {}),
   };
@@ -523,8 +532,8 @@ export async function placeOrder(
   }
   const insertOrder = `WITH requested(variant_id,qty,sale_price,has_discount,discount_percentage,promotion_id,product_updated_at,variant_updated_at) AS (VALUES ${tuple})
     INSERT OR IGNORE INTO orders
-    (id,order_number,user_id,user_email,idempotency_key,customer_name,customer_phone,address_line1,address_line2,city,province,postal_code,country,store_name_snapshot,store_address_snapshot,gross_paisa,discount_paisa,subtotal_paisa,shipping_paisa,total_paisa)
-    SELECT ?,?,?,?,?,?,?,?,?,?,?,?,'Pakistan',?,?,?,?,?,?,?
+    (id,order_number,user_id,user_email,idempotency_key,customer_name,customer_phone,address_line1,address_line2,city,province,postal_code,country,store_name_snapshot,store_address_snapshot,payment_method,gross_paisa,discount_paisa,subtotal_paisa,shipping_paisa,total_paisa)
+    SELECT ?,?,?,?,?,?,?,?,?,?,?,?,'Pakistan',?,?,?,?,?,?,?,?
     WHERE NOT EXISTS (
       SELECT 1 FROM requested r
       LEFT JOIN product_variants v ON v.id=r.variant_id
@@ -564,6 +573,7 @@ export async function placeOrder(
         s.postalCode || null,
         storeName,
         storeAddress,
+        payload.paymentMethod,
         gross,
         discount,
         subtotal,
@@ -706,7 +716,7 @@ type OrderDbRow = {
   country: string;
   storeName: string;
   storeAddress: string;
-  paymentMethod: "cod";
+  paymentMethod: PaymentMethod;
   grossPaisa: number;
   discountPaisa: number;
   subtotalPaisa: number;
@@ -879,7 +889,7 @@ export async function orderList(
     .prepare(
       `SELECT id,order_number AS orderNumber,status,total_paisa AS totalPaisa,
     created_at AS createdAt,customer_name AS customerName,user_email AS userEmail,
-    customer_phone AS phone,
+    customer_phone AS phone,payment_method AS paymentMethod,
     COUNT(*) OVER() AS totalRows FROM orders ${where}
     ORDER BY created_at DESC,id DESC LIMIT ? OFFSET ?`,
     )
@@ -895,6 +905,7 @@ export async function orderList(
       customerName: o.customerName,
       userEmail: o.userEmail,
       phone: o.phone,
+      paymentMethod: o.paymentMethod,
       canCustomerCancel: canCustomerCancel(o.status, o.createdAt),
     })),
     page: safePage,

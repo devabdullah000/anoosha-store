@@ -2,6 +2,10 @@ import type { OrderInfo } from "@/lib/orders/types";
 import { money } from "@/lib/storefront/utils";
 import { LuCheck } from "react-icons/lu";
 import { formatOrderDate } from "@/lib/orders/format";
+import {
+  PAYMENT_METHOD_LABELS,
+  paymentAccountNumber,
+} from "@/lib/orders/payment";
 export default function OrderReceipt({ order }: { order: OrderInfo }) {
   return (
     <article
@@ -59,8 +63,18 @@ export default function OrderReceipt({ order }: { order: OrderInfo }) {
           <p className="mt-2 text-slate-600">Account: {order.userEmail}</p>
           <p className="mt-1 text-slate-600">
             Payment method:{" "}
-            <strong className="text-slate-900">Cash on delivery</strong>
+            <strong className="text-slate-900">
+              {PAYMENT_METHOD_LABELS[order.paymentMethod]}
+            </strong>
           </p>
+          {paymentAccountNumber(order.paymentMethod) && (
+            <p className="mt-1 text-slate-600">
+              {PAYMENT_METHOD_LABELS[order.paymentMethod]} receiving number:{" "}
+              <strong className="text-slate-900">
+                {paymentAccountNumber(order.paymentMethod)}
+              </strong>
+            </p>
+          )}
           {order.status === "cancelled" && (
             <p className="mt-2 text-rose-600">
               Cancelled: {order.cancellationReason}
@@ -137,13 +151,13 @@ export default function OrderReceipt({ order }: { order: OrderInfo }) {
         </div>
       </div>
       <div className="mt-8 flex items-start gap-2 border-t pt-5 text-xs leading-5 text-slate-500">
-        <LuCheck className="mt-0.5 shrink-0 text-emerald-600" />
-        <span>
-          This receipt preserves the item names, variants, options and prices as
-          ordered, even if products are later edited or removed. Order status
-          may change.
-        </span>
-      </div>
+        </div>
+        <div className="flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800">
+  <LuCheck className="h-6 w-6 shrink-0 text-emerald-600" />
+  <p className="text-sm font-semibold leading-relaxed">
+    Thank you for shopping with Anoosha Store. We appreciate your trust in us!
+  </p>
+</div>
     </article>
   );
 }

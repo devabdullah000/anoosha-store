@@ -70,6 +70,15 @@ export const ADD_TO_CART_EVENT = "anoosha:storefront:add-to-cart";
 
 export const ORDER_NOW_EVENT = "anoosha:storefront:order-now";
 
+export const WHATSAPP_NUMBER = "923160484847";
+
+export const DEFAULT_WHATSAPP_MESSAGE =
+  "Hello Anoosha Store! I would like to get more information about your products. Could you please help me?";
+
+export const EASYPAISA_NUMBER = "+923160484847";
+
+export const JAZZCASH_NUMBER = "+923160484847";
+
 export const ICON_CLASS = "h-5 w-5 text-black";
 
 export const MAX_IMAGE_BYTES = 5 * 1024 * 1024;

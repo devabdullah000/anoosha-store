@@ -5,6 +5,7 @@
  */
 import type { OrderInfo } from "./types";
 import { formatOrderDate } from "./format";
+import { PAYMENT_METHOD_LABELS, paymentAccountNumber } from "./payment";
 
 const MONEY = (paisa: number): string =>
   `Rs. ${(paisa / 100).toLocaleString("en-PK", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -232,8 +233,29 @@ export async function downloadOrderInvoicePdf(order: OrderInfo): Promise<void> {
   y += 14;
   totalRow("GRAND TOTAL", order.totalPaisa, true, purple);
   y += 6;
-  txt("Payment: Cash on delivery (COD)", left, y, 9, false, muted);
-  y += 20;
+  ensure(50);
+  txt(
+    `Payment: ${PAYMENT_METHOD_LABELS[order.paymentMethod]}`,
+    left,
+    y,
+    9,
+    false,
+    muted,
+  );
+  y += 18;
+  const receivingNumber = paymentAccountNumber(order.paymentMethod);
+  if (receivingNumber) {
+    ensure(20);
+    txt(
+      `${PAYMENT_METHOD_LABELS[order.paymentMethod]} receiving number: ${receivingNumber}`,
+      left,
+      y,
+      9,
+      false,
+      muted,
+    );
+    y += 18;
+  }
   if (order.status === "cancelled" && order.cancellationReason) {
     addWrapped(
       `Cancellation reason: ${order.cancellationReason}`,

@@ -8,6 +8,7 @@ import { cancelOrder, OrderApiError } from "@/lib/orders/client";
 import { money } from "@/lib/storefront/utils";
 import { SUPPORT_EMAIL } from "@/lib/constants";
 import { formatOrderDate } from "@/lib/orders/format";
+import { PAYMENT_METHOD_LABELS } from "@/lib/orders/payment";
 import NotificationPopup from "@/components/storefront/notification-popup";
 import Pagination from "@/components/pagination";
 export default function OrdersClient({
@@ -54,7 +55,6 @@ export default function OrdersClient({
           <Link
             href="/shop"
             className="mt-5 inline-flex rounded-xl bg-indigo-600 px-5 py-3 text-sm font-bold text-white"
-            prefetch={false}
           >
             Visit our shop
           </Link>
@@ -79,6 +79,10 @@ export default function OrdersClient({
                   </p>
                   <p className="mt-2 text-xs font-bold uppercase tracking-wide text-slate-700">
                     {o.status}
+                  </p>
+                  <p className="mt-1 text-xs text-slate-600">
+                    Payment:{" "}
+                    <strong>{PAYMENT_METHOD_LABELS[o.paymentMethod]}</strong>
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">

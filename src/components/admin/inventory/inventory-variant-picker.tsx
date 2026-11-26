@@ -191,7 +191,7 @@ export default function InventoryVariantPicker({
               width: layout.width,
               maxHeight: layout.maxHeight,
             }}
-            className="z-[200] flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl shadow-slate-900/15"
+            className="z-[6000] flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl shadow-slate-900/15"
           >
             <div className="shrink-0 border-b border-slate-100 p-2">
               <input

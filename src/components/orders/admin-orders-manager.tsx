@@ -22,8 +22,10 @@ import type { OrderInfo, OrderListItem, OrderStatus } from "@/lib/orders/types";
 import { OrderApiError, updateOrderStatus } from "@/lib/orders/client";
 import { money } from "@/lib/storefront/utils";
 import { formatOrderDate } from "@/lib/orders/format";
+import { PAYMENT_METHOD_LABELS } from "@/lib/orders/payment";
 import OrderReceipt from "./order-receipt";
 import InvoiceActions from "./invoice-actions";
+import { createPortal } from "react-dom";
 
 const STATUS_OPTIONS: OrderStatus[] = [
   "pending",
@@ -163,7 +165,7 @@ export default function OrdersInterface() {
     {
       key: "order",
       header: "Order",
-      width: "21%",
+      width: "18%",
       render: (row) => (
         <div className="min-w-[145px]">
           <p className="break-all font-extrabold text-slate-900">
@@ -178,7 +180,7 @@ export default function OrdersInterface() {
     {
       key: "customer",
       header: "Customer",
-      width: "22%",
+      width: "19%",
       render: (row) => (
         <div className="min-w-[155px]">
           <p className="font-bold text-slate-900">{row.customerName}</p>
@@ -191,7 +193,7 @@ export default function OrdersInterface() {
     {
       key: "contact",
       header: "Contact",
-      width: "17%",
+      width: "15%",
       render: (row) => (
         <a
           href={`tel:${row.phone}`}
@@ -206,7 +208,7 @@ export default function OrdersInterface() {
     {
       key: "status",
       header: "Status",
-      width: "14%",
+      width: "12%",
       render: (row) => (
         <span
           className={`inline-flex whitespace-nowrap rounded-lg px-2.5 py-1.5 text-[11px] font-extrabold ${statusClass[row.status]}`}
@@ -216,10 +218,20 @@ export default function OrdersInterface() {
       ),
     },
     {
+      key: "payment",
+      header: "Payment",
+      width: "12%",
+      render: (row) => (
+        <span className="whitespace-nowrap text-xs font-bold text-slate-700">
+          {PAYMENT_METHOD_LABELS[row.paymentMethod]}
+        </span>
+      ),
+    },
+    {
       key: "amount",
       header: "Total (PKR)",
       align: "right",
-      width: "13%",
+      width: "12%",
       render: (row) => (
         <span className="whitespace-nowrap font-black text-slate-900">
           {money(row.totalPaisa)}
@@ -233,7 +245,7 @@ export default function OrdersInterface() {
       key: "actions",
       header: "Actions",
       align: "right",
-      width: "13%",
+      width: "12%",
       render: (row) => (
         <button
           type="button"
@@ -389,173 +401,171 @@ export default function OrdersInterface() {
         }}
       />
 
-      {selected && (
-        <div
-          className="fixed inset-0 z-[100] overflow-y-auto bg-slate-950/70 p-3 backdrop-blur-sm sm:p-6"
-          role="presentation"
-        >
+      {selected &&
+        typeof document !== "undefined" &&
+        createPortal(
           <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="admin-order-detail-title"
-            className="mx-auto w-full max-w-5xl rounded-2xl bg-gradient-to-r from-pink-500 via-blue-500 to-cyan-400 p-[1px] shadow-2xl"
+            className="fixed inset-0 z-[6000] overflow-y-auto overscroll-contain bg-slate-950/70 px-3 py-5 backdrop-blur-sm sm:px-6 sm:py-8"
+            role="presentation"
           >
-            <div className="rounded-[15px] bg-white p-4 sm:p-6">
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div>
-                  <p className="text-xs font-extrabold uppercase tracking-widest text-indigo-600">
-                    Order management
-                  </p>
-                  <h3
-                    id="admin-order-detail-title"
-                    className="mt-2 break-all text-xl font-black text-slate-950 sm:text-2xl"
-                  >
-                    {selected.orderNumber}
-                  </h3>
-                  <p className="mt-2 text-sm text-slate-600">
-                    Current status:{" "}
-                    <strong>{STATUS_LABELS[selected.status]}</strong>
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  aria-label="Close order details"
-                  disabled={busy}
-                  onClick={() => {
-                    setSelected(null);
-                    setPendingStatus(null);
-                  }}
-                  className="rounded-xl p-2 text-slate-500 hover:bg-slate-100 disabled:opacity-50"
-                >
-                  <LuX className="h-5 w-5" />
-                </button>
-              </div>
-
-              <div className="mt-5 flex flex-col gap-3 rounded-xl border border-indigo-100 bg-indigo-50/70 p-4 text-sm sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
-                <div className="min-w-0">
-                  <p className="text-[11px] font-bold uppercase tracking-wide text-indigo-600">
-                    Delivery contact
-                  </p>
-                  <p className="mt-1 font-black text-slate-900">
-                    {selected.customerName}
-                  </p>
-                  <p className="mt-1 break-words text-xs text-slate-600">
-                    {selected.addressLine1}
-                    {selected.addressLine2
-                      ? `, ${selected.addressLine2}`
-                      : ""}, {selected.city}, {selected.province},{" "}
-                    {selected.country}
-                  </p>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  <a
-                    href={`tel:${selected.phone}`}
-                    className="inline-flex min-h-10 items-center gap-2 rounded-xl bg-indigo-600 px-3 text-xs font-bold text-white"
-                  >
-                    <LuPhone />
-                    {selected.phone}
-                  </a>
-                  <a
-                    href={`mailto:${selected.userEmail}`}
-                    className="inline-flex min-h-10 items-center rounded-xl border border-indigo-200 bg-white px-3 text-xs font-bold text-indigo-700"
-                  >
-                    Email customer
-                  </a>
-                </div>
-              </div>
-
-              {available.length > 0 ? (
-                <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4">
-                  <p className="mb-3 text-xs font-black uppercase tracking-wide text-slate-600">
-                    Order actions
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {available.includes("processing") && (
-                      <button
-                        type="button"
-                        onClick={() => setPendingStatus("processing")}
-                        disabled={busy}
-                        className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-indigo-600 px-4 text-xs font-bold text-white disabled:opacity-50"
-                      >
-                        <LuClipboardList className="h-4 w-4" />
-                        Mark as processing
-                      </button>
-                    )}
-                    {available.includes("delivered") && (
-                      <button
-                        type="button"
-                        onClick={() => setPendingStatus("delivered")}
-                        disabled={busy}
-                        className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-emerald-600 px-4 text-xs font-bold text-white disabled:opacity-50"
-                      >
-                        <LuTruck className="h-4 w-4" />
-                        Mark as delivered / received
-                      </button>
-                    )}
-                    {available.includes("cancelled") && (
-                      <button
-                        type="button"
-                        onClick={() => setPendingStatus("cancelled")}
-                        disabled={busy}
-                        className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-rose-600 px-4 text-xs font-bold text-white disabled:opacity-50"
-                      >
-                        <LuCircle className="h-4 w-4" />
-                        Cancel order
-                      </button>
-                    )}
-                  </div>
-                  {selected.status === "delivered" && (
-                    <p className="mt-3 text-xs font-semibold text-amber-800">
-                      Cancellation of a delivered order does not automatically
-                      put stock back. Record physical returns through the
-                      Inventory module.
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="admin-order-detail-title"
+              className="mx-auto w-full max-w-5xl rounded-2xl bg-gradient-to-r from-pink-500 via-blue-500 to-cyan-400 p-[1px] shadow-2xl"
+            >
+              <div className="rounded-[15px] bg-white p-4 sm:p-6">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-extrabold uppercase tracking-widest text-indigo-600">
+                      Order management
                     </p>
-                  )}
-                </div>
-              ) : (
-                <p className="mt-4 flex items-center gap-2 rounded-xl bg-slate-50 p-3 text-xs font-semibold text-slate-600">
-                  <LuShieldCheck className="h-4 w-4" />
-                  This cancelled order is final and cannot be reopened.
-                </p>
-              )}
 
-              <div className="my-6 flex justify-end">
-                <InvoiceActions order={selected} />
-              </div>
-              <OrderReceipt order={selected} />
-              {selected.events && (
-                <section className="mx-auto mt-6 max-w-4xl rounded-xl border border-slate-200 p-4 sm:p-5">
-                  <h4 className="text-sm font-black text-slate-900">
-                    Order audit history
-                  </h4>
-                  <div className="mt-4 space-y-3">
-                    {selected.events.map((event) => (
-                      <div
-                        key={event.id}
-                        className="border-l-2 border-indigo-200 pl-4 text-xs"
-                      >
-                        <p className="font-bold text-slate-900">
-                          {event.previousStatus ?? "New order"} →{" "}
-                          {event.nextStatus}
-                        </p>
-                        <p className="mt-1 text-slate-500">
-                          {event.actorRole} · {formatOrderDate(event.createdAt)}
-                        </p>
-                        {event.note && (
-                          <p className="mt-1 text-slate-700">{event.note}</p>
-                        )}
-                      </div>
-                    ))}
+                    <h3
+                      id="admin-order-detail-title"
+                      className="mt-2 break-all text-xl font-black text-slate-950 sm:text-2xl"
+                    >
+                      {selected.orderNumber}
+                    </h3>
+
+                    <p className="mt-2 text-sm text-slate-600">
+                      Current status:{" "}
+                      <strong>{STATUS_LABELS[selected.status]}</strong>
+                    </p>
+
+                    <p className="mt-1 text-sm text-slate-600">
+                      Payment method:{" "}
+                      <strong>
+                        {PAYMENT_METHOD_LABELS[selected.paymentMethod]}
+                      </strong>
+                    </p>
                   </div>
-                </section>
-              )}
+
+                  <button
+                    type="button"
+                    aria-label="Close order details"
+                    disabled={busy}
+                    onClick={() => {
+                      setSelected(null);
+                      setPendingStatus(null);
+                    }}
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-600 transition hover:bg-rose-50 hover:text-rose-600 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-indigo-200 disabled:opacity-50"
+                  >
+                    <LuX className="h-5 w-5" />
+                  </button>
+                </div>
+
+                <div className="mt-5 flex flex-col gap-3 rounded-xl border border-indigo-100 bg-indigo-50/70 p-4 text-sm sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+                  <div className="min-w-0">
+                    <p className="text-[11px] font-bold uppercase tracking-wide text-indigo-600">
+                      Delivery contact
+                    </p>
+
+                    <p className="mt-1 font-black text-slate-900">
+                      {selected.customerName}
+                    </p>
+
+                    <p className="mt-1 break-words text-xs text-slate-600">
+                      {selected.addressLine1}
+                      {selected.addressLine2
+                        ? `, ${selected.addressLine2}`
+                        : ""}
+                      , {selected.city}, {selected.province}, {selected.country}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2">
+                    <a
+                      href={`tel:${selected.phone}`}
+                      className="inline-flex min-h-10 items-center gap-2 rounded-xl bg-indigo-600 px-3 text-xs font-bold text-white"
+                    >
+                      <LuPhone />
+                      {selected.phone}
+                    </a>
+
+                    <a
+                      href={`mailto:${selected.userEmail}`}
+                      className="inline-flex min-h-10 items-center rounded-xl border border-indigo-200 bg-white px-3 text-xs font-bold text-indigo-700"
+                    >
+                      Email customer
+                    </a>
+                  </div>
+                </div>
+
+                {available.length > 0 ? (
+                  <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                    <p className="mb-3 text-xs font-black uppercase tracking-wide text-slate-600">
+                      Order actions
+                    </p>
+
+                    <div className="flex flex-wrap gap-2">
+                      {available.includes("processing") && (
+                        <button
+                          type="button"
+                          onClick={() => setPendingStatus("processing")}
+                          disabled={busy}
+                          className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-indigo-600 px-4 text-xs font-bold text-white disabled:opacity-50"
+                        >
+                          <LuClipboardList className="h-4 w-4" />
+                          Mark as processing
+                        </button>
+                      )}
+
+                      {available.includes("delivered") && (
+                        <button
+                          type="button"
+                          onClick={() => setPendingStatus("delivered")}
+                          disabled={busy}
+                          className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-emerald-600 px-4 text-xs font-bold text-white disabled:opacity-50"
+                        >
+                          <LuTruck className="h-4 w-4" />
+                          Mark as delivered / received
+                        </button>
+                      )}
+
+                      {available.includes("cancelled") && (
+                        <button
+                          type="button"
+                          onClick={() => setPendingStatus("cancelled")}
+                          disabled={busy}
+                          className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-rose-600 px-4 text-xs font-bold text-white disabled:opacity-50"
+                        >
+                          <LuCircle className="h-4 w-4" />
+                          Cancel order
+                        </button>
+                      )}
+                    </div>
+
+                    {selected.status === "delivered" && (
+                      <p className="mt-3 text-xs font-semibold text-amber-800">
+                        Cancellation of a delivered order does not automatically
+                        put stock back. Record physical returns through the
+                        Inventory module.
+                      </p>
+                    )}
+                  </div>
+                ) : (
+                  <p className="mt-4 flex items-center gap-2 rounded-xl bg-slate-50 p-3 text-xs font-semibold text-slate-600">
+                    <LuShieldCheck className="h-4 w-4" />
+                    This cancelled order is final and cannot be reopened.
+                  </p>
+                )}
+
+                <div className="my-6 flex justify-end">
+                  <InvoiceActions order={selected} />
+                </div>
+
+                <div>
+                  <OrderReceipt order={selected} />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
 
       {selected && pendingStatus && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center bg-slate-950/75 p-4 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[1100000] flex items-center justify-center bg-slate-950/75 p-4 backdrop-blur-sm">
           <div
             role="alertdialog"
             aria-modal="true"

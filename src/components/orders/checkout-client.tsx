@@ -8,6 +8,7 @@ import {
   LuLoaderCircle,
   LuShoppingBag,
   LuShieldCheck,
+  LuWallet,
 } from "react-icons/lu";
 import type { CartPayload } from "@/lib/cart/types";
 import { money } from "@/lib/storefront/utils";
@@ -15,6 +16,13 @@ import { announceCartChanged, getCart } from "@/lib/cart/client";
 import { placeOrder, quoteDirect, OrderApiError } from "@/lib/orders/client";
 import { DIRECT_CHECKOUT_KEY } from "@/lib/orders/types";
 import { normalizePakistanMobile } from "@/lib/orders/phone";
+import {
+  PAYMENT_METHODS,
+  PAYMENT_METHOD_LABELS,
+  paymentAccountNumber,
+  paymentMethodAvailable,
+} from "@/lib/orders/payment";
+import type { PaymentMethod } from "@/lib/orders/payment";
 import type {
   OrderQuote,
   OrderSource,
@@ -45,6 +53,7 @@ export default function CheckoutClient({
 }) {
   const router = useRouter();
   const [shipping, setShipping] = useState(initialShipping);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | "">("");
   const [direct, setDirect] = useState<OrderSource | null>(null);
   const [quote, setQuote] = useState<OrderQuote | null>(null);
   // The initial cart is rendered on the server; refresh it only on a 409 price change.
@@ -121,11 +130,21 @@ export default function CheckoutClient({
       ? (quote?.subtotalPaisa ?? 0)
       : (currentCart?.subtotalPaisa ?? 0);
   const ready = mode === "direct" ? !!direct && !!quote : cartReady;
+  // Account numbers are display-only. They must not control whether the
+  // customer can select a manual payment method.
+  const receivingNumber =
+    paymentMethod && paymentMethod !== "cod"
+      ? paymentAccountNumber(paymentMethod)
+      : null;
   function set(field: keyof ShippingDetails, value: string) {
     setShipping((s) => ({ ...s, [field]: value }));
   }
   async function confirm() {
     if (busy || !ready) return;
+    if (!paymentMethod || !paymentMethodAvailable(paymentMethod)) {
+      setNotice("Select an available payment method before placing your order.");
+      return;
+    }
     if (!normalizePakistanMobile(shipping.phone)) {
       setNotice(
         "Enter a Pakistani mobile number, e.g. 03001234567 or +923001234567.",
@@ -157,6 +176,7 @@ export default function CheckoutClient({
       const receipt = await placeOrder({
         ...source,
         shipping,
+        paymentMethod,
         idempotencyKey: requestId.current,
         expectedPrices: lines.map((line) => ({
           variantId: line.variantId,
@@ -212,7 +232,6 @@ export default function CheckoutClient({
         <Link
           href={mode === "cart" ? "/cart" : "/shop"}
           className="inline-flex items-center gap-2 text-sm font-bold text-indigo-700"
-          prefetch={false}
         >
           <LuArrowLeft />
           Back to shopping
@@ -221,8 +240,8 @@ export default function CheckoutClient({
           Secure checkout
         </h1>
         <p className="mt-2 text-sm text-slate-500">
-          Cash on delivery · Final stock and prices are verified when you place
-          the order.
+          Select Cash on Delivery, Easypaisa, or JazzCash. Final stock and prices
+          are verified when you place the order.
         </p>
         <div className="mt-7 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_390px]">
           <section className={border}>
@@ -322,11 +341,72 @@ export default function CheckoutClient({
                 delivery calls or SMS. I understand that incorrect contact
                 information can delay delivery.
               </label>
-              <div className="mt-3 flex items-start gap-3 rounded-xl bg-slate-50 p-4 text-xs leading-6 text-slate-700">
+              <section aria-labelledby="checkout-payment-title" className="mt-6 border-t border-slate-100 pt-6">
+                <h3 id="checkout-payment-title" className="flex items-center gap-2 text-base font-black text-slate-950">
+                  <LuWallet aria-hidden="true" /> Payment method *
+                </h3>
+                <p className="mt-1 text-xs leading-5 text-slate-500">
+                  Select one method. Mobile wallet payments are not processed automatically on this website.
+                </p>
+                <div role="radiogroup" aria-label="Payment method" aria-required="true" className="mt-4 grid gap-3">
+                  {PAYMENT_METHODS.map((method) => {
+                    const available = paymentMethodAvailable(method);
+                    return (
+                      <label key={method} className={`flex items-center gap-3 rounded-xl border p-4 text-sm font-semibold transition ${paymentMethod === method ? "border-indigo-500 bg-indigo-50 text-indigo-900" : "border-slate-200 bg-white text-slate-700"} ${!available ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}>
+                        <input
+                          type="radio"
+                          name="checkout-payment-method"
+                          value={method}
+                          checked={paymentMethod === method}
+                          disabled={!available || busy}
+                          onChange={() => setPaymentMethod(method)}
+                          className="h-4 w-4 shrink-0 accent-indigo-600"
+                          required
+                        />
+                        <span>{PAYMENT_METHOD_LABELS[method]}</span>
+                        {!available && <span className="ml-auto text-xs font-normal">Not configured</span>}
+                      </label>
+                    );
+                  })}
+                </div>
+                {paymentMethod && paymentMethod !== "cod" && (
+                  <div
+                    className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-950"
+                    role="status"
+                  >
+                    <p className="font-extrabold">
+                      {PAYMENT_METHOD_LABELS[paymentMethod]} receiving number
+                    </p>
+                    {receivingNumber ? (
+                      <p className="mt-2 select-all break-all font-mono text-lg font-black tracking-wide">
+                        {receivingNumber}
+                      </p>
+                    ) : (
+                      <p className="mt-2 font-semibold text-amber-800">
+                        Receiving number is not configured correctly yet.
+                        Please contact support for verified transfer details
+                        before making a payment.
+                      </p>
+                    )}
+                    <p className="mt-2 text-xs leading-5">
+                      This is a manual transfer, not an online payment gateway.
+                      Keep your transaction reference. Your order will remain
+                      pending until our team independently confirms payment.
+                      Contact support with your order number for verification.
+                    </p>
+                  </div>
+                )}
+                {!paymentMethod && (
+                  <p className="mt-3 text-xs font-semibold text-amber-700">Please select a payment method to continue.</p>
+                )}
+                {paymentMethod === "cod" && (
+                  <p className="mt-3 text-xs leading-5 text-slate-600">Pay the confirmed amount on delivery.</p>
+                )}
+              </section>
+              <div className="mt-5 flex items-start gap-3 rounded-xl bg-slate-50 p-4 text-xs leading-6 text-slate-700">
                 <LuShieldCheck className="mt-1 shrink-0" />
-                Cash on delivery. Final stock, pricing and mobile number format
-                are checked on the server. Phone ownership is not independently
-                verified without SMS/voice OTP.
+                Final stock, pricing and mobile number format are checked on the server.
+                Phone ownership is not independently verified without SMS/voice OTP.
               </div>
             </div>
           </section>
@@ -399,7 +479,7 @@ export default function CheckoutClient({
               )}
               <button
                 type="button"
-                disabled={!ready || busy || loading}
+                disabled={!ready || !paymentMethod || !paymentMethodAvailable(paymentMethod) || busy || loading}
                 onClick={() => void confirm()}
                 className="mt-5 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-pink-500 via-blue-600 to-cyan-500 px-4 text-sm font-extrabold text-white disabled:cursor-not-allowed disabled:opacity-50"
               >
@@ -408,14 +488,14 @@ export default function CheckoutClient({
                 ) : (
                   <LuCheck />
                 )}
-                {busy ? "Placing order..." : "Place cash-on-delivery order"}
+                {busy ? "Placing order..." : "Place order"}
               </button>
               <p className="mt-3 text-center text-[11px] leading-5 text-slate-500">
                 By ordering, you agree to our{" "}
                 <Link
                   href="/terms-and-conditions"
-                  className="font-bold text-indigo-700"
                   prefetch={false}
+                  className="font-bold text-indigo-700"
                 >
                   Terms & Conditions
                 </Link>

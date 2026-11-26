@@ -7,6 +7,7 @@ import { Navbar } from "@/components/navigation/navbar";
 import { Footer } from "@/components/footer";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import WhatsAppButton from "@/components/navigation/whatsapp-button";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -50,7 +51,7 @@ export default function RootLayout({
           />
 
           {children}
-
+          <WhatsAppButton />
           <Footer />
         </AppProviders>
       </body>

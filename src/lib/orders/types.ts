@@ -1,4 +1,5 @@
 import type { CartSelection } from "@/lib/cart/types";
+import type { PaymentMethod } from "./payment";
 export const DIRECT_CHECKOUT_KEY = "anoosha:direct-checkout";
 export type OrderStatus = "pending" | "processing" | "delivered" | "cancelled";
 export type ShippingDetails = {
@@ -29,6 +30,7 @@ export type ExpectedOrderPrice = {
 };
 export type PlaceOrderBody = OrderSource & {
   shipping: ShippingDetails;
+  paymentMethod: PaymentMethod;
   idempotencyKey: string;
   /** Client-visible price expectation; the server must independently validate it. */
   expectedPrices?: ExpectedOrderPrice[];
@@ -67,7 +69,7 @@ export type OrderInfo = {
   country: string;
   storeName: string;
   storeAddress: string;
-  paymentMethod: "cod";
+  paymentMethod: PaymentMethod;
   grossPaisa: number;
   discountPaisa: number;
   subtotalPaisa: number;
@@ -93,6 +95,7 @@ export type OrderListItem = Pick<
   | "id"
   | "orderNumber"
   | "status"
+  | "paymentMethod"
   | "totalPaisa"
   | "createdAt"
   | "customerName"
