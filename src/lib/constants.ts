@@ -181,20 +181,21 @@ export const NAVBAR_TEXT = {
    FOOTER
    ================================================================== */
 
+
 export const footer_brand = {
   name: "ANOOSHA STORE",
   description:
-    "Discover quality mobile and gaming accessories designed to keep you connected, equipped, and ready for more.",
+    "Discover a wide variety of products in one place. Enjoy convenient online shopping, great finds, and a simple, customer-focused shopping experience.",
   logo: "/brand-logo.svg",
   logoAlt: "Anoosha Store",
   logoHref: "/",
-  tagline: "Mobile & Gaming Accessories",
+  tagline: "Discover More. Shop Better.",
 };
 
 export const footer_bottom_text = {
   copyright: "All rights reserved.",
   country: "Pakistan",
-  closingLine: "Made for everyday connections and gaming experiences.",
+  closingLine: "Designed to make everyday life simpler, smarter, and more convenient.",
 };
 
 export const footer_nav_links: FooterLinkGroup[] = [
@@ -389,86 +390,90 @@ export const SHOP_PAGE_SUBTITLE2 = "everyday extraordinary.";
 export const SHOP_PAGE_DESCRIPTION =
   "Browse by collection and discover accessories that fit the way you work, play and stay connected.";
 
+
 /* ==================================================================
    TERMS & CONDITIONS PAGE
    ================================================================== */
 
-export const Terms_AND_Condition_EYEBROW = "The essentials";
+export const Terms_AND_Condition_EYEBROW =
+  "Terms of service";
 
-export const Terms_AND_Condition_TITLE = "Clear terms. Confident shopping.";
+export const Terms_AND_Condition_TITLE =
+  "Simple terms. Transparent shopping.";
 
 export const Terms_AND_Condition_DESCRIPTION =
-  "These terms explain how orders, payments, delivery, cancellations and customer support work at Anoosha Store. Please read them before placing an order.";
+  "Please review these terms before shopping at Anoosha Store. They explain our ordering process, payments, delivery, cancellations, returns and customer responsibilities.";
 
-export const Terms_AND_Condition_POLICY_UPDATED = "18 November 2026";
+export const Terms_AND_Condition_POLICY_UPDATED =
+  "27 November 2026";
+
+/* ==================================================================
+   TERMS & CONDITIONS SECTIONS
+   ================================================================== */
 
 export const Terms_AND_Condition_POLIICY_SECTION = [
   {
-    heading: "1. About these terms",
+    heading: "1. General terms",
     description:
-      "These terms apply to browsing, ordering and purchasing products from Anoosha Store. By placing an order, you agree to provide accurate information and follow the purchasing process described here. Your statutory consumer rights under applicable law remain unaffected. We may update these terms to reflect changes in our operations or legal requirements. The current version will appear on this page.",
+      "By using Anoosha Store or placing an order, you agree to these Terms & Conditions. You must provide accurate information and use the website lawfully. We may update these terms when necessary. Applicable consumer rights under Pakistani law remain unaffected.",
   },
   {
-    heading: "2. Products, information and availability",
+    heading: "2. Products & pricing",
     description:
-      "We aim to present useful product descriptions, specifications and images. Actual appearance, packaging and availability can vary slightly. Please review product details before ordering and contact us if anything is unclear. Products and pricing may change without notice. An order can require verification of product availability or delivery feasibility before confirmation.",
+      "We aim to provide accurate product descriptions, images, prices and availability. Minor differences in appearance or packaging may occur. Prices and availability may change, but the order total is displayed before checkout confirmation. If an item becomes unavailable or its price changes before placement, you may need to review your order again.",
   },
   {
-    heading: "3. Placing and confirming orders",
+    heading: "3. Orders & confirmation",
     description:
-      "To place an order, provide your correct full name, reachable phone number, email where requested, and complete delivery address, including any relevant area or landmark. We may call or email you to confirm the order or resolve questions about the delivery details. Incorrect or unreachable contact information may delay or prevent order processing. Placing an order does not guarantee dispatch until it has been confirmed and processed. Review order details through your Orders page where available.",
+      "Customers must provide a valid name, active phone number and complete delivery address. An order is recorded after successful checkout but remains subject to processing and availability. We may contact you to verify order or delivery information. You can review your order details and status through your account.",
   },
   {
-    heading: "4. Payment",
+    heading: "4. Payment methods",
     description:
-      "We currently accept cash on delivery (COD) only. Pay the amount confirmed for your order when the parcel is delivered. Any applicable shipping charge should be shown during checkout or communicated before order confirmation. We do not currently request online card payment through our store.",
+      "We accept Cash on Delivery (COD), Easypaisa and JazzCash. COD payments are collected upon delivery. Easypaisa and JazzCash require manual transfers to the receiving number shown at checkout. Keep your transaction reference and contact support for verification. Selecting a payment method or placing an order does not automatically confirm payment. Online card payments and automated wallet verification are not currently available.",
   },
   {
-    heading: "5. Cancellation requests",
-    description: `You may cancel an order within 15 minutes of placing it, using the available order cancellation option where provided. After the initial 15 minutes, email ${SUPPORT_EMAIL} as soon as possible. Include your order number and explicitly request cancellation. Our team will check the order status and notify you when it has been cancelled, or explain if cancellation is no longer possible. After dispatch, an order may no longer be cancellable. If a parcel has already shipped, refer to our Returns & Refunds guidance.`,
-  },
-  {
-    heading: "6. Shipping and delivery",
+    heading: "5. Shipping & delivery",
     description:
-      "Delivery serviceability, applicable charges and estimated timing depend on the destination, courier coverage and order circumstances. Delivery estimates are not guarantees. Keep your phone reachable for order confirmation and delivery coordination. See Shipping Information for more detail.",
+      "Delivery is available within Pakistan, subject to courier coverage and product availability. Any applicable shipping charges are shown at checkout. Delivery times are estimates and may vary due to location, courier operations or unforeseen delays. Customers are responsible for providing accurate delivery information and remaining reachable.",
   },
   {
-    heading: "7. Returns, issues and refunds",
+    heading: "6. Order cancellation",
+    description: `Eligible pending or processing orders may be cancelled through your account within 15 minutes of placement. After this period, contact ${SUPPORT_EMAIL} with your order number. Later cancellation requests are subject to the order's current status and may not be possible after dispatch.`,
+  },
+  {
+    heading: "7. Returns & refunds",
     description:
-      "For a damaged item, wrong item, or other concern, contact us promptly with your order number and relevant photographs. Requests are reviewed case by case, subject to the applicable law and our Returns & Refunds policy. Do not send a parcel back without first requesting instructions from our support team.",
+      "If you receive a damaged, defective or incorrect item, contact support promptly with your order number and supporting photographs. Return and refund requests are reviewed under our Shipping & Returns Policy and applicable consumer laws. Do not send items back without receiving return instructions. Approved refunds are arranged through a method confirmed by our team.",
   },
   {
-    heading: "8. Accounts, website use and content",
-    description:
-      "Keep your account credentials private and use the website lawfully. Do not misuse checkout, impersonate another customer or interfere with the website's operation. Store content, imagery and branding belong to Anoosha Store or their respective owners. Do not reproduce them for commercial use without permission.",
-  },
-  {
-    heading: "9. Privacy and communication",
-    description:
-      "We use information supplied during account creation, ordering and support requests to operate the store, handle purchases and communicate with you. Read our Privacy Policy for a more detailed explanation. Order-related calls or emails are operational communications and may be necessary to complete a purchase.",
-  },
-  {
-    heading: "10. Questions about these terms",
-    description: `Contact ${SUPPORT_EMAIL} or use our Contact page. For order-specific questions, include your order number. These terms are subject to applicable laws and mandatory consumer protections in Pakistan.`,
+    heading: "8. Accounts, privacy & support",
+    description: `Keep your account credentials secure and do not misuse the website. We handle customer information according to our Privacy Policy. For questions about products, payments, orders or these terms, contact ${SUPPORT_EMAIL} or use our Contact page. Include your order number for order-related enquiries.`,
   },
 ];
 
+/* ==================================================================
+   TERMS AT A GLANCE
+   ================================================================== */
+
 export const Terms_AND_Condition_AT_A_GLANCE = [
-  "Cash on delivery only",
-  "Accurate details required",
-  "Order confirmation may involve a call or email",
-  "15-minute cancellation window",
-  "Email support for later cancellation requests",
+  "Cash on Delivery, Easypaisa and JazzCash accepted",
+  "Wallet payments require manual verification",
+  "Accurate contact and delivery details required",
+  "Eligible orders can be cancelled within 15 minutes",
+  "Returns and refunds are subject to review",
 ];
+
 
 /* ==================================================================
    SHIPPING & RETURNS PAGE
    ================================================================== */
 
-export const SHIPPING_AND_RETURN_SEO_TITLE = "Shipping & Returns";
+export const SHIPPING_AND_RETURN_SEO_TITLE =
+  "Shipping & Returns";
 
 export const SHIPPING_AND_RETURN_SEO_DESCRIPTION =
-  "Find Anoosha Store shipping and return policies, including order verification, delivery estimates, cash on delivery, address accuracy, damaged or wrong items and refund help.";
+  "Learn about Anoosha Store delivery, shipping charges, payment methods, order cancellations, returns and refunds in Pakistan.";
 
 export const SHIPPING_AND_RETURN_SEO_PATH: StaticPageHref =
   "/shipping-and-return-policy";
@@ -476,48 +481,61 @@ export const SHIPPING_AND_RETURN_SEO_PATH: StaticPageHref =
 export const SHIPPING_AND_RETURN_SHELL_PATH: StaticPageHref =
   "/shipping-and-return-policy";
 
-export const SHIPPING_AND_RETURN_SHELL_EYEBROW = "Delivery & post-purchase care";
+export const SHIPPING_AND_RETURN_SHELL_EYEBROW =
+  "Shipping & returns";
 
 export const SHIPPING_AND_RETURN_SHELL_TITLE =
-  "Shipping, returns and help, all in one place.";
+  "Delivery made simple. Support when you need it.";
 
 export const SHIPPING_AND_RETURN_SHELL_DESCRIPTION =
-  "How order confirmation, cash on delivery, delivery estimates, item issues and return reviews work at Anoosha Store.";
+  "Everything you need to know about shipping, payment, cancellations, returns and refunds at Anoosha Store.";
 
-export const SHIPPING_AND_RETURN_UPDATED_LABEL = "Last updated:";
+export const SHIPPING_AND_RETURN_UPDATED_LABEL =
+  "Last updated:";
+
+export const SHIPPING_AND_RETURN_POLICY_UPDATED =
+  "27 November 2026";
+
+/* ==================================================================
+   HELP AND INFORMATION
+   ================================================================== */
 
 export const SHIPPING_AND_RETURN_CHECKLIST_HEADING =
-  "Before you order or reach out";
+  "Before placing your order";
 
 export const SHIPPING_AND_RETURN_HELP_CARD_TITLE =
-  "Need help with an order or item?";
+  "Need help with your order?";
 
 export const SHIPPING_AND_RETURN_HELP_CARD_BODY =
-  "Start with your order number and a clear description—and keep packaging and photos handy—so our team can guide you.";
+  "Contact our support team with your order number and a brief explanation. Include photographs if your request concerns a damaged or incorrect item.";
 
-export const SHIPPING_AND_RETURN_HELP_CARD_CTA = "Start a request";
+export const SHIPPING_AND_RETURN_HELP_CARD_CTA =
+  "Contact support";
 
 export const SHIPPING_AND_RETURN_ESTIMATE_NOTE_TITLE =
-  "No guaranteed delivery dates";
+  "Delivery times may vary";
 
 export const SHIPPING_AND_RETURN_ESTIMATE_NOTE_BODY =
-  "Estimates may vary. Need a status update? Get in touch with your order number.";
+  "Delivery estimates depend on location, processing and courier availability. Contact support for order-related enquiries.";
 
 export const SHIPPING_AND_RETURN_ADDRESS_NOTE_TITLE =
-  "Accurate addresses make a difference";
+  "Check your delivery details";
 
 export const SHIPPING_AND_RETURN_ADDRESS_NOTE_BODY =
-  "Double-check your street, area, city and reachable contact number before submitting an order.";
+  "Provide your complete address and an active phone number to help prevent delivery delays.";
 
-export const SHIPPING_AND_RETURN_POLICY_UPDATED = "18 November 2026";
+/* ==================================================================
+   SEO
+   ================================================================== */
 
 export const SHIPPING_AND_RETURN_SEO_KEYWORDS: string[] = [
-  "shipping Pakistan",
+  "Anoosha Store shipping",
+  "shipping and returns Pakistan",
+  "online shopping delivery",
   "cash on delivery",
-  "returns",
-  "refund request",
-  "wrong item",
-  "damaged parcel",
+  "Easypaisa JazzCash",
+  "order cancellation",
+  "returns and refunds",
 ];
 
 export const SHIPPING_AND_RETURN_RELATED_ROUTES: StaticPageHref[] = [
@@ -526,89 +544,83 @@ export const SHIPPING_AND_RETURN_RELATED_ROUTES: StaticPageHref[] = [
   "/terms-and-conditions",
 ];
 
+/* ==================================================================
+   SHIPPING PROCESS
+   ================================================================== */
+
 export const SHIPPING_AND_RETURN_TILES = [
   {
     key: "placed",
-    title: "Order placed",
-    body: "Choose your accessories and enter your complete contact and delivery details.",
+    title: "Place your order",
+    body: "Select your products, choose a payment method and enter your delivery details.",
   },
   {
     key: "confirmed",
-    title: "Order confirmed",
-    body: "Our team may call or email to confirm details or clarify questions before dispatch.",
+    title: "Order processing",
+    body: "We review your order and may contact you to confirm payment or delivery information.",
   },
   {
     key: "care",
-    title: "Delivery & care",
-    body: "Pay cash on delivery on arrival, inspect promptly, and reach out with your order number for any issue.",
+    title: "Delivery & support",
+    body: "Receive your order, inspect your items and contact us if you need assistance.",
   },
 ] as const;
+
+/* ==================================================================
+   SHIPPING & RETURN POLICY
+   ================================================================== */
 
 export const SHIPPING_AND_RETURN_SECTIONS = [
   {
     key: "availability",
-    title: "Delivery availability",
+    title: "1. Shipping & delivery",
     paragraphs: [
-      "Delivery coverage depends on the destination, courier serviceability and the items ordered. Confirm that your location can be served when placing your order or during order confirmation.",
-      "We cannot guarantee service in every location. If there is a delivery limitation, our team may contact you to discuss the available options.",
+      "We arrange deliveries within Pakistan, subject to courier coverage and product availability. Shipping charges, if applicable, are displayed during checkout.",
+      "Delivery times vary by location and courier operations. Estimated dates are not guaranteed.",
     ],
   },
   {
     key: "fees-payment",
-    title: "Shipping fees and cash on delivery",
+    title: "2. Payment methods",
     paragraphs: [
-      "Any applicable delivery fee should be shown during checkout or communicated before the order is confirmed. The payable amount includes the order total and any confirmed delivery charge.",
-      "We currently support cash on delivery (COD). Please arrange to pay the confirmed amount when your parcel arrives.",
-    ],
-  },
-  {
-    key: "estimates",
-    title: "Processing and delivery estimates",
-    paragraphs: [
-      "Orders may require a confirmation call or email before processing. Dispatch and delivery times vary with product availability, destination, courier operations and seasonal demand.",
-      "If a delivery estimate is provided, it is an estimate rather than a guaranteed date. Unexpected delays, weather, public holidays or courier disruptions may affect arrival.",
+      "We accept Cash on Delivery (COD), Easypaisa and JazzCash. For COD, pay when your parcel arrives. For Easypaisa or JazzCash, use the receiving number displayed at checkout and keep your transaction reference for manual payment verification.",
     ],
   },
   {
     key: "address-accuracy",
-    title: "Accurate contact and location details",
+    title: "3. Order details & tracking",
     paragraphs: [
-      "At checkout, provide a reachable phone number, correct name and full delivery address. Include the area, city and any helpful landmark or location information.",
-      "If details are incorrect or you cannot be reached, the shipment may be delayed, returned or cancelled. To request an address correction, contact support immediately with your order number; changes cannot always be made after dispatch.",
-    ],
-  },
-  {
-    key: "tracking",
-    title: "Tracking and delivery questions",
-    paragraphs: [
-      "Shipment or tracking information may be provided when available from the courier. Check your Orders page or email support with your order number for shipment updates.",
-      "If a parcel is delayed, damaged or not delivered as expected, contact us with your order number and clear photos where relevant so we can review and guide you.",
-    ],
-  },
-  {
-    key: "return-review",
-    title: "How return and refund reviews work",
-    paragraphs: [
-      "Contact us as soon as reasonably possible with your order number, contact details, explanation of the issue and clear photos if an item is damaged, defective or incorrect.",
-      "Email support or use the contact form, wait for eligibility guidance and instructions before sending anything back, and note that refunds for COD orders follow an arranged non-card method or an appropriate resolution under applicable consumer laws.",
+      "Please provide an accurate delivery address and reachable phone number. You can review your order status in your account's Orders section. Contact support immediately if your details need correction; changes after dispatch may not be possible.",
     ],
   },
   {
     key: "cancellations-rights",
-    title: "Cancellations and consumer rights",
+    title: "4. Order cancellation",
     paragraphs: [
-      "You may cancel within the first 15 minutes of ordering. After that, email support with your order number immediately; cancellation may not be possible after dispatch, and the return review process may apply instead.",
-      "Nothing here limits mandatory consumer protection rights under applicable law. See our Terms & Conditions and FAQs for more details.",
+      "Eligible orders can be cancelled through your account within 15 minutes of placement. After this period, contact support with your order number. Cancellation requests depend on the order's current status and may not be possible after dispatch.",
+    ],
+  },
+  {
+    key: "return-review",
+    title: "5. Returns & refunds",
+    paragraphs: [
+      "If you receive a damaged, defective or incorrect item, contact us promptly with your order number, details and clear photographs. Please wait for return instructions before sending any item back.",
+      "Returns and refunds are reviewed individually, subject to applicable consumer rights. If approved, our team will confirm the return instructions, refund method and expected processing time.",
     ],
   },
 ] as const;
 
+/* ==================================================================
+   CUSTOMER CHECKLIST
+   ================================================================== */
+
 export const SHIPPING_AND_RETURN_CHECKLIST = [
-  "Your phone number is active and reachable",
-  "Your address includes city, area and helpful location details",
-  "You understand that payment is cash on delivery",
-  "You have checked item details, quantities and packaging on arrival",
+  "Confirm your products, quantities and order total",
+  "Provide your complete address and active phone number",
+  "Choose COD, Easypaisa or JazzCash at checkout",
+  "Inspect your items after delivery and report any issues promptly",
 ] as const;
+
 
 /* ==================================================================
    PRIVACY POLICY PAGE
@@ -617,33 +629,39 @@ export const SHIPPING_AND_RETURN_CHECKLIST = [
 export const PRIVACY_POLICY_SEO_TITLE = "Privacy Policy";
 
 export const PRIVACY_POLICY_SEO_DESCRIPTION =
-  "Learn how Anoosha Store collects, uses and protects personal information for accounts, cash-on-delivery orders, customer support and contact requests.";
+  "Learn how Anoosha Store protects your personal information, account details, shopping cart, order history and privacy while shopping online.";
 
-export const PRIVACY_POLICY_SEO_PATH: StaticPageHref = "/privacy-policy";
+export const PRIVACY_POLICY_SEO_PATH: StaticPageHref =
+  "/privacy-policy";
 
-export const PRIVACY_POLICY_SHELL_PATH: StaticPageHref = "/privacy-policy";
+export const PRIVACY_POLICY_SHELL_PATH: StaticPageHref =
+  "/privacy-policy";
 
-export const PRIVACY_POLICY_SHELL_EYEBROW = "Your information";
+export const PRIVACY_POLICY_SHELL_EYEBROW = "Your privacy matters";
 
-export const PRIVACY_POLICY_SHELL_TITLE = "Your trust deserves clarity.";
+export const PRIVACY_POLICY_SHELL_TITLE =
+  "Your information. Your privacy. Our responsibility.";
 
 export const PRIVACY_POLICY_SHELL_DESCRIPTION =
-  "This policy explains what information we use, why we need it, and how you can reach us with privacy-related questions while shopping at Anoosha Store.";
+  "At Anoosha Store, we respect your privacy. We collect only the information needed to operate our store, process orders and provide customer support.";
 
 export const PRIVACY_POLICY_UPDATED_LABEL = "Last updated:";
 
+export const PRIVACY_POLICY_UPDATED = "November 27, 2026";
+
 export const PRIVACY_POLICY_SOFT_NOTE_TITLE =
-  "Cash on delivery means no card checkout";
+  "Your privacy is our priority";
 
 export const PRIVACY_POLICY_SOFT_NOTE_BODY =
-  "We currently accept cash on delivery. Please never email payment-card information or passwords to customer support.";
-
-export const PRIVACY_POLICY_UPDATED = "Last updated: January 1, 2023";
+  "We never sell customer information or provide personal data, login details, shopping cart information or order history for advertising or AI model training. Never share your password or verification codes with anyone.";
 
 export const PRIVACY_POLICY_SEO_KEYWORDS: string[] = [
-  "customer privacy",
-  "personal data",
-  "cookies",
+  "Anoosha Store privacy policy",
+  "customer data protection",
+  "online shopping privacy",
+  "personal information security",
+  "account privacy",
+  "order data privacy",
 ];
 
 export const PRIVACY_POLICY_RELATED_ROUTES: StaticPageHref[] = [
@@ -653,104 +671,79 @@ export const PRIVACY_POLICY_RELATED_ROUTES: StaticPageHref[] = [
   "/shipping-and-return-policy",
 ];
 
+/* ==================================================================
+   PRIVACY COMMITMENTS
+   ================================================================== */
+
 export const PRIVACY_POLICY_PILLARS = [
   {
     key: "purpose",
-    title: "Purpose-led data",
-    body: "We use customer information to serve orders and answer requests.",
+    title: "Your data stays private",
+    body: "We do not sell customer information or share it for advertising, marketing databases or AI model training.",
   },
   {
     key: "security",
-    title: "Account protection",
-    body: "Authentication and session controls help protect account access.",
+    title: "Secure shopping",
+    body: "We use authentication and security measures to help protect your account, cart and order information.",
   },
   {
     key: "questions",
-    title: "Privacy questions",
-    body: "You can contact our team to ask about information associated with you.",
+    title: "You're in control",
+    body: "Contact us to ask questions or request access, corrections or applicable deletion of your personal information.",
   },
 ] as const;
+
+/* ==================================================================
+   PRIVACY POLICY SECTIONS
+   ================================================================== */
 
 export const PRIVACY_POLICY_SECTIONS = [
   {
     key: "collection",
     title: "1. Information we collect",
     paragraphs: [
-      "Depending on how you use Anoosha Store, information may include your name, email address, phone number, delivery address, account identifiers, order details and messages you send to us.",
-      "We may also receive routine technical information such as browser details, IP address and essential session-cookie data needed to run the website and keep accounts signed in.",
-      "When you choose Google sign-in, authentication information is used to establish your session. We do not require an online payment-card number for cash-on-delivery orders.",
+      "We collect information necessary to provide our services, including your name, email address, phone number, delivery address, account details, shopping cart, order history and customer support messages.",
+      "Basic technical information, such as IP addresses, browser details and essential session cookies, may also be processed for website functionality and security.",
     ],
     bullets: [] as string[],
   },
   {
     key: "usage",
-    title: "2. How we use information",
+    title: "2. How we use your information",
     paragraphs: [
-      "We do not use the contact form as an automatic newsletter signup.",
-    ],
-    bullets: [
-      "To create and maintain customer accounts and authenticate sign-ins.",
-      "To process orders, confirm availability, arrange delivery and respond to order questions.",
-      "To contact you by phone or email for order confirmation, corrections and operational updates.",
-      "To address cancellation, return, refund and general support requests.",
-      "To protect against misuse, diagnose service issues and meet applicable legal requirements.",
-    ],
-  },
-  {
-    key: "sharing",
-    title: "3. Sharing with service providers",
-    paragraphs: [
-      "To operate the store, relevant information may be processed by service providers such as cloud hosting, authentication, email delivery and fulfilment or courier partners. For example, our contact emails and verification messages are delivered through an email service provider.",
-      "We share only information reasonably needed for the relevant service. Information may also be disclosed when required by applicable law or to address security or legal matters.",
+      "Your information is used to manage accounts, process orders, arrange deliveries, provide customer support and maintain website security. We do not use your information for unrelated purposes without an appropriate basis.",
     ],
     bullets: [] as string[],
   },
   {
-    key: "cookies",
-    title: "4. Cookies and authentication",
+    key: "protection",
+    title: "3. Data privacy and AI protection",
     paragraphs: [
-      "Essential cookies may be used to maintain login sessions, support account security and keep the website working. Some sign-in options can involve third-party identity providers, such as Google, under their own privacy notices.",
-      "You can manage cookies in your browser, but disabling essential cookies may prevent sign-in or order-related features from working correctly.",
+      "Anoosha Store does not sell, rent or disclose customer information to unrelated organizations for advertising, data trading, profiling or AI model training.",
+      "We do not provide personal details, authentication information, shopping cart contents, order histories or private customer communications to third parties for training artificial intelligence models.",
     ],
     bullets: [] as string[],
   },
   {
-    key: "storage",
-    title: "5. Data storage and security",
+    key: "services",
+    title: "4. Essential services and security",
     paragraphs: [
-      "We use technical and organizational measures intended to reduce unauthorized access, alteration and loss. No internet-connected service can guarantee absolute security.",
-      "Information is kept for as long as reasonably needed for the purpose collected, operational records, dispute handling and applicable legal obligations. Different categories of records may have different retention periods.",
+      "Limited information may be processed by trusted providers supporting website hosting, authentication, email communication and order delivery. We share only what is reasonably necessary for these services or required by law.",
+      "We use reasonable security measures to protect customer information. Essential cookies support sign-in and account security. No online service can guarantee absolute security.",
     ],
     bullets: [] as string[],
   },
   {
     key: "rights",
-    title: "6. Access, correction and deletion requests",
+    title: "5. Your information and privacy requests",
     paragraphs: [
-      "For questions about your information, to request corrections or to ask about deletion where applicable, contact support with enough detail to identify your request; we may need to verify your identity before acting.",
-      "Some records may need to be retained to comply with legal obligations, resolve disputes or preserve legitimate transaction records.",
-    ],
-    bullets: [] as string[],
-  },
-  {
-    key: "children",
-    title: "7. Children's privacy and external sites",
-    paragraphs: [
-      "The website is intended for customers who can legally place orders. If you believe a child submitted personal information without appropriate authorization, please contact us.",
-      "Links to external platforms, including social networks, are governed by those platforms' own terms and privacy practices.",
-    ],
-    bullets: [] as string[],
-  },
-  {
-    key: "changes",
-    title: "8. Changes and contact",
-    paragraphs: [
-      "We may revise this policy as features and legal requirements evolve. The updated version and date will appear here.",
-      "For privacy enquiries, use our contact form or email support. Read our Terms & Conditions for purchasing rules.",
+      "You can contact us to request access to, correction of or applicable deletion of your personal information. We may verify your identity before processing a request. Certain order records may be retained for legitimate operational, dispute-resolution or legal purposes.",
+      "We may update this policy when our services change. For privacy-related enquiries, use our Contact page or email anooshastoree@gmail.com.",
     ],
     bullets: [] as string[],
   },
 ] as const;
+
 
 /* ==================================================================
    FREQUENTLY ASKED QUESTIONS PAGE
@@ -759,7 +752,7 @@ export const PRIVACY_POLICY_SECTIONS = [
 export const FAQ_SEO_TITLE = "Frequently Asked Questions";
 
 export const FAQ_SEO_DESCRIPTION =
-  "Find answers to questions about Anoosha Store orders, cash on delivery, 15-minute cancellation, shipping, returns and customer support.";
+  "Find answers about shopping at Anoosha Store, payment methods, order tracking, cancellations, shipping, delivery, returns, refunds and customer support in Pakistan.";
 
 export const FAQ_SEO_PATH: StaticPageHref = "/faq";
 
@@ -767,27 +760,36 @@ export const FAQ_SHELL_PATH: StaticPageHref = "/faq";
 
 export const FAQ_SHELL_EYEBROW = "Help center";
 
-export const FAQ_SHELL_TITLE = "Questions? We've got the details.";
+export const FAQ_SHELL_TITLE =
+  "Frequently asked questions";
 
 export const FAQ_SHELL_DESCRIPTION =
-  "Everything you need to know about ordering, cash on delivery, shipping and getting help from Anoosha Store—all in one easy place.";
+  "Find clear answers to common questions about placing orders, making payments, delivery, returns and getting support. We're here to make your shopping experience easier.";
 
-export const FAQ_HELP_CARD_TITLE = "We’re here to help.";
+export const FAQ_HELP_CARD_TITLE =
+  "Still have a question?";
 
 export const FAQ_HELP_CARD_BODY =
-  "Didn’t find an answer? Contact our team and we’ll help you with your question.";
+  "Our support team is available to help with product enquiries, orders, payments and delivery-related questions. Get in touch and let us know how we can assist.";
 
 export const FAQ_HELP_CARD_CTA = "Contact support";
 
-export const FAQ_SOFT_NOTE_TITLE = "Order enquiries";
+export const FAQ_SOFT_NOTE_TITLE =
+  "Need help with an existing order?";
 
 export const FAQ_SOFT_NOTE_BODY =
-  "When contacting us about an order, include your order number to help us find the right details.";
+  "Please include your order number when contacting support about an existing order. This helps us locate your order and respond more efficiently.";
 
 export const FAQ_SEO_KEYWORDS: string[] = [
   "Anoosha Store FAQ",
-  "COD",
-  "cancel order",
+  "online shopping help Pakistan",
+  "Anoosha Store payment methods",
+  "cash on delivery",
+  "Easypaisa and JazzCash",
+  "order tracking",
+  "order cancellation",
+  "shipping and delivery",
+  "returns and refunds",
 ];
 
 export const FAQ_RELATED_ROUTES: StaticPageHref[] = [
@@ -796,67 +798,97 @@ export const FAQ_RELATED_ROUTES: StaticPageHref[] = [
   "/terms-and-conditions",
 ];
 
+/* ==================================================================
+   FAQ QUESTIONS AND ANSWERS
+   ================================================================== */
+
 export const FAQ_GROUPS: FaqGroup[] = [
   {
-    title: "Orders & payment",
+    title: "Orders & payments",
     items: [
       {
-        q: "Which payment methods do you accept?",
-        a: "We currently offer cash on delivery (COD). Please have the payable amount ready when your parcel arrives. Other payment methods are not available at this time.",
+        q: "How do I place an order at Anoosha Store?",
+        a: "Browse our store, select a product and its available options, and choose Order Now or add it to your cart. At checkout, enter your delivery details, select a payment method and review your order summary. Once your order is submitted successfully, you can view its details and status in the Orders section of your account.",
       },
       {
-        q: "Will Anoosha Store contact me after I place an order?",
-        a: "Yes. We may contact you using the phone number or email provided at checkout to confirm your order, clarify delivery details or resolve order-related questions. Please keep your contact information accurate and reachable.",
+        q: "Which payment methods are available?",
+        a: "We currently support Cash on Delivery (COD), Easypaisa and JazzCash. With Cash on Delivery, you pay when your order arrives. Easypaisa and JazzCash are manual transfer options. Select your preferred method at checkout to view the corresponding receiving number. We do not currently process wallet payments automatically through the website.",
       },
       {
-        q: "Can I cancel an order?",
-        a: "Orders can be cancelled within 15 minutes of placement. After that, please email anooshastoree@gmail.com as soon as possible with your order number and cancellation request. We will review the order status and confirm when cancellation has been processed. Once dispatched, cancellation may no longer be possible.",
+        q: "How do I pay using Easypaisa or JazzCash?",
+        a: "Choose Easypaisa or JazzCash during checkout and carefully check the receiving number displayed for your selected method. Complete the transfer through the appropriate wallet service and keep your transaction reference or receipt. Contact our support team with your order number and transaction details so the payment can be reviewed. Selecting a wallet method does not automatically confirm that payment has been received.",
       },
       {
-        q: "How can I find information about an existing order?",
-        a: "Go to the Orders page to review available order details. For further help, contact our support team and include your order number.",
+        q: "How will I know if my order was placed successfully?",
+        a: "After a successful checkout, your order details will be available in your account, including the order number, selected payment method, total amount and current order status. You can review these details through the Orders page. We may also contact you using the information provided at checkout if confirmation or clarification is needed.",
+      },
+      {
+        q: "Can I cancel or change my order after placing it?",
+        a: "Eligible pending or processing orders can be cancelled from your account within 15 minutes of placement. After this period, contact our support team as soon as possible with your order number and request. Changes or cancellations are subject to the order's current processing and dispatch status and cannot always be guaranteed.",
+      },
+      {
+        q: "Where can I check my order status and receipt?",
+        a: "Sign in to your Anoosha Store account and open the Orders page. Select an order to review its current status, purchased items, delivery information, payment method and total amount. You can also view the available receipt or invoice details. If anything appears incorrect, contact support and provide your order number.",
       },
     ],
   },
+
   {
     title: "Shipping & delivery",
     items: [
       {
-        q: "Where do you deliver?",
-        a: "Delivery availability depends on the destination and courier coverage. Confirm your complete address and available shipping options during checkout or order confirmation.",
+        q: "Where does Anoosha Store deliver?",
+        a: "We accept delivery information for destinations in Pakistan, subject to courier availability and service coverage. Delivery may not be possible in every location. If you are unsure whether your address is serviceable, contact our support team before placing an order.",
       },
       {
-        q: "How much does shipping cost?",
-        a: "Any applicable delivery charge should be shown during checkout or communicated before your order is confirmed. Contact us if you need clarification about the total amount to pay on delivery.",
+        q: "How much does delivery cost?",
+        a: "Your checkout summary displays the currently applicable delivery charge and order total before you submit your order. If shipping is shown as Rs. 0, no delivery charge has been added to that checkout total. Any delivery arrangement requiring an additional charge should be clarified with you before proceeding.",
       },
       {
-        q: "How long will delivery take?",
-        a: "Timing varies with destination, courier coverage and order processing. An estimated timeline may be shared when your order is confirmed; it is not a guaranteed delivery date.",
+        q: "How long does it take to receive an order?",
+        a: "Delivery times depend on your location, order processing and the courier's service availability. Any estimated timeframe communicated by our team is an estimate rather than a guaranteed delivery date. Delays may occur due to courier operations, weather, holidays or incomplete delivery information.",
       },
       {
-        q: "What if I entered the wrong address or phone number?",
-        a: "Contact us immediately and include your order number and corrected details. Changes may not be possible once the parcel has been dispatched.",
+        q: "How can I track the progress of my order?",
+        a: "Open the Orders section of your account to check the latest available order status. Orders may appear as Pending, Processing, Delivered or Cancelled. These statuses describe the order's progress; they do not necessarily provide live courier tracking. For dispatch or delivery enquiries, contact support with your order number.",
+      },
+      {
+        q: "What should I do if I entered an incorrect address or phone number?",
+        a: "Contact our support team immediately with your order number and the correct information. Please provide a complete delivery address and an active mobile number that can receive calls or SMS. We will review whether the details can be updated, but changes may not be possible once the order has been dispatched.",
+      },
+      {
+        q: "What happens if the courier cannot deliver my order?",
+        a: "A delivery attempt may be unsuccessful if the recipient cannot be reached, the address is incomplete or the location is outside available courier coverage. Contact support with your order number if you believe delivery has failed. Any further delivery attempt or alternative arrangement will depend on the courier's availability and the order's circumstances.",
       },
     ],
   },
+
   {
-    title: "Returns, refunds & support",
+    title: "Returns, refunds & customer support",
     items: [
       {
-        q: "What should I do if my parcel is damaged or the wrong item arrives?",
-        a: "Contact us promptly with your order number, a description of the issue and clear photographs of the parcel and item. We will review the matter and explain the next steps.",
+        q: "What should I do if I receive a damaged, defective or incorrect item?",
+        a: "Contact Anoosha Store as soon as possible after receiving the parcel. Provide your order number, a clear explanation of the issue and photographs showing the product, packaging and any visible damage or discrepancy. Our team will review the information and advise you about the available next steps.",
       },
       {
-        q: "Can I request a return or refund?",
-        a: "You can request a review through our Contact page or by email. Eligibility, return instructions and any refund arrangement are confirmed after reviewing your order and the condition or issue, subject to applicable consumer rights.",
+        q: "Can I return a product after delivery?",
+        a: "You can contact us to request a return review. Eligibility depends on the reason for the request, the condition of the product and our published Shipping and Return Policy, subject to applicable consumer rights. Please contact support before sending anything back so that any approved return instructions can be provided.",
       },
       {
-        q: "Do you offer refunds to the original payment card?",
-        a: "We currently accept cash on delivery, not online card payments. If a refund is approved, our team will confirm an appropriate refund method with you.",
+        q: "How do I request a refund?",
+        a: "Submit your request through our Contact page or email anooshastoree@gmail.com with your order number and the reason for the refund request. Include relevant photographs or supporting information where appropriate. We will review the request and explain the available resolution, including any applicable return or refund requirements.",
       },
       {
-        q: "How can I reach Anoosha Store?",
-        a: "Use our contact form or email anooshastoree@gmail.com. Include your order number for any order-related request so we can assist you more efficiently.",
+        q: "How will an approved refund be issued?",
+        a: "If a refund is approved, our support team will confirm the appropriate refund method and any required details with you. The arrangement may depend on how the original order was paid and the circumstances of the refund. Processing time can vary, and a specific completion date will be communicated only when it can be reasonably confirmed.",
+      },
+      {
+        q: "Can I exchange an item or request a different product?",
+        a: "If you would like to exchange an item, contact support with your order number and explain the requested change. Our team will review whether an exchange or another resolution is possible based on product availability, order circumstances and the applicable return policy. Exchanges are not automatically guaranteed.",
+      },
+      {
+        q: "How can I contact Anoosha Store for assistance?",
+        a: "You can reach our support team through the Contact page or by emailing anooshastoree@gmail.com. For general product enquiries, describe what you need help with. For existing orders, include your order number and a brief explanation of the issue. Please never share passwords, OTP codes or sensitive account credentials when requesting support.",
       },
     ],
   },
@@ -945,72 +977,94 @@ export const SUBJECT_OPTIONS = [
   { value: "return", label: "Returns & refunds" },
 ];
 
+
 /* ==================================================================
-   ABOUT US PAGE
+   ABOUT US PAGE — ANOOSHA STORE
+   General-purpose online shopping
    ================================================================== */
 
 export const ABOUT_SEO_TITLE = "About Us";
 
 export const ABOUT_SEO_DESCRIPTION =
-  "Get to know Anoosha Store: practical mobile and gaming accessories, clear cash-on-delivery ordering, and customer-focused support in Pakistan.";
+  "Learn about Anoosha Store, an online shopping destination in Pakistan offering a diverse selection of products, convenient ordering, flexible payment options, and helpful customer support.";
 
 export const ABOUT_SEO_PATH: StaticPageHref = "/about";
 
 export const ABOUT_SHELL_PATH: StaticPageHref = "/about";
 
-export const ABOUT_SHELL_EYEBROW = "Our story";
+export const ABOUT_SHELL_EYEBROW = "Get to know us";
 
-export const ABOUT_SHELL_TITLE = "Small accessories. Better everyday moments.";
+export const ABOUT_SHELL_TITLE =
+  "Everyday discoveries. A better way to shop.";
 
 export const ABOUT_SHELL_DESCRIPTION =
-  "A modern place to discover mobile and gaming accessories, with a shopping experience built around clarity, convenience and genuine customer care.";
+  "Welcome to Anoosha Store, your online destination for discovering a variety of products in one place. We believe shopping should be simple, convenient, and enjoyable, with clear information and support when you need it.";
 
 export const ABOUT_SCHEMA_CONTACT_TYPE = "customer support";
 
-export const ABOUT_STORY_SECTION_EYEBROW = "Why Anoosha Store exists";
+/* ==================================================================
+   OUR STORY
+   ================================================================== */
 
-export const ABOUT_STORY_SECTION_TITLE = "A store for what moves with you";
+export const ABOUT_STORY_SECTION_EYEBROW = "Our story";
+
+export const ABOUT_STORY_SECTION_TITLE =
+  "A store built around your everyday needs";
 
 export const ABOUT_STORY_PARAGRAPH_ONE_PREFIX =
-  "Technology is part of how we communicate, work, play and relax. The little things around it matter too.";
+  "Online shopping should feel simple, whether you know exactly what you want or are just exploring. That belief is at the heart of";
 
 export const ABOUT_STORY_PARAGRAPH_ONE_SUFFIX =
-  "brings mobile and gaming accessories together in a shopping space that feels simple to explore.";
+  "— a place where different products come together, giving you the freedom to explore, discover, and choose what works for you.";
 
 export const ABOUT_STORY_PARAGRAPH_TWO =
-  "We want customers to understand what they are ordering and what happens next. From accurate product information to straightforward support, our aim is to make each interaction feel considered.";
+  "Our goal is to create a shopping experience built on convenience, clarity, and customer care. We focus on making product information easy to understand, the ordering process straightforward, and support accessible whenever questions arise. As our store grows, we aim to continue bringing fresh choices and a more enjoyable shopping experience to our customers.";
 
-export const ABOUT_STORY_PARAGRAPH_THREE_PREFIX = "We currently accept";
+export const ABOUT_STORY_PARAGRAPH_THREE_PREFIX =
+  "At checkout, you can choose";
 
-export const ABOUT_STORY_PARAGRAPH_THREE_HIGHLIGHT = "cash on delivery";
+export const ABOUT_STORY_PARAGRAPH_THREE_HIGHLIGHT =
+  "cash on delivery, Easypaisa, or JazzCash";
 
 export const ABOUT_STORY_PARAGRAPH_THREE_MIDDLE =
-  ". For more details about ordering and confirmation, explore our";
+  ". Easypaisa and JazzCash transfers are handled manually and require payment confirmation. For more information about ordering, payments, and delivery, explore our";
 
-export const ABOUT_STORY_FAQ_LINK_LABEL = "frequently asked questions";
+export const ABOUT_STORY_FAQ_LINK_LABEL =
+  "frequently asked questions";
 
 export const ABOUT_STORY_FAQ_LINK_HREF: StaticPageHref = "/faq";
 
 export const ABOUT_STORY_TERMS_CONNECTOR = "and";
 
-export const ABOUT_STORY_TERMS_LINK_LABEL = "terms and conditions";
+export const ABOUT_STORY_TERMS_LINK_LABEL =
+  "terms and conditions";
 
 export const ABOUT_STORY_TERMS_LINK_HREF: StaticPageHref =
   "/terms-and-conditions";
 
-export const ABOUT_CLARITY_CARD_TITLE = "Shopping with clarity.";
+/* ==================================================================
+   CUSTOMER EXPERIENCE CARD
+   ================================================================== */
+
+export const ABOUT_CLARITY_CARD_TITLE =
+  "Shopping made simple. Support that matters.";
 
 export const ABOUT_CLARITY_CARD_BODY =
-  "Accurate contact and delivery information helps us confirm orders and avoid preventable delays. We may reach out when information needs clarification.";
+  "We want every customer to feel informed and comfortable when shopping with us. From choosing a product to placing an order and understanding delivery expectations, clear communication matters. Accurate contact and delivery details also help us process orders smoothly and reach you if anything needs clarification.";
 
 export const ABOUT_CLARITY_CARD_CTA_LABEL = "Get in touch";
 
 export const ABOUT_CLARITY_CARD_CTA_HREF: StaticPageHref = "/contact";
 
-export const ABOUT_SOFT_NOTE_TITLE = "Before your order arrives";
+/* ==================================================================
+   SHIPPING AND RETURNS
+   ================================================================== */
+
+export const ABOUT_SOFT_NOTE_TITLE =
+  "What happens after you place an order?";
 
 export const ABOUT_SOFT_NOTE_PREFIX =
-  "Learn how delivery confirmation and return reviews work in our";
+  "Find information about delivery, order confirmation, and return requests in our";
 
 export const ABOUT_SOFT_NOTE_LINK_LABEL =
   "shipping and returns guidance";
@@ -1018,9 +1072,19 @@ export const ABOUT_SOFT_NOTE_LINK_LABEL =
 export const ABOUT_SOFT_NOTE_LINK_HREF: StaticPageHref =
   "/shipping-and-return-policy";
 
+/* ==================================================================
+   SEO
+   ================================================================== */
+
 export const ABOUT_SEO_KEYWORDS: string[] = [
+  "Anoosha Store",
   "about Anoosha Store",
-  "accessory shop",
+  "Anoosha Store Pakistan",
+  "online shopping in Pakistan",
+  "general online shopping store",
+  "online shopping experience",
+  "convenient online shopping",
+  "customer support",
 ];
 
 export const ABOUT_RELATED_ROUTES: StaticPageHref[] = [
@@ -1030,24 +1094,30 @@ export const ABOUT_RELATED_ROUTES: StaticPageHref[] = [
   "/terms-and-conditions",
 ];
 
-export const ABOUT_SCHEMA_AVAILABLE_LANGUAGES: string[] = ["English"];
+export const ABOUT_SCHEMA_AVAILABLE_LANGUAGES: string[] = [
+  "English",
+];
+
+/* ==================================================================
+   ABOUT PAGE INFORMATION TILES
+   ================================================================== */
 
 export const ABOUT_TILES = [
   {
     key: "design",
-    title: "Useful by design",
-    body: "We focus on accessories that belong in your daily setup, from mobile essentials to gaming gear.",
+    title: "Something new to discover",
+    body: "Explore a changing selection of products, discover new possibilities, and find choices that fit your preferences and everyday needs.",
   },
   {
     key: "shopping",
-    title: "Straightforward shopping",
-    body: "Clear order steps, cash on delivery and accessible",
+    title: "Simple and convenient shopping",
+    body: "Easy-to-follow ordering, flexible payment options, and helpful",
     linkLabel: "shipping guidance",
     linkHref: "/shipping-and-return-policy" as StaticPageHref,
   },
   {
     key: "people",
-    title: "People behind the parcel",
-    body: "We can contact you to confirm an order and help resolve questions before it reaches you.",
+    title: "Customers come first",
+    body: "We value clear communication and a helpful shopping experience. If you have questions about products, orders, or delivery, our support is here to assist.",
   },
 ] as const;
