@@ -111,10 +111,10 @@ export const STORE_NAME="Anoosha Store"
 export const footer_social_links: FooterSocialLink[] = [
   // Add your official social media URLs here.
   // Example: { name: "Instagram", link: "https://instagram.com/your-store" },
-  { name: "Instagram", link: "https://instagram.com/your-store" },
-  { name: "Facebook", link: "https://facebook.com/your-store" },
-  { name: "YouTube", link: "https://youtube.com/your-store" },
-  { name: "TikTok", link: "https://tiktok.com/@your-store" },
+  { name: "Instagram", link: "https://www.instagram.com/anooshastore00?fqnt=c241d3R6bGs1Mmky" },
+  { name: "Facebook", link: "https://www.facebook.com/share/1CmWTJpnyy/" },
+  { name: "YouTube", link: "https://www.youtube.com/@anooshastore" },
+  { name: "TikTok", link: "https://www.tiktok.com/@anooshastore" },
 ];
 
 export const SOCIAL_ICONS: Record<string, { Icon: IconType; style: string }> = {
@@ -697,13 +697,14 @@ export const PRIVACY_POLICY_PILLARS = [
    PRIVACY POLICY SECTIONS
    ================================================================== */
 
+
 export const PRIVACY_POLICY_SECTIONS = [
   {
     key: "collection",
     title: "1. Information we collect",
     paragraphs: [
-      "We collect information necessary to provide our services, including your name, email address, phone number, delivery address, account details, shopping cart, order history and customer support messages.",
-      "Basic technical information, such as IP addresses, browser details and essential session cookies, may also be processed for website functionality and security.",
+      "We collect information necessary to operate Anoosha Store, including your name, email address, phone number, delivery address, account details, shopping cart, order history and support messages.",
+      "Basic technical information, including IP addresses, browser details and essential session cookies, may also be processed for website functionality and security.",
     ],
     bullets: [] as string[],
   },
@@ -711,16 +712,16 @@ export const PRIVACY_POLICY_SECTIONS = [
     key: "usage",
     title: "2. How we use your information",
     paragraphs: [
-      "Your information is used to manage accounts, process orders, arrange deliveries, provide customer support and maintain website security. We do not use your information for unrelated purposes without an appropriate basis.",
+      "Your information is used to maintain accounts, process orders, arrange deliveries, provide customer support and protect our services. We do not use your personal information for unrelated purposes without an appropriate basis.",
     ],
     bullets: [] as string[],
   },
   {
     key: "protection",
-    title: "3. Data privacy and AI protection",
+    title: "3. Privacy and AI protection",
     paragraphs: [
-      "Anoosha Store does not sell, rent or disclose customer information to unrelated organizations for advertising, data trading, profiling or AI model training.",
-      "We do not provide personal details, authentication information, shopping cart contents, order histories or private customer communications to third parties for training artificial intelligence models.",
+      "Anoosha Store does not sell, rent or share customer information with unrelated organizations for advertising, data trading or AI model training.",
+      "We do not provide personal details, login information, shopping cart contents, order histories or private customer communications to third parties for training artificial intelligence models.",
     ],
     bullets: [] as string[],
   },
@@ -728,21 +729,37 @@ export const PRIVACY_POLICY_SECTIONS = [
     key: "services",
     title: "4. Essential services and security",
     paragraphs: [
-      "Limited information may be processed by trusted providers supporting website hosting, authentication, email communication and order delivery. We share only what is reasonably necessary for these services or required by law.",
-      "We use reasonable security measures to protect customer information. Essential cookies support sign-in and account security. No online service can guarantee absolute security.",
+      "Limited information may be processed by trusted providers supporting hosting, authentication, communication and delivery. Only information reasonably necessary for these services or required by law is shared.",
+      "We use reasonable security measures to protect customer information. Essential cookies support account access and security.",
     ],
     bullets: [] as string[],
   },
   {
     key: "rights",
-    title: "5. Your information and privacy requests",
+    title: "5. Your information and privacy rights",
     paragraphs: [
-      "You can contact us to request access to, correction of or applicable deletion of your personal information. We may verify your identity before processing a request. Certain order records may be retained for legitimate operational, dispute-resolution or legal purposes.",
-      "We may update this policy when our services change. For privacy-related enquiries, use our Contact page or email anooshastoree@gmail.com.",
+      "You may request access to, correction of or applicable deletion of your personal information. Identity verification may be required. Certain transaction records may be retained for legal, security or dispute-resolution purposes.",
+    ],
+    bullets: [] as string[],
+  },
+  {
+    key: "children",
+    title: "6. Children's privacy",
+    paragraphs: [
+      "Anoosha Store is intended for customers who can legally place orders. If a child has provided personal information without appropriate authorization, a parent or guardian may contact us for assistance.",
+    ],
+    bullets: [] as string[],
+  },
+  {
+    key: "changes",
+    title: "7. Policy updates and contact",
+    paragraphs: [
+      "We may update this Privacy Policy to reflect changes in our services or applicable requirements. The latest version and revision date will be published on this page.",
     ],
     bullets: [] as string[],
   },
 ] as const;
+
 
 
 /* ==================================================================
